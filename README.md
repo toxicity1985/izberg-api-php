@@ -32,6 +32,6 @@ Donc pour le moment, c'est lié à modizy.com et l'api est disponible avec http:
 
 ### Run tests
 
-> Install php unit : http://phpunit.de/getting-started.html
-> cd /to/the/iceberg/php/library/folder
-> run 'phpunit tests/IcebergTest.php'
+- Install php unit : http://phpunit.de/getting-started.html
+- cd /to/the/iceberg/php/library/folder
+- run 'phpunit tests/IcebergTest.php'
