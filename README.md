@@ -1,5 +1,4 @@
 #Iceberg-API-PHP
-===============
 
 ## About
 
@@ -24,7 +23,10 @@ Donc pour le moment, c'est lié à modizy.com et l'api est disponible avec http:
     $iceberg = new Iceberg(array(
       'apiKey'      => 'YOUR_APP_KEY',
       'apiSecret'   => 'YOUR_APP_SECRET',
-      'appNamespace' => 'YOUR_APP_NAMESPACE'
+      'appNamespace' => 'YOUR_APP_NAMESPACE',
+      "email" => "YOUR_EMAIL",
+      "firstName" => "YOUR_ACCOUNT_FIRST_NAME",
+      "lastName" => "YOUR_ACCOUNT_LAST_NAME"
     ));
 
 ?>
