@@ -420,8 +420,8 @@ class Iceberg {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    $jsonData = curl_exec($ch);
-    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $jsonData = $this->curlExec($ch);
+    $httpcode = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);
 
     if (false === $jsonData) {
       throw new Exception("Error: _getSingleSignOnResponse() - cURL error: " . curl_error($ch));
@@ -434,6 +434,14 @@ class Iceberg {
       throw new Exception("Error: from Iceberg API - error: " . print_r($jsonResponse,true));
     }
     return $jsonResponse;
+  }
+
+  public function curlExec($ch) {
+    return curl_exec($ch);
+  }
+
+  public function curlGetInfo($ch, $name) {
+      return curl_getinfo($ch, $name);
   }
 
 

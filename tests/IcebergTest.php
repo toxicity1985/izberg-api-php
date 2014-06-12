@@ -24,11 +24,57 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         return $a;
     }
 
-    public function mockGetSingleSignOnResponse()
+    public function mockSuccessSingleSignOnResponse($options = array())
     {
-        $stub = $this->getMock('Iceberg', array("_getSingleSignOnResponse"), array($this->getDefaultOptions()));
+        return $this->mockIceberg($options, true);
+    }
 
-        $array = array(
+    public function mockErrorSingleSignOnResponse($options = array())
+    {
+        return $this->mockIceberg($options, false);
+    }
+
+    public function mockIceberg($options= array(), $success = true)
+    {
+        if (empty($options)) {
+          $options = $this->getDefaultOptions();
+        }
+
+        $methods = ($success) ? array('_getSingleSignOnResponse') : array('curlGetInfo', 'curlExec');
+
+        $stub = $this->getMockBuilder('Iceberg')
+                     ->setMethods($methods)
+                     ->disableOriginalConstructor()
+                     ->getMock();
+
+        $array = $success ? $this->getRealAnswer() : $this->getErrorAnswer();
+        $response = (object) $array;
+
+        if ($success) {
+          $stub->expects($this->any())
+             ->method('_getSingleSignOnResponse')
+             ->will($this->returnValue($response));
+
+         } else {
+           $stub->expects($this->any())
+             ->method('curlGetInfo')
+             ->will($this->returnValue(300));
+
+           $stub->expects($this->any())
+             ->method('curlExec')
+             ->will($this->returnValue(json_encode("[error: 'mymessage']")));
+         }
+
+
+        $stub->__construct($options);
+
+        return $stub;
+    }
+
+
+
+    public function getRealAnswer() {
+        return array(
             "absolute_url" => "/user/sebfie/",
             "age" => "",
             "api_key" => "e0da0c1a729176449446a3cd606fd46e7a9a0c8a",
@@ -65,20 +111,19 @@ class IcebergTest extends PHPUnit_Framework_TestCase
             "type" => "user",
             "username" => "sebfie"
         );
+    }
 
-        $response = (object) $array;
-
-        // Configure the stub.
-        $stub->expects($this->any())
-             ->method('_getSingleSignOnResponse')
-             ->will($this->returnValue($response));
-
-        return $stub;
+    public function getErrorAnswer() {
+        return array(
+            "error" => array(
+                "msg" => "An error happened"
+            )
+        );
     }
 
     public function testConstructorUseParams()
     {
-        $a = $this->mockGetSingleSignOnResponse();
+        $a = $this->mockSuccessSingleSignOnResponse();
 
         // // Assert
         $this->assertEquals("app_of_test", $a->getAppNamespace());
@@ -93,15 +138,14 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
     public function testConstructorGetIcebergApiKey()
     {
-        $a = $this->getIceberg(array(
-            "appNamespace" => "sebfie",
-            "apiKey" => "bd86055e-fccd-4686-a29c-db17cfdb22fa",
-            "apiSecret" => "02aad76d-fd75-4626-9429-af5075259cd0",
-            "email" => "sebastien.fieloux@gmail.com",
-            "firstName" => "sébastien",
-            "lastName" => "fieloux"
-        ));
+        $a = $this->mockSuccessSingleSignOnResponse();
         $this->assertEquals("e0da0c1a729176449446a3cd606fd46e7a9a0c8a", $a->getIcebergApiKey());
+    }
+
+    public function testShouldThrowErrorIfNotGoodResponseCode()
+    {
+        $this->setExpectedException('Exception', "Error: from Iceberg API - error: [error: 'mymessage']");
+        $a = $this->mockErrorSingleSignOnResponse();
     }
 
 
