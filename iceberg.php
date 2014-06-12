@@ -114,34 +114,6 @@ class Iceberg {
 
 
   /**
-   * Default constructor
-   *
-   * @param array|string $config          Iceberg configuration data
-   * @return void
-   */
-  public function __construct($config) {
-    if (true === is_array($config)) {
-      // if you want to access user data
-      $this->setApiKey($config['apiKey']);
-      $this->setApiSecret($config['apiSecret']);
-      $this->setAppNamespace($config['appNamespace']);
-      $this->setEmail($config['email']);
-      $this->setFirstName($config['firstName']);
-      $this->setLastName($config['lastName']);
-      (isset($config['currency'])) ? $this->setCurrency($config['currency']) : $this->setCurrency(self::DEFAULT_CURRENCY);
-      (isset($config['shippingCountry'])) ? $this->setShippingCountry($config['shippingCountry']) : $this->setShippingCountry(self::DEFAULT_SHIPPING_COUNTRY);
-
-      // We get the iceberg api key using the Single Sign On API
-      $this->_single_sign_on_response = $this->_getSingleSignOnResponse();
-      $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
-
-    } else {
-      throw new Exception("Error: __construct() - Configuration data is missing.");
-    }
-  }
-
-
-  /**
    * API-key Getter
    *
    * @return String
@@ -344,6 +316,34 @@ class Iceberg {
     $this->_timestamp = $timestamp;
   }
 
+
+  /**
+   * Default constructor
+   *
+   * @param array|string $config          Iceberg configuration data
+   * @return void
+   */
+  public function __construct($config) {
+    if (true === is_array($config)) {
+      // if you want to access user data
+      $this->setApiKey($config['apiKey']);
+      $this->setApiSecret($config['apiSecret']);
+      $this->setAppNamespace($config['appNamespace']);
+      $this->setEmail($config['email']);
+      $this->setFirstName($config['firstName']);
+      $this->setLastName($config['lastName']);
+      (isset($config['currency'])) ? $this->setCurrency($config['currency']) : $this->setCurrency(self::DEFAULT_CURRENCY);
+      (isset($config['shippingCountry'])) ? $this->setShippingCountry($config['shippingCountry']) : $this->setShippingCountry(self::DEFAULT_SHIPPING_COUNTRY);
+
+      // We get the iceberg api key using the Single Sign On API
+      $this->_single_sign_on_response = $this->_getSingleSignOnResponse();
+      $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
+
+    } else {
+      throw new Exception("Error: __construct() - Configuration data is missing.");
+    }
+  }
+
   /**
    * The call operator
    *
@@ -436,11 +436,12 @@ class Iceberg {
     return $jsonResponse;
   }
 
-  public function curlExec($ch) {
+  // curl functions
+  protected function curlExec($ch) {
     return curl_exec($ch);
   }
 
-  public function curlGetInfo($ch, $name) {
+  protected function curlGetInfo($ch, $name) {
       return curl_getinfo($ch, $name);
   }
 

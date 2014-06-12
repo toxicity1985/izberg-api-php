@@ -3,6 +3,10 @@ require_once "iceberg.php";
 
 class IcebergTest extends PHPUnit_Framework_TestCase
 {
+    // ======================================
+    //            TESTS FUNCTIONS
+    // ======================================
+
     public function getDefaultOptions()
     {
         return array(
@@ -120,6 +124,10 @@ class IcebergTest extends PHPUnit_Framework_TestCase
             )
         );
     }
+
+    // ======================================
+    //                  TESTS
+    // ======================================
 
     public function testConstructorUseParams()
     {
