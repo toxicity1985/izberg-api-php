@@ -49,11 +49,19 @@ class Iceberg {
   private $_apisecret;
 
   /**
-   * The iceberg api key
+   * The iceberg application api key
    *
    * @var string
    */
   private $_apikey;
+
+
+  /**
+   * The iceberg api key
+   *
+   * @var string
+   */
+  private $_iceberg_apikey;
 
   /**
    * The user email
@@ -61,6 +69,13 @@ class Iceberg {
    * @var string
    */
   private $_email;
+
+  /**
+   * The request timestamp
+   *
+   * @var string
+   */
+  private $_timestamp;
 
   /**
    * The user first name
@@ -90,6 +105,13 @@ class Iceberg {
    */
   private $_shipping_country;
 
+  /**
+   * The single sign on response
+   *
+   * @var array
+   */
+  private $_single_sign_on_response;
+
 
   /**
    * Default constructor
@@ -108,6 +130,11 @@ class Iceberg {
       $this->setLastName($config['lastName']);
       (isset($config['currency'])) ? $this->setCurrency($config['currency']) : $this->setCurrency(self::DEFAULT_CURRENCY);
       (isset($config['shippingCountry'])) ? $this->setShippingCountry($config['shippingCountry']) : $this->setShippingCountry(self::DEFAULT_SHIPPING_COUNTRY);
+
+      // We get the iceberg api key using the Single Sign On API
+      $this->_single_sign_on_response = $this->_getSingleSignOnResponse();
+      $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
+
     } else {
       throw new Exception("Error: __construct() - Configuration data is missing.");
     }
@@ -186,16 +213,34 @@ class Iceberg {
     return $this->_shipping_country;
   }
 
+  /**
+   * Iceberg API key Getter
+   *
+   * @return String
+   */
+  public function getIcebergApiKey() {
+    return $this->_iceberg_apikey;
+  }
 
+  /**
+   * Timestamp Getter
+   *
+   * @return String
+   */
+  public function getTimestamp() {
+    return $this->_timestamp;
+  }
+
+  /**
+   * Message Auth Getter
+   *
+   * @return String
+   */
   public function getMessageAuth() {
-    $email = "test@modizy.com";
-    $first_name = "Bill";
-    $last_name = "Murray";
-    $timestamp = time();
-    $secret_key = "123";
-    $to_compose = array($email, $first_name, $last_name, $timestamp);
-    $message_auth = hash_hmac('sha1', implode(";", $to_compose), $secret_key);
-    echo $message_auth;
+    $this->setTimestamp(time());
+    $to_compose = array($this->getEmail(), $this->getFirstName(), $this->getLastName(), $this->getTimestamp());
+    $message_auth = hash_hmac('sha1', implode(";", $to_compose), $this->getApiSecret());
+    return $message_auth;
   }
 
 
@@ -280,6 +325,26 @@ class Iceberg {
   }
 
   /**
+   * Iceberg API key Setter
+   *
+   * @param string $api_key
+   * @return String
+   */
+  public function setIcebergApiKey($api_key) {
+    $this->_iceberg_apikey = $api_key;
+  }
+
+  /**
+   * Timestamp Setter
+   *
+   * @param string $api_key
+   * @return String
+   */
+  public function setTimestamp($timestamp) {
+    $this->_timestamp = $timestamp;
+  }
+
+  /**
    * The call operator
    *
    * @param string $function              API resource path
@@ -323,6 +388,52 @@ class Iceberg {
     curl_close($ch);
 
     return json_decode($jsonData);
+  }
+
+  /**
+   * Api key Getter
+   *
+   * @return String
+   */
+  protected function _getSingleSignOnResponse() {
+    $params = array(
+      "format" => "json",
+      "email" => $this->getEmail(),
+      "first_name" => $this->getFirstName(),
+      "last_name" => $this->getLastName(),
+      "message_auth" => $this->getMessageAuth(),
+      "timestamp" => $this->getTimeStamp(),
+      "application" => $this->getAppNamespace()
+    );
+
+    $apiCall = self::API_URL . self::SINGLE_SIGN_ON_URL . "?" . http_build_query($params);
+
+    $headers = array(
+      'Content-type: application/json',
+      'Authorization: '. $this->getMessageAuth()
+    );
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $apiCall);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    $jsonData = curl_exec($ch);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if (false === $jsonData) {
+      throw new Exception("Error: _getSingleSignOnResponse() - cURL error: " . curl_error($ch));
+    }
+    curl_close($ch);
+
+    $jsonResponse = json_decode($jsonData);
+    // We display the error only if the HTTP code is different of 200..300
+    if (preg_match("/2\d{2}/", $httpcode)  == 0) {
+      throw new Exception("Error: from Iceberg API - error: " . print_r($jsonResponse,true));
+    }
+    return $jsonResponse;
   }
 
 
