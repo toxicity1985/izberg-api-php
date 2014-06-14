@@ -69,7 +69,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
              ->will($this->returnValue(json_encode("[error: 'mymessage']")));
          }
 
-
         $stub->__construct($options);
 
         return $stub;
@@ -154,6 +153,12 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     {
         $this->setExpectedException('Exception', "Error: from Iceberg API - error: [error: 'mymessage']");
         $a = $this->mockErrorSingleSignOnResponse();
+    }
+
+    public function testGetInstanceShoudlReturnTheCreatedInstance()
+    {
+       $a = $this->mockSuccessSingleSignOnResponse();
+       $this->assertEquals($a, Iceberg::getInstance());
     }
 
 

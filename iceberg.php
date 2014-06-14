@@ -35,6 +35,13 @@ class Iceberg {
 
 
   /**
+   * The singleton of Iceberg instance
+   *
+   * @var Iceberg
+   */
+  protected static $_singleton;
+
+  /**
    * The iceberg application namespace
    *
    * @var string
@@ -339,9 +346,38 @@ class Iceberg {
       $this->_single_sign_on_response = $this->_getSingleSignOnResponse();
       $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
 
+      // We save this instance as singleton
+      self::setInstance($this);
+
     } else {
       throw new Exception("Error: __construct() - Configuration data is missing.");
     }
+  }
+
+  /**
+   * Static function to get the last validated Instance
+   *
+   * @return Iceberg
+   */
+  public static function getInstance()
+  {
+    if (self::$_singleton) {
+      return self::$_singleton;
+    } else {
+      throw new Exception("You should create a first validated Iceberg instance");
+    }
+  }
+
+  /**
+   * Set the default instance to a specified instance.
+   *
+   * @param Iceberg $iceberg An object instance of type Iceberg,
+   *   or a subclass.
+   * @return void
+   */
+  public static function setInstance(Iceberg $iceberg)
+  {
+      self::$_singleton = $iceberg;
   }
 
   /**
@@ -397,7 +433,6 @@ class Iceberg {
    */
   protected function _getSingleSignOnResponse() {
     $params = array(
-      "format" => "json",
       "email" => $this->getEmail(),
       "first_name" => $this->getFirstName(),
       "last_name" => $this->getLastName(),
