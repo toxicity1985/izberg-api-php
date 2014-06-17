@@ -183,8 +183,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     public function testGetFullProductImportShouldReturnAllProducts()
     {
         $a = $this->getRealIcebergInstance();
-        $marchant_id = 511;
-        $a->getFullProductImport($marchant_id);
+        $merchant_id = 511;
+        $a->getFullProductImport($merchant_id);
     }
 
 

@@ -506,14 +506,14 @@ class Iceberg {
   }
 
    /**
-   * get Products of an iceberg marchant
+   * get Products of an iceberg merchant
    *
-   * @param string $marchant_id
+   * @param string $merchant_id
    * @return String
    */
-  public function getFullProductImport($marchant_id)
+  public function getFullProductImport($merchant_id)
   {
-    return $this->_makeCall("merchant/$marchant_id/download_export/", "GET", null, 'Content-type: application/xml');
+    return $this->_makeCall("merchant/$merchant_id/download_export/", "GET", null, 'Content-type: application/xml');
   }
 
   /**
