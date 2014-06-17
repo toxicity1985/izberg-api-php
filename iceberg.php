@@ -389,7 +389,7 @@ class Iceberg {
    * @param string [optional] $method     Request type GET|POST
    * @return mixed
    */
-  protected function _makeCall($path, $method = 'GET', $params = null) {
+  protected function _makeCall($path, $method = 'GET', $params = null, $content_type = 'Content-type: application/json') {
     if (isset($params) && is_array($params)) {
       $paramString = '&' . http_build_query($params);
     } else {
@@ -399,7 +399,7 @@ class Iceberg {
     $apiCall = self::API_URL . $path . (('GET' === $method) ? $paramString : null);
 
     $headers = array(
-      'Content-type: application/json',
+      $content_type,
       'Authorization: '. $this->getMessageAuth()
     );
 
@@ -408,7 +408,11 @@ class Iceberg {
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+    // curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+    // curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
     if ('POST' === $method) {
       curl_setopt($ch, CURLOPT_POST, count($params));
@@ -417,7 +421,7 @@ class Iceberg {
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
     }
 
-    $jsonData = curl_exec($ch);
+    $jsonData = $this->curlExec($ch);
     if (false === $jsonData) {
       throw new Exception("Error: _makeCall() - cURL error: " . curl_error($ch));
     }
@@ -455,6 +459,9 @@ class Iceberg {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+    // curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+    // curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+
     $jsonData = $this->curlExec($ch);
     $httpcode = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);
 
@@ -477,8 +484,56 @@ class Iceberg {
   }
 
   protected function curlGetInfo($ch, $name) {
-      return curl_getinfo($ch, $name);
+    return curl_getinfo($ch, $name);
   }
 
+  // =============
+  // API FUNCTIONS
+  // =============
+
+  /**
+   * get Products of an iceberg account
+   *
+   * @param array $params
+   * $params can contain this keys :
+   *   offset: Integer => The offset of the request (for pagination)
+   *   limit: Integer => The limit of the request
+   * @return Array
+   */
+  public function getProducts($params = null)
+  {
+    return $this->_makeCall("product/", "GET", $params);
+  }
+
+   /**
+   * get Products of an iceberg marchant
+   *
+   * @param string $marchant_id
+   * @return String
+   */
+  public function getFullProductImport($marchant_id)
+  {
+    return $this->_makeCall("merchant/$marchant_id/download_export/", "GET", null, 'Content-type: application/xml');
+  }
+
+  /**
+   * get Products schema
+   *
+   * @return Array
+   */
+  public function getProductsSchema()
+  {
+    return $this->_makeCall("product/schema/");
+  }
+
+  /**
+   * get all categories of Iceberg catalog
+   *
+   * @return Array
+   */
+  public function getCategories()
+  {
+    return $this->_makeCall("category/tree/");
+  }
 
 }

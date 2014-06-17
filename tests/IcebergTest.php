@@ -19,6 +19,19 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         );
     }
 
+    public function getRealIcebergInstance()
+    {
+         $a = $this->getIceberg(array(
+             "appNamespace" => "sebfie",
+             "apiKey" => "bd86055e-fccd-4686-a29c-db17cfdb22fa",
+             "apiSecret" => "02aad76d-fd75-4626-9429-af5075259cd0",
+             "email" => "sebastien.fieloux@gmail.com",
+             "firstName" => "sébastien",
+             "lastName" => "fieloux"
+         ));
+         return $a;
+    }
+
     public function getIceberg($options = array())
     {
         if (empty($options)) {
@@ -160,6 +173,33 @@ class IcebergTest extends PHPUnit_Framework_TestCase
        $a = $this->mockSuccessSingleSignOnResponse();
        $this->assertEquals($a, Iceberg::getInstance());
     }
+
+    public function testGetProductShouldReturnProducts()
+    {
+        $a = $this->getRealIcebergInstance();
+        $a->getProducts();
+    }
+
+    public function testGetFullProductImportShouldReturnAllProducts()
+    {
+        $a = $this->getRealIcebergInstance();
+        $marchant_id = 511;
+        $a->getFullProductImport($marchant_id);
+    }
+
+
+    public function testGetProductSchemaShouldReturnProductSchema()
+    {
+        $a = $this->getRealIcebergInstance();
+        $a->getProductsSchema();
+    }
+
+    public function testGetCategoriesShouldReturnCategories()
+    {
+        $a = $this->getRealIcebergInstance();
+        $a->getCategories();
+    }
+
 
 
 }
