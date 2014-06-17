@@ -1,1 +1,37 @@
-{"absolute_url": "/user/sebfie/", "age": null, "api_key": "e0da0c1a729176449446a3cd606fd46e7a9a0c8a", "birth_date": null, "city": null, "country": null, "created": false, "dislikes_count": 0, "display_name": "sébastien fieloux", "email": "sebastien.fieloux@gmail.com", "first_name": "sébastien", "from_list": false, "gender": "F", "gid": "u:73061", "groups": [], "id": 73061, "is_application_staff": true, "is_staff": false, "is_superuser": false, "language": "fr", "last_name": "fieloux", "resource_uri": "http://api.modizy.com/v1/user/73061/", "shopping_preference": {"country": null, "currency": "EUR", "feed_content": "{}", "from_list": false, "id": 11674, "resource_uri": "http://api.modizy.com/v1/user_shopping_prefs/11674/", "user": 73061}, "timestamp": "2014-06-11T16:18:57", "total_spent": "0.00", "type": "user", "username": "sebfie"}
+{
+  "absolute_url": "/user/sebfie/",
+  "age": null,
+  "api_key": "e0da0c1a729176449446a3cd606fd46e7a9a0c8a",
+  "birth_date": null,
+  "city": null,
+  "country": null,
+  "created": false,
+  "dislikes_count": 0,
+  "display_name": "sébastien fieloux",
+  "email": "sebastien.fieloux@gmail.com",
+  "first_name": "sébastien",
+  "from_list": false,
+  "gender": "F",
+  "gid": "u:73061",
+  "groups": [],
+  "id": 73061,
+  "is_application_staff": true,
+  "is_staff": false,
+  "is_superuser": false,
+  "language": "fr",
+  "last_name": "fieloux",
+  "resource_uri": "http://api.modizy.com/v1/user/73061/",
+  "shopping_preference": {
+    "country": null,
+    "currency": "EUR",
+    "feed_content": "{}",
+    "from_list": false,
+    "id": 11674,
+    "resource_uri": "http://api.modizy.com/v1/user_shopping_prefs/11674/",
+    "user": 73061
+  },
+  "timestamp": "2014-06-11T16:18:57",
+  "total_spent": "0.00",
+  "type": "user",
+  "username": "sebfie"
+}
