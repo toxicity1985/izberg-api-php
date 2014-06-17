@@ -200,6 +200,18 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $a->getCategories();
     }
 
+    public function testGetMerchantsShouldReturnMerchants()
+    {
+        $a = $this->getRealIcebergInstance();
+        $a->getMerchants();
+    }
+
+    public function testGetMerchantsSchemaShouldReturnMerchantsSchema()
+    {
+        $a = $this->getRealIcebergInstance();
+        echo print_r($a->getMerchantsSchema(), true);
+    }
+
 
 
 }

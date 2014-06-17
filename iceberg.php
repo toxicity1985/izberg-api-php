@@ -505,6 +505,16 @@ class Iceberg {
     return $this->_makeCall("product/", "GET", $params);
   }
 
+  /**
+   * get Products schema
+   *
+   * @return Array
+   */
+  public function getProductsSchema()
+  {
+    return $this->_makeCall("product/schema/");
+  }
+
    /**
    * get Products of an iceberg merchant
    *
@@ -516,15 +526,7 @@ class Iceberg {
     return $this->_makeCall("merchant/$merchant_id/download_export/", "GET", null, 'Content-type: application/xml');
   }
 
-  /**
-   * get Products schema
-   *
-   * @return Array
-   */
-  public function getProductsSchema()
-  {
-    return $this->_makeCall("product/schema/");
-  }
+
 
   /**
    * get all categories of Iceberg catalog
@@ -535,5 +537,30 @@ class Iceberg {
   {
     return $this->_makeCall("category/tree/");
   }
+
+  /**
+   * get Merchants of an iceberg account
+   *
+   * @param array $params
+   * $params can contain this keys :
+   *   offset: Integer => The offset of the request (for pagination)
+   *   limit: Integer => The limit of the request
+   * @return Array
+   */
+  public function getMerchants($params = null)
+  {
+    return $this->_makeCall("merchant/", "GET", $params);
+  }
+
+  /**
+   * get Merchants schema
+   *
+   * @return Array
+   */
+  public function getMerchantsSchema()
+  {
+    return $this->_makeCall("merchant/schema/");
+  }
+
 
 }
