@@ -421,13 +421,13 @@ class Iceberg {
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
     }
 
-    $jsonData = $this->curlExec($ch);
+    $data = $this->curlExec($ch);
     if (false === $jsonData) {
       throw new Exception("Error: _makeCall() - cURL error: " . curl_error($ch));
     }
     curl_close($ch);
 
-    return json_decode($jsonData);
+    return ($content_type == 'Content-type: application/json') ? json_decode($data) : $data;
   }
 
   /**
@@ -519,11 +519,12 @@ class Iceberg {
    * get Products of an iceberg merchant
    *
    * @param string $merchant_id
-   * @return String
+   * @return String || SimpleXMLElement depending of the $to_simplexml_object parameter
    */
-  public function getFullProductImport($merchant_id)
+  public function getFullProductImport($merchant_id, $to_simplexml_object = false)
   {
-    return $this->_makeCall("merchant/$merchant_id/download_export/", "GET", null, 'Content-type: application/xml');
+    $xml = $this->_makeCall("merchant/$merchant_id/download_export/", "GET", null, 'Content-type: application/xml');
+    return $to_simplexml_object ? simplexml_load_string($xml) : $xml;
   }
 
 

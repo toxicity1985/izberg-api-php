@@ -184,7 +184,12 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     {
         $a = $this->getRealIcebergInstance();
         $merchant_id = 511;
-        $a->getFullProductImport($merchant_id);
+
+        $result = $a->getFullProductImport($merchant_id);
+        $this->assertTrue(is_string ($result));
+
+        $result = $a->getFullProductImport($merchant_id, true);
+        $this->assertTrue(is_a($result, "SimpleXMLElement"));
     }
 
 
@@ -209,7 +214,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     public function testGetMerchantsSchemaShouldReturnMerchantsSchema()
     {
         $a = $this->getRealIcebergInstance();
-        echo print_r($a->getMerchantsSchema(), true);
+        $a->getMerchantsSchema();
     }
 
 
