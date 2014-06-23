@@ -422,7 +422,7 @@ class Iceberg {
     }
 
     $data = $this->curlExec($ch);
-    if (false === $jsonData) {
+    if (false === $data) {
       throw new Exception("Error: _makeCall() - cURL error: " . curl_error($ch));
     }
     curl_close($ch);
