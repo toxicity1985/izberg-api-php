@@ -391,7 +391,7 @@ class Iceberg {
    */
   protected function _makeCall($path, $method = 'GET', $params = null, $content_type = 'Content-type: application/json') {
     if (isset($params) && is_array($params)) {
-      $paramString = '&' . http_build_query($params);
+      $paramString = '?' . http_build_query($params);
     } else {
       $paramString = null;
     }
@@ -413,6 +413,7 @@ class Iceberg {
 
     // curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
     // curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+    // curl_setopt($ch,CURLOPT_USERAGENT,"ELB-HealthChecker/1.0");
 
     if ('POST' === $method) {
       curl_setopt($ch, CURLOPT_POST, count($params));
@@ -461,6 +462,7 @@ class Iceberg {
 
     // curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
     // curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+    // curl_setopt($ch,CURLOPT_USERAGENT,"ELB-HealthChecker/1.0");
 
     $jsonData = $this->curlExec($ch);
     $httpcode = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);
