@@ -389,7 +389,7 @@ class Iceberg {
    * @param string [optional] $method     Request type GET|POST
    * @return mixed
    */
-  protected function _makeCall($path, $method = 'GET', $params = null, $content_type = 'Content-type: application/json') {
+  protected function _makeCall($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json') {
     if (isset($params) && is_array($params)) {
       $paramString = '?' . http_build_query($params);
     } else {
@@ -399,7 +399,7 @@ class Iceberg {
     $apiCall = self::API_URL . $path . (('GET' === $method) ? $paramString : null);
 
     $headers = array(
-      $content_type,
+      $accept_type,
       'Authorization: '. $this->getMessageAuth()
     );
 
@@ -428,7 +428,7 @@ class Iceberg {
     }
     curl_close($ch);
 
-    return ($content_type == 'Content-type: application/json') ? json_decode($data) : $data;
+    return ($accept_type == 'Accept: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
   }
 
   /**
@@ -449,7 +449,7 @@ class Iceberg {
     $apiCall = self::API_URL . self::SINGLE_SIGN_ON_URL . "?" . http_build_query($params);
 
     $headers = array(
-      'Content-type: application/json',
+      'Accept: application/json',
       'Authorization: '. $this->getMessageAuth()
     );
 
@@ -502,9 +502,20 @@ class Iceberg {
    *   limit: Integer => The limit of the request
    * @return Array
    */
-  public function getProducts($params = null)
+  public function getProducts($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("product/", "GET", $params);
+    return $this->_makeCall("product/", "GET", $params, $accept_type);
+  }
+
+  /**
+   * get Product of an iceberg account using its id
+   *
+   * @param string/integer $id
+   * @return Object
+   */
+  public function getProduct($id, $params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("product/$id", "GET", $params, $accept_type);
   }
 
   /**
@@ -523,10 +534,9 @@ class Iceberg {
    * @param string $merchant_id
    * @return String || SimpleXMLElement depending of the $to_simplexml_object parameter
    */
-  public function getFullProductImport($merchant_id, $to_simplexml_object = false)
+  public function getFullProductImport($merchant_id, $params = null, $accept_type = 'Accept: application/xml')
   {
-    $xml = $this->_makeCall("merchant/$merchant_id/download_export/", "GET", null, 'Content-type: application/xml');
-    return $to_simplexml_object ? simplexml_load_string($xml) : $xml;
+    return $this->_makeCall("merchant/$merchant_id/download_export/", $params , null, $accept_type);
   }
 
 
@@ -536,9 +546,9 @@ class Iceberg {
    *
    * @return Array
    */
-  public function getCategories()
+  public function getCategories($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("category/tree/");
+    return $this->_makeCall("category/tree/", $params, $accept_type);
   }
 
   /**
@@ -550,9 +560,9 @@ class Iceberg {
    *   limit: Integer => The limit of the request
    * @return Array
    */
-  public function getMerchants($params = null)
+  public function getMerchants($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("merchant/", "GET", $params);
+    return $this->_makeCall("merchant/", "GET", $params, $accept_type = 'Accept: application/json');
   }
 
   /**
@@ -560,9 +570,9 @@ class Iceberg {
    *
    * @return Array
    */
-  public function getMerchantsSchema()
+  public function getMerchantsSchema($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("merchant/schema/");
+    return $this->_makeCall("merchant/schema/", $params, $accept_type);
   }
 
 

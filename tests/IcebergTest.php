@@ -186,9 +186,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $merchant_id = 511;
 
         $result = $a->getFullProductImport($merchant_id);
-        $this->assertTrue(is_string ($result));
-
-        $result = $a->getFullProductImport($merchant_id, true);
         $this->assertTrue(is_a($result, "SimpleXMLElement"));
     }
 
