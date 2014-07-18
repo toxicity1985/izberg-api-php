@@ -358,13 +358,10 @@ class Iceberg {
   public function __construct($config) {
     if (true === is_array($config)) {
       // if you want to access user data
-        if (isset($config['accessToken']) === true)
-        {
+        if (isset($config['accessToken'])){
             $this->_logwithtoken = true;
             $this->_accesstoken = $config['accessToken'];
-        }
-        else
-        {
+        } else {
             $this->_logwithtoken = false;
             $this->setApiKey($config['apiKey']);
             $this->setApiSecret($config['apiSecret']);
@@ -380,7 +377,6 @@ class Iceberg {
         }
       // We save this instance as singleton
       self::setInstance($this);
-
     } else {
       throw new Exception("Error: __construct() - Configuration data is missing.");
     }
