@@ -16,7 +16,7 @@ class Iceberg {
   /**
    * The API base URL
    */
-  const API_URL = 'https://api.modizy.com/v1/';
+  const API_URL = 'https://api.iceberg.technology/v1/';
 
   /**
    * The Single Sign On URL
@@ -33,6 +33,20 @@ class Iceberg {
    */
   const DEFAULT_SHIPPING_COUNTRY = 'FR';
 
+
+  /**
+   * Boolean used to indicate if you're using the access token
+   *
+   * @var bool
+   */
+  private $_logwithtoken;
+
+  /**
+   * Access token string
+   *
+   * @var string
+   */
+  private $_accesstoken;
 
   /**
    * The singleton of Iceberg instance
@@ -149,7 +163,6 @@ class Iceberg {
 
   /**
    * Email Getter
-   *
    * @return String
    */
   public function getEmail() {
@@ -208,6 +221,18 @@ class Iceberg {
    */
   public function getTimestamp() {
     return $this->_timestamp;
+  }
+
+  /**
+   * Return header for accesstoken loging
+   *
+   * @return array
+   */
+  public function getTokenHeader($content_type) {
+      $header = array($content_type,
+          'Authorization: IcebergAccessToken '.$this->_accesstoken
+      );
+      return $header;
   }
 
   /**
@@ -333,19 +358,26 @@ class Iceberg {
   public function __construct($config) {
     if (true === is_array($config)) {
       // if you want to access user data
-      $this->setApiKey($config['apiKey']);
-      $this->setApiSecret($config['apiSecret']);
-      $this->setAppNamespace($config['appNamespace']);
-      $this->setEmail($config['email']);
-      $this->setFirstName($config['firstName']);
-      $this->setLastName($config['lastName']);
-      (isset($config['currency'])) ? $this->setCurrency($config['currency']) : $this->setCurrency(self::DEFAULT_CURRENCY);
-      (isset($config['shippingCountry'])) ? $this->setShippingCountry($config['shippingCountry']) : $this->setShippingCountry(self::DEFAULT_SHIPPING_COUNTRY);
-
-      // We get the iceberg api key using the Single Sign On API
-      $this->_single_sign_on_response = $this->_getSingleSignOnResponse();
-      $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
-
+        if (isset($config['accessToken']) === true)
+        {
+            $this->_logwithtoken = true;
+            $this->_accesstoken = $config['accessToken'];
+        }
+        else
+        {
+            $this->_logwithtoken = false;
+            $this->setApiKey($config['apiKey']);
+            $this->setApiSecret($config['apiSecret']);
+            $this->setAppNamespace($config['appNamespace']);
+            $this->setEmail($config['email']);
+            $this->setFirstName($config['firstName']);
+            $this->setLastName($config['lastName']);
+            (isset($config['currency'])) ? $this->setCurrency($config['currency']) : $this->setCurrency(self::DEFAULT_CURRENCY);
+            (isset($config['shippingCountry'])) ? $this->setShippingCountry($config['shippingCountry']) : $this->setShippingCountry(self::DEFAULT_SHIPPING_COUNTRY);
+            // We get the iceberg api key using the Single Sign On API
+            $this->_single_sign_on_response = $this->_getSingleSignOnResponse();
+            $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
+        }
       // We save this instance as singleton
       self::setInstance($this);
 
@@ -397,12 +429,17 @@ class Iceberg {
     }
 
     $apiCall = self::API_URL . $path . (('GET' === $method) ? $paramString : null);
+    print "APICALL ".$apiCall."</br>";
 
-    $headers = array(
-      $content_type,
-      'Authorization: '. $this->getMessageAuth()
-    );
-
+    if ($this->_logwithtoken == false)
+    {
+        $headers = array(
+            $content_type,
+            'Authorization: '. $this->getMessageAuth()
+            );
+    }
+    else
+        $headers = $this->getTokenHeader($content_type);
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiCall);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -451,7 +488,6 @@ class Iceberg {
       'Content-type: application/json',
       'Authorization: '. $this->getMessageAuth()
     );
-
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiCall);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -462,8 +498,10 @@ class Iceberg {
     // curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
     // curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
+
     $jsonData = $this->curlExec($ch);
     $httpcode = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);
+
 
     if (false === $jsonData) {
       throw new Exception("Error: _getSingleSignOnResponse() - cURL error: " . curl_error($ch));
@@ -534,9 +572,13 @@ class Iceberg {
    *
    * @return Array
    */
-  public function getCategories()
+  public function getCategories($cat_id = null)
   {
-    return $this->_makeCall("category/tree/");
+      if ($cat_id === null)
+        $cat_id = "__isnull=true";
+      else
+        $cat_id = "=".$cat_id;
+      return $this->_makeCall("category/?parents".$cat_id);
   }
 
   /**
