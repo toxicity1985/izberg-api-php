@@ -16,7 +16,7 @@ class Iceberg {
   /**
    * The API base URL
    */
-  const API_URL = 'https://api.modizy.com/v1/';
+  const API_URL = 'https://api.iceberg.technology/v1/';
 
   /**
    * The Single Sign On URL
