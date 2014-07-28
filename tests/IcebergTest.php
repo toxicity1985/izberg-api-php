@@ -22,9 +22,9 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     public function getRealIcebergInstance()
     {
          $a = $this->getIceberg(array(
-             "appNamespace" => "sebfie",
-             "apiKey" => "bd86055e-fccd-4686-a29c-db17cfdb22fa",
-             "apiSecret" => "02aad76d-fd75-4626-9429-af5075259cd0",
+             "appNamespace" => "lolote",
+             "apiKey" => "d43fce48-836c-43d3-9ddb-7da2e70af9f1",
+             "apiSecret" => "6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0",
              "email" => "sebastien.fieloux@gmail.com",
              "firstName" => "sébastien",
              "lastName" => "fieloux"
@@ -183,10 +183,17 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     public function testGetFullProductImportShouldReturnAllProducts()
     {
         $a = $this->getRealIcebergInstance();
-        $merchant_id = 511;
+        // My little poesy
+        $merchant_id = 14;
 
         $result = $a->getFullProductImport($merchant_id);
         $this->assertTrue(is_a($result, "SimpleXMLElement"));
+
+        // It return false if we specify an unexisting merchant id
+        $merchant_id = 511;
+
+        $result = $a->getFullProductImport($merchant_id);
+        $this->assertFalse($result);
     }
 
 
@@ -205,14 +212,98 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     public function testGetMerchantsShouldReturnMerchants()
     {
         $a = $this->getRealIcebergInstance();
-        $a->getMerchants();
+        $merchants = $a->getMerchants();
+        $this->assertTrue(is_a($merchants, "stdClass"));
+        $this->assertTrue(is_array($merchants->objects));
     }
 
     public function testGetMerchantsSchemaShouldReturnMerchantsSchema()
     {
         $a = $this->getRealIcebergInstance();
-        $a->getMerchantsSchema();
+        $merchantSchema = $a->getMerchantsSchema();
+        $this->assertTrue(is_a($merchantSchema, "stdClass"));
     }
+
+    public function testgetUserShouldReturnTheCurrentUser()
+    {
+        $a = $this->getRealIcebergInstance();
+        $user = $a->getUser();
+        $this->assertArrayHasKey("id", (array)$user);
+    }
+
+    public function testgetUserShouldReturnTheLastAuthenticatedUser()
+    {
+        $a = $this->getRealIcebergInstance();
+        $user = $a->getUser();
+        $this->assertEquals($user->email, "sebastien.fieloux@gmail.com");
+
+        // We set a new user
+        $a->setUser(array(
+             "email" => "sebfie@yahoo.fr",
+             "first_name" => "seb",
+             "last_name" => "fie"
+         ));
+        $user = $a->getUser();
+        $this->assertEquals($user->email, "sebfie@yahoo.fr");
+    }
+
+
+    public function testgetCartShouldReturnACart()
+    {
+        $a = $this->getRealIcebergInstance();
+        $cart = $a->getCart();
+        $firstId = $cart->id;
+        $this->assertArrayHasKey("id", (array)$cart);
+
+        $this->assertEquals($firstId, $a->getCart()->id);
+    }
+
+
+    public function testgetCartItemsShouldReturnCartItems()
+    {
+        $a = $this->getRealIcebergInstance();
+        $a->newCart();
+        $cart = $a->getCart();
+        $items = $a->getCartItems();
+        $this->assertTrue(is_a($items, "stdClass"));
+        $this->assertEquals($items->meta->total_count, 0);
+        $this->assertTrue(is_array($items->objects));
+    }
+
+    public function testAddCartItemShouldAddItem()
+    {
+        $a = $this->getRealIcebergInstance();
+        $a->newCart();
+        $a->addCardItem(array(
+            "offer_id" => 149,
+            "variation_id" => 283,
+            "quantity" => 2
+        ));
+        $cart = $a->getCart();
+        $items = $a->getCartItems();
+        $this->assertEquals($items->meta->total_count, 1);
+
+        // We remove the item
+        $firstItem = $items->objects[0];
+        $a->removeCardItem($firstItem->id);
+        $items = $a->getCartItems();
+        $this->assertEquals($items->meta->total_count, 0);
+    }
+
+    public function testNewCartItemShouldCreateANewCart()
+    {
+        $a = $this->getRealIcebergInstance();
+        $cart1 = $a->newCart();
+        $cart2 = $a->newCart();
+        $this->assertNotSame($cart1->id, $cart2->id);
+    }
+
+    // public function testgetAvailableCreditBalanceShouldReturnAFloat()
+    // {
+    //     $a = $this->getRealIcebergInstance();
+    //     $balance = $a->getAvailableCreditBalance();
+    //     $this->assertEquals(0.0, $balance);
+    // }
 
 
 

@@ -430,7 +430,7 @@ class Iceberg {
 
     if ('POST' === $method) {
       curl_setopt($ch, CURLOPT_POST, count($params));
-      curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim($paramString, '&'));
+      curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
     } else if ('DELETE' === $method) {
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
     }
@@ -476,8 +476,8 @@ class Iceberg {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-    curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+    // curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+    // curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
     // curl_setopt($ch,CURLOPT_USERAGENT,"ELB-HealthChecker/1.0");
 
     $jsonData = $this->curlExec($ch);
@@ -605,6 +605,10 @@ class Iceberg {
     return $this->_current_cart;
   }
 
+  public function newCart($params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("cart/", 'POST', $params, $accept_type);
+  }
 
   /**
    * get current cart items
@@ -633,14 +637,26 @@ class Iceberg {
   }
 
   /**
+   * delete an item to a cart
+   *
+   * @return Array
+   */
+  public function removeCardItem($cart_item_id, $params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("cart_item/" . $cart_item_id . "/", 'DELETE', $params, $accept_type);
+  }
+
+
+  /**
    * get current user credit balance
    *
    * @return Float
    */
-  public function getAvailableCreditBalance($params = null, $accept_type = 'Accept: application/json')
-  {
-    return floatval($this->_makeCall("cart/" . $this->getCart()->id . "/get_available_credit_balance/", 'GET', $params, $accept_type));
-  }
+  // We will fix it later
+  // public function getAvailableCreditBalance($params = null, $accept_type = 'Accept: application/json')
+  // {
+  //   return floatval($this->_makeCall("cart/" . $this->getCart()->id . "/get_available_credit_balance/", 'GET', $params, $accept_type));
+  // }
 
 
   /**
