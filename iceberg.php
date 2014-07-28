@@ -119,6 +119,19 @@ class Iceberg {
    */
   private $_single_sign_on_response;
 
+  /**
+   * The user current cart
+   *
+   * @var stdObject
+   */
+  private $_current_cart;
+
+  /**
+   * The current_prder
+   *
+   * @var stdObject
+   */
+  private $_current_order;
 
   /**
    * API-key Getter
@@ -215,9 +228,9 @@ class Iceberg {
    *
    * @return String
    */
-  public function getMessageAuth() {
+  public function getMessageAuth($email, $first_name, $last_name) {
     $this->setTimestamp(time());
-    $to_compose = array($this->getEmail(), $this->getFirstName(), $this->getLastName(), $this->getTimestamp());
+    $to_compose = array($email, $first_name, $last_name, $this->getTimestamp());
     $message_auth = hash_hmac('sha1', implode(";", $to_compose), $this->getApiSecret());
     return $message_auth;
   }
@@ -400,7 +413,7 @@ class Iceberg {
 
     $headers = array(
       $accept_type,
-      'Authorization: '. $this->getMessageAuth()
+      'Authorization: IcebergAccessToken '. $this->_single_sign_on_response->username . ":" . $this->_single_sign_on_response->api_key
     );
 
     $ch = curl_init();
@@ -436,21 +449,24 @@ class Iceberg {
    *
    * @return String
    */
-  protected function _getSingleSignOnResponse() {
-    $params = array(
-      "email" => $this->getEmail(),
-      "first_name" => $this->getFirstName(),
-      "last_name" => $this->getLastName(),
-      "message_auth" => $this->getMessageAuth(),
-      "timestamp" => $this->getTimeStamp(),
-      "application" => $this->getAppNamespace()
-    );
+  protected function _getSingleSignOnResponse($params = null) {
+    if(is_null($params)) {
+      $params = array(
+        "email" => $this->getEmail(),
+        "first_name" => $this->getFirstName(),
+        "last_name" => $this->getLastName()
+      );
+    }
+
+    $params["message_auth"] = $this->getMessageAuth($params["email"], $params["first_name"], $params["last_name"]);
+    $params["application"] = $this->getAppNamespace();
+    $params["timestamp"] = $this->getTimeStamp();
 
     $apiCall = self::API_URL . self::SINGLE_SIGN_ON_URL . "?" . http_build_query($params);
 
     $headers = array(
       'Accept: application/json',
-      'Authorization: '. $this->getMessageAuth()
+      'Authorization: '. $this->getMessageAuth($params["email"],$params["first_name"],$params["last_name"])
     );
 
     $ch = curl_init();
@@ -460,8 +476,8 @@ class Iceberg {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    // curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-    // curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+    curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+    curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
     // curl_setopt($ch,CURLOPT_USERAGENT,"ELB-HealthChecker/1.0");
 
     $jsonData = $this->curlExec($ch);
@@ -536,7 +552,7 @@ class Iceberg {
    */
   public function getFullProductImport($merchant_id, $params = null, $accept_type = 'Accept: application/xml')
   {
-    return $this->_makeCall("merchant/$merchant_id/download_export/", $params , null, $accept_type);
+    return $this->_makeCall("merchant/$merchant_id/download_export/", 'GET', $params , $accept_type);
   }
 
 
@@ -548,7 +564,7 @@ class Iceberg {
    */
   public function getCategories($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("category/tree/", $params, $accept_type);
+    return $this->_makeCall("category/tree/", 'GET', $params, $accept_type);
   }
 
   /**
@@ -572,8 +588,97 @@ class Iceberg {
    */
   public function getMerchantsSchema($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("merchant/schema/", $params, $accept_type);
+    return $this->_makeCall("merchant/schema/", 'GET', $params, $accept_type);
+
   }
+
+  /**
+   * get current user cart
+   *
+   * @return StdObject
+   */
+  public function getCart($params = null, $accept_type = 'Accept: application/json')
+  {
+    if (!$this->_current_cart) {
+      $this->_current_cart = $this->_makeCall("cart/mine/", 'GET', $params, $accept_type);
+    }
+    return $this->_current_cart;
+  }
+
+
+  /**
+   * get current cart items
+   *
+   * @return Array
+   */
+  public function getCartItems($params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("cart/" . $this->getCart()->id . "/items/", 'GET', $params, $accept_type);
+  }
+
+  /**
+   * add an item to a cart
+   *
+   * @return Array
+   */
+  public function addCardItem($params = null, $accept_type = 'Accept: application/json')
+  {
+    // Params:
+    //   offer_id: Integer
+    //   variation_id: Integer
+    //   quantity: Integer
+    //   gift: Boolean
+    //   bundled: Boolean
+    return $this->_makeCall("cart/" . $this->getCart()->id . "/items/", 'POST', $params, $accept_type);
+  }
+
+  /**
+   * get current user credit balance
+   *
+   * @return Float
+   */
+  public function getAvailableCreditBalance($params = null, $accept_type = 'Accept: application/json')
+  {
+    return floatval($this->_makeCall("cart/" . $this->getCart()->id . "/get_available_credit_balance/", 'GET', $params, $accept_type));
+  }
+
+
+  /**
+   * create order from current cart
+   *
+   * @return StdObject
+   */
+  public function createOrder($params = null, $accept_type = 'Accept: application/json')
+  {
+    // params:
+    //   - credit_use: Decimal. Amount to be use from user credit balance
+    //   - payment_info_id: Integer. Id of the payment card if pay with registered card
+    //   - pre_auth_id: Integer. Id of the PreAuthorization object from the payment backend
+
+    $this->current_order = $this->_makeCall("cart/" . $this->getCart()->id . "/createOrder/", 'POST', $params, $accept_type);
+    // We also clear the cart
+    $this->_current_cart = null;
+
+    return $this->current_order;
+  }
+
+  /**
+   * get current authenticated user
+   *
+   * @return StdObject
+   */
+
+  public function getUser()
+  {
+    return $this->_single_sign_on_response;
+  }
+
+  public function setUser($params)
+  {
+    $this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
+    $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
+  }
+
 
 
 }
