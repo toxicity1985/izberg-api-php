@@ -689,12 +689,78 @@ class Iceberg {
     return $this->_single_sign_on_response;
   }
 
+  /**
+   * Use this user for current connection
+   *
+   * @return null
+   */
   public function setUser($params)
   {
     $this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
     $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
   }
 
+  /**
+   * Get country from params
+   * @param array $params
+   *    code: FR
+   * @return StdObject
+   */
+  public function getCountry($params = null, $accept_type = 'Accept: application/json')
+  {
+    $response = $this->_makeCall("country/", 'GET', $params, $accept_type);
+    return $response->objects[0];
+  }
+
+
+  /**
+   * Get current user's addresses
+   *
+   * @return StdObject
+   */
+  public function getAddresses($params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("address/", 'GET', $params, $accept_type);
+  }
+
+  /**
+   * Create a user for the current user
+   *
+   * @return StdObject
+   */
+  public function createAddresses($params = null, $accept_type = 'Accept: application/json')
+  {
+    // address: string
+    // address2: string
+    // city: string
+    // company: string
+    // country: string
+    // default_billing: boolean
+    // default_shipping: boolean
+    // digicode: string
+    // first_name: string
+    // floor: string
+    // last_name: string
+    // name: string
+    // phone: string
+    // state: string
+    // status:
+    //   0: Inactive address
+    //   10: Active address
+    //   90: Hidden address
+    // zipcode
+    return $this->_makeCall("address/", 'POST', $params, $accept_type);
+  }
+
+  /**
+   * Get address from id
+   *
+   * @return StdObject
+   */
+  public function getAddress($address_id, $params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("address/$address_id", 'GET', $params, $accept_type);
+  }
 
 
 }

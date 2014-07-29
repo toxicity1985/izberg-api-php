@@ -305,6 +305,79 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     //     $this->assertEquals(0.0, $balance);
     // }
 
+    public function testgetAdressesShouldReturnAdresses()
+    {
+        $a = $this->getRealIcebergInstance();
+        $adresses = $a->getAddresses();
+        $this->assertEquals($adresses->meta->total_count, 0);
+    }
+
+    public function testgetCountryShouldReturnTheCountry()
+    {
+      $a = $this->getRealIcebergInstance();
+      $country = $a->getCountry(array("code" => "FR"));
+      $this->assertEquals($country->code, 'FR');
+    }
+
+    public function testcreateAddressesShouldReturnACreatedAddress()
+    {
+        $a = $this->getRealIcebergInstance();
+        $country = $a->getCountry(array("code" => "FR"));
+        $address = $a->createAddresses(array(
+            "address" => "Address line 1",
+            "address2" => "Address line 2",
+            "city" => "St remy de provence",
+            "company" => "Sebfie",
+            "country" => "/v1/country/" . $country->id . "/",
+            "default_billing" => true,
+            "default_shipping" => true,
+            "digicode" => null,
+            "first_name" => "sebastien",
+            "floor" => null,
+            "last_name" => "fieloux",
+            "name" => "House",
+            "phone" => "0698674532",
+            "state" => null,
+            "status" => 10,
+            "zipcode" => "13210"
+        ));
+
+        $this->assertArrayHasKey("id", (array) $address);
+
+        // We check that this address is well linked to the user
+        $adresses = $a->getAddresses();
+        $this->assertNotEquals($adresses->meta->total_count, 0);
+    }
+
+    public function testGetAddressShouldReturnAddress()
+    {
+        $a = $this->getRealIcebergInstance();
+        $country = $a->getCountry(array("code" => "FR"));
+        var_dump($country);
+        $address = $a->createAddresses(array(
+            "address" => "Address line 1",
+            "address2" => "Address line 2",
+            "city" => "St remy de provence",
+            "company" => "Sebfie",
+            "country" => "/v1/country/" . $country->id . "/",
+            "default_billing" => true,
+            "default_shipping" => true,
+            "digicode" => null,
+            "first_name" => "sebastien",
+            "floor" => null,
+            "last_name" => "fieloux",
+            "name" => "House",
+            "phone" => "0698674532",
+            "state" => null,
+            "status" => 10,
+            "zipcode" => "13210"
+        ));
+
+        // We check that this address is well linked to the user
+        $new_address = $a->getAddress($address->id);
+        $this->assertEquals($new_address->id, $address->id);
+    }
+
 
 
 }
