@@ -481,6 +481,20 @@ class Iceberg {
     return $this->_use_sso;
   }
 
+
+	public function getHeaders($accept_type = 'Accept : application/json', $paramlength = null)
+	{
+		$headers = array();
+		$headers[] = $accept_type;
+		if ($paramlength)
+			$headers[] = 'Content-length: '.$paramlength;
+		if($this->useSso())
+			$headers[] = 'Authorization: IcebergAccessToken '.$this->_single_sign_on_response->username.":".$this->_single_sign_on_response->api_key;
+		else
+			$headers = 'Authorization: IcebergAccessToken '.$this->getUserName().":".$this->getAccessToken();
+		return $headers;
+	}
+
   /**
    * The call operator
    *
@@ -499,17 +513,7 @@ class Iceberg {
 
     $apiCall = self::API_URL . $path . (('GET' === $method) ? $paramString : null);
 
-    if ($this->useSso()) {
-      $headers = array(
-        $accept_type,
-        'Authorization: IcebergAccessToken '. $this->_single_sign_on_response->username . ":" . $this->_single_sign_on_response->api_key
-      );
-    } else {
-      $headers = array(
-        $accept_type,
-        'Authorization: IcebergAccessToken '. $this->getUserName() . ":" . $this->getAccessToken()
-      );
-    }
+	$headers = $this->getHeaders($accept_type);
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiCall);
