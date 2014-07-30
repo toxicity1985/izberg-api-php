@@ -25,8 +25,11 @@ You can use your access token or our Single Sign On system :
     require_once 'iceberg.php';
 
     $iceberg = new Iceberg(array(
+      'appNamespace' => 'YOUR_APP_NAMESPACE',
       'accessToken'      => 'YOUR_ACCESSTOKEN',
-      'username'   => 'YOUR_USERNAME'
+      'username'   => 'YOUR_USERNAME',
+      'apiKey'      => 'YOUR_APP_KEY',
+      'apiSecret'   => 'YOUR_APP_SECRET'
     ));
 
 ?>
@@ -38,11 +41,13 @@ You can use your access token or our Single Sign On system :
 <?php
     require_once 'iceberg.php';
 
-    $iceberg = new Iceberg();
-    $iceberg->sso(array(
-      'apiKey'      => 'YOUR_APP_KEY',
-      'apiSecret'   => 'YOUR_APP_SECRET',
+    $iceberg = new Iceberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
+      'apiKey'      => 'YOUR_APP_KEY',
+      'apiSecret'   => 'YOUR_APP_SECRET'
+    ));
+
+    $iceberg->sso(array(
       "email" => "YOUR_EMAIL",
       "firstName" => "YOUR_ACCOUNT_FIRST_NAME",
       "lastName" => "YOUR_ACCOUNT_LAST_NAME"

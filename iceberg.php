@@ -98,6 +98,15 @@ class Iceberg {
    */
   private $_timestamp;
 
+
+  /**
+   * Boolean to know if we have to use sso
+   *
+   * @var string
+   */
+  private $_use_sso;
+
+
   /**
    * The user first name
    *
@@ -263,6 +272,9 @@ class Iceberg {
   public function getMessageAuth($email, $first_name, $last_name) {
     $this->setTimestamp(time());
     $to_compose = array($email, $first_name, $last_name, $this->getTimestamp());
+    if (is_null($this->getApiSecret())) {
+      throw new exception("To use SSO you have to set the api_secret");
+    }
     $message_auth = hash_hmac('sha1', implode(";", $to_compose), $this->getApiSecret());
     return $message_auth;
   }
@@ -394,11 +406,18 @@ class Iceberg {
    * @return void
    */
   public function __construct($config) {
+    $this->_use_sso = false;
+
     if (true === is_array($config)) {
       if (isset($config['accessToken'])) {
         $this->setAccessToken($config['accessToken']);
         $this->setUsername($config['username']);
       }
+
+      if (isset($config['apiKey'])) $this->setApiKey($config['apiKey']);
+      if (isset($config['apiSecret'])) $this->setApiSecret($config['apiSecret']);
+
+      $this->setAppNamespace($config['appNamespace']);
       (isset($config['currency'])) ? $this->setCurrency($config['currency']) : $this->setCurrency(self::DEFAULT_CURRENCY);
       (isset($config['shippingCountry'])) ? $this->setShippingCountry($config['shippingCountry']) : $this->setShippingCountry(self::DEFAULT_SHIPPING_COUNTRY);
 
@@ -415,7 +434,7 @@ class Iceberg {
     // if you want to access user data
     $this->setApiKey($config['apiKey']);
     $this->setApiSecret($config['apiSecret']);
-    $this->setAppNamespace($config['appNamespace']);
+    if (isset($config['appNamespace'])) $this->setAppNamespace($config['appNamespace']);
     $this->setEmail($config['email']);
     $this->setFirstName($config['firstName']);
     $this->setLastName($config['lastName']);
@@ -459,7 +478,7 @@ class Iceberg {
    */
   public function useSso()
   {
-    return is_null($this->getAccessToken());
+    return $this->_use_sso;
   }
 
   /**
@@ -526,6 +545,8 @@ class Iceberg {
    * @return String
    */
   protected function _getSingleSignOnResponse($params = null) {
+    $this->_use_sso = true;
+
     if(is_null($params)) {
       $params = array(
         "email" => $this->getEmail(),
@@ -552,8 +573,8 @@ class Iceberg {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    // curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-    // curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+    curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+    curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
     // curl_setopt($ch,CURLOPT_USERAGENT,"ELB-HealthChecker/1.0");
 
     $jsonData = $this->curlExec($ch);
@@ -762,11 +783,7 @@ class Iceberg {
 
   public function getUser()
   {
-    if ($this->useSso()) {
-      return $this->_single_sign_on_response;
-    } else {
-      return $this->_makeCall("user/me/", 'GET');
-    }
+    return $this->_makeCall("user/me/", 'GET');
   }
 
   /**

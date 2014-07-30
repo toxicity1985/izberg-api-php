@@ -21,22 +21,24 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
     public function getRealIcebergInstance()
     {
-         $a = $this->getIceberg(array())->sso(array(
-             "appNamespace" => "lolote",
+         $a = $this->getIceberg(array("appNamespace" => "lolote"))->sso(array(
              "apiKey" => "d43fce48-836c-43d3-9ddb-7da2e70af9f1",
              "apiSecret" => "6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0",
-             "email" => "sebastien.fieloux@gmail.com",
+             "email" => "sebfie@yahoo.fr",
              "firstName" => "sébastien",
              "lastName" => "fieloux")
          );
+         // $a = $this->getRealIcebergInstanceWithToken();
          return $a;
     }
 
     public function getRealIcebergInstanceWithToken()
     {
          $a = $this->getIceberg(array(
+            "appNamespace" => "lolote",
             "username" => "sebfie",
-            "accessToken" => "156d219e38f84953c159a857738119bc0c35de96"
+            "accessToken" => "156d219e38f84953c159a857738119bc0c35de96",
+            "apiSecret" => "6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0"
          ));
          return $a;
     }
@@ -245,16 +247,16 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $a = $this->getRealIcebergInstance();
         $user = $a->getUser();
 
-        $this->assertEquals($user->email, "sebastien.fieloux@gmail.com");
+        $this->assertEquals($user->email, "sebfie@yahoo.fr");
 
         // We set a new user
         $a->setUser(array(
-             "email" => "sebfie@yahoo.fr",
+             "email" => "sebastien.fieloux@gmail.com",
              "first_name" => "seb",
              "last_name" => "fie"
          ));
         $user = $a->getUser();
-        $this->assertEquals($user->email, "sebfie@yahoo.fr");
+        $this->assertEquals($user->email, "sebastien.fieloux@gmail.com");
     }
 
 
