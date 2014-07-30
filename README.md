@@ -28,6 +28,23 @@ Wrapper PHP around the Iceberg API
 ?>
 ```
 
+#### Authentification
+
+By default we authenticate the admin user with informations specified on initialization (email, firstname, lastname). If you want to authenticate a new user, you can do it using the setUser function :
+
+```php
+<?php
+
+  $iceberg->setUser(array(
+    "email" => "myemail@yahoo.fr",
+    "first_name" => "seb",
+    "last_name" => "fie"
+  ));
+?>
+```
+
+This is useful when you want to link your api calls to a user, you will need it during an order process.
+
 ### Run tests
 
 - Install php unit : http://phpunit.de/getting-started.html

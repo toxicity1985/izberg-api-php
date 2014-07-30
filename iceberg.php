@@ -16,7 +16,7 @@ class Iceberg {
   /**
    * The API base URL
    */
-  const API_URL = 'https://api.modizy.com/v1/';
+  const API_URL = 'https://api.iceberg.technology/v1/';
 
   /**
    * The Single Sign On URL
@@ -119,6 +119,19 @@ class Iceberg {
    */
   private $_single_sign_on_response;
 
+  /**
+   * The user current cart
+   *
+   * @var stdObject
+   */
+  private $_current_cart;
+
+  /**
+   * The current_prder
+   *
+   * @var stdObject
+   */
+  private $_current_order;
 
   /**
    * API-key Getter
@@ -215,9 +228,9 @@ class Iceberg {
    *
    * @return String
    */
-  public function getMessageAuth() {
+  public function getMessageAuth($email, $first_name, $last_name) {
     $this->setTimestamp(time());
-    $to_compose = array($this->getEmail(), $this->getFirstName(), $this->getLastName(), $this->getTimestamp());
+    $to_compose = array($email, $first_name, $last_name, $this->getTimestamp());
     $message_auth = hash_hmac('sha1', implode(";", $to_compose), $this->getApiSecret());
     return $message_auth;
   }
@@ -400,7 +413,7 @@ class Iceberg {
 
     $headers = array(
       $accept_type,
-      'Authorization: '. $this->getMessageAuth()
+      'Authorization: IcebergAccessToken '. $this->_single_sign_on_response->username . ":" . $this->_single_sign_on_response->api_key
     );
 
     $ch = curl_init();
@@ -417,7 +430,7 @@ class Iceberg {
 
     if ('POST' === $method) {
       curl_setopt($ch, CURLOPT_POST, count($params));
-      curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim($paramString, '&'));
+      curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
     } else if ('DELETE' === $method) {
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
     }
@@ -436,21 +449,24 @@ class Iceberg {
    *
    * @return String
    */
-  protected function _getSingleSignOnResponse() {
-    $params = array(
-      "email" => $this->getEmail(),
-      "first_name" => $this->getFirstName(),
-      "last_name" => $this->getLastName(),
-      "message_auth" => $this->getMessageAuth(),
-      "timestamp" => $this->getTimeStamp(),
-      "application" => $this->getAppNamespace()
-    );
+  protected function _getSingleSignOnResponse($params = null) {
+    if(is_null($params)) {
+      $params = array(
+        "email" => $this->getEmail(),
+        "first_name" => $this->getFirstName(),
+        "last_name" => $this->getLastName()
+      );
+    }
+
+    $params["message_auth"] = $this->getMessageAuth($params["email"], $params["first_name"], $params["last_name"]);
+    $params["application"] = $this->getAppNamespace();
+    $params["timestamp"] = $this->getTimeStamp();
 
     $apiCall = self::API_URL . self::SINGLE_SIGN_ON_URL . "?" . http_build_query($params);
 
     $headers = array(
       'Accept: application/json',
-      'Authorization: '. $this->getMessageAuth()
+      'Authorization: '. $this->getMessageAuth($params["email"],$params["first_name"],$params["last_name"])
     );
 
     $ch = curl_init();
@@ -536,7 +552,7 @@ class Iceberg {
    */
   public function getFullProductImport($merchant_id, $params = null, $accept_type = 'Accept: application/xml')
   {
-    return $this->_makeCall("merchant/$merchant_id/download_export/", $params , null, $accept_type);
+    return $this->_makeCall("merchant/$merchant_id/download_export/", 'GET', $params , $accept_type);
   }
 
 
@@ -548,7 +564,7 @@ class Iceberg {
    */
   public function getCategories($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("category/tree/", $params, $accept_type);
+    return $this->_makeCall("category/tree/", 'GET', $params, $accept_type);
   }
 
   /**
@@ -572,7 +588,178 @@ class Iceberg {
    */
   public function getMerchantsSchema($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("merchant/schema/", $params, $accept_type);
+    return $this->_makeCall("merchant/schema/", 'GET', $params, $accept_type);
+
+  }
+
+  /**
+   * get current user cart
+   *
+   * @return StdObject
+   */
+  public function getCart($params = null, $accept_type = 'Accept: application/json')
+  {
+    if (!$this->_current_cart) {
+      $this->_current_cart = $this->_makeCall("cart/mine/", 'GET', $params, $accept_type);
+    }
+    return $this->_current_cart;
+  }
+
+  public function newCart($params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("cart/", 'POST', $params, $accept_type);
+  }
+
+  /**
+   * get current cart items
+   *
+   * @return Array
+   */
+  public function getCartItems($params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("cart/" . $this->getCart()->id . "/items/", 'GET', $params, $accept_type);
+  }
+
+  /**
+   * add an item to a cart
+   *
+   * @return Array
+   */
+  public function addCardItem($params = null, $accept_type = 'Accept: application/json')
+  {
+    // Params:
+    //   offer_id: Integer
+    //   variation_id: Integer
+    //   quantity: Integer
+    //   gift: Boolean
+    //   bundled: Boolean
+    return $this->_makeCall("cart/" . $this->getCart()->id . "/items/", 'POST', $params, $accept_type);
+  }
+
+  /**
+   * delete an item to a cart
+   *
+   * @return Array
+   */
+  public function removeCardItem($cart_item_id, $params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("cart_item/" . $cart_item_id . "/", 'DELETE', $params, $accept_type);
+  }
+
+
+  /**
+   * get current user credit balance
+   *
+   * @return Float
+   */
+  // We will fix it later
+  // public function getAvailableCreditBalance($params = null, $accept_type = 'Accept: application/json')
+  // {
+  //   return floatval($this->_makeCall("cart/" . $this->getCart()->id . "/get_available_credit_balance/", 'GET', $params, $accept_type));
+  // }
+
+
+  /**
+   * create order from current cart
+   *
+   * @return StdObject
+   */
+  public function createOrder($params = null, $accept_type = 'Accept: application/json')
+  {
+    // params:
+    //   - credit_use: Decimal. Amount to be use from user credit balance
+    //   - payment_info_id: Integer. Id of the payment card if pay with registered card
+    //   - pre_auth_id: Integer. Id of the PreAuthorization object from the payment backend
+
+    $this->current_order = $this->_makeCall("cart/" . $this->getCart()->id . "/createOrder/", 'POST', $params, $accept_type);
+    // We also clear the cart
+    $this->_current_cart = null;
+
+    return $this->current_order;
+  }
+
+  /**
+   * get current authenticated user
+   *
+   * @return StdObject
+   */
+
+  public function getUser()
+  {
+    return $this->_single_sign_on_response;
+  }
+
+  /**
+   * Use this user for current connection
+   *
+   * @return null
+   */
+  public function setUser($params)
+  {
+    $this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
+    $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
+  }
+
+  /**
+   * Get country from params
+   * @param array $params
+   *    code: FR
+   * @return StdObject
+   */
+  public function getCountry($params = null, $accept_type = 'Accept: application/json')
+  {
+    $response = $this->_makeCall("country/", 'GET', $params, $accept_type);
+    return $response->objects[0];
+  }
+
+
+  /**
+   * Get current user's addresses
+   *
+   * @return StdObject
+   */
+  public function getAddresses($params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("address/", 'GET', $params, $accept_type);
+  }
+
+  /**
+   * Create a user for the current user
+   *
+   * @return StdObject
+   */
+  public function createAddresses($params = null, $accept_type = 'Accept: application/json')
+  {
+    // address: string
+    // address2: string
+    // city: string
+    // company: string
+    // country: string
+    // default_billing: boolean
+    // default_shipping: boolean
+    // digicode: string
+    // first_name: string
+    // floor: string
+    // last_name: string
+    // name: string
+    // phone: string
+    // state: string
+    // status:
+    //   0: Inactive address
+    //   10: Active address
+    //   90: Hidden address
+    // zipcode
+    return $this->_makeCall("address/", 'POST', $params, $accept_type);
+  }
+
+  /**
+   * Get address from id
+   *
+   * @return StdObject
+   */
+  public function getAddress($address_id, $params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("address/$address_id", 'GET', $params, $accept_type);
   }
 
 
