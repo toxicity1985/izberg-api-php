@@ -16,11 +16,30 @@ Donc pour le moment, c'est lié à modizy.com et l'api est disponible avec http:
 
 ### Initialize the class
 
+You can use your access token or our Single Sign On system :
+
+#### With Access token :
+
 ```php
 <?php
     require_once 'iceberg.php';
 
     $iceberg = new Iceberg(array(
+      'accessToken'      => 'YOUR_ACCESSTOKEN',
+      'username'   => 'YOUR_USERNAME'
+    ));
+
+?>
+```
+
+#### With SSO :
+
+```php
+<?php
+    require_once 'iceberg.php';
+
+    $iceberg = new Iceberg();
+    $iceberg->sso(array(
       'apiKey'      => 'YOUR_APP_KEY',
       'apiSecret'   => 'YOUR_APP_SECRET',
       'appNamespace' => 'YOUR_APP_NAMESPACE',
@@ -31,6 +50,7 @@ Donc pour le moment, c'est lié à modizy.com et l'api est disponible avec http:
 
 ?>
 ```
+
 
 #### Authentification
 

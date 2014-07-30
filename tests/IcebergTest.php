@@ -21,13 +21,22 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
     public function getRealIcebergInstance()
     {
-         $a = $this->getIceberg(array(
+         $a = $this->getIceberg(array())->sso(array(
              "appNamespace" => "lolote",
              "apiKey" => "d43fce48-836c-43d3-9ddb-7da2e70af9f1",
              "apiSecret" => "6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0",
              "email" => "sebastien.fieloux@gmail.com",
              "firstName" => "sébastien",
-             "lastName" => "fieloux"
+             "lastName" => "fieloux")
+         );
+         return $a;
+    }
+
+    public function getRealIcebergInstanceWithToken()
+    {
+         $a = $this->getIceberg(array(
+            "username" => "sebfie",
+            "accessToken" => "156d219e38f84953c159a857738119bc0c35de96"
          ));
          return $a;
     }
@@ -83,7 +92,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
          }
 
         $stub->__construct($options);
-
+        $stub->sso($options);
         return $stub;
     }
 
@@ -235,6 +244,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     {
         $a = $this->getRealIcebergInstance();
         $user = $a->getUser();
+
         $this->assertEquals($user->email, "sebastien.fieloux@gmail.com");
 
         // We set a new user
@@ -252,6 +262,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     {
         $a = $this->getRealIcebergInstance();
         $cart = $a->getCart();
+
         $firstId = $cart->id;
         $this->assertArrayHasKey("id", (array)$cart);
 
@@ -309,7 +320,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     {
         $a = $this->getRealIcebergInstance();
         $adresses = $a->getAddresses();
-        $this->assertEquals($adresses->meta->total_count, 0);
+        $this->assertTrue($adresses->meta->total_count >= 0);
     }
 
     public function testgetCountryShouldReturnTheCountry()
@@ -353,7 +364,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     {
         $a = $this->getRealIcebergInstance();
         $country = $a->getCountry(array("code" => "FR"));
-        var_dump($country);
+
         $address = $a->createAddresses(array(
             "address" => "Address line 1",
             "address2" => "Address line 2",
@@ -378,6 +389,18 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($new_address->id, $address->id);
     }
 
+
+    // MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
+    // public function testFullOrderProcess()
+    // {
+    //     $a = $this->getRealIcebergInstance();
+    //     // We get the first merchant
+    //     $merchants = $a->getMerchants();
+    //     $merchant = $merchants->objects[0];
+
+    //     $products = $a->getFullProductImport($merchant->id);
+    //     $product = $products->product;
+    // }
 
 
 }
