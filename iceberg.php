@@ -64,6 +64,13 @@ class Iceberg {
 
 
   /**
+   * The iceberg application access_token
+   *
+   * @var string
+   */
+  private $_access_token;
+
+  /**
    * The iceberg api key
    *
    * @var string
@@ -76,6 +83,13 @@ class Iceberg {
    * @var string
    */
   private $_email;
+
+  /**
+   * The username
+   *
+   * @var string
+   */
+  private $_username;
 
   /**
    * The request timestamp
@@ -151,6 +165,15 @@ class Iceberg {
     return $this->_apisecret;
   }
 
+   /**
+   * Access token Getter
+   *
+   * @return String
+   */
+  public function getAccessToken() {
+    return $this->_access_token;
+  }
+
   /**
    * NAMESPACE Getter
    *
@@ -185,6 +208,15 @@ class Iceberg {
    */
   public function getLastName() {
     return $this->_last_name;
+  }
+
+  /**
+   * Username Getter
+   *
+   * @return String
+   */
+  public function getUsername() {
+    return $this->_username;
   }
 
   /**
@@ -244,6 +276,24 @@ class Iceberg {
    */
   public function setApiKey($apiKey) {
     $this->_apikey = $apiKey;
+  }
+
+  /**
+   * Username Getter
+   *
+   * @return String
+   */
+  public function setUsername($username) {
+    $this->_username = $username;
+  }
+
+  /**
+   * Access token Setter
+   *
+   * @return String
+   */
+  public function setAccessToken($access_token) {
+    $this->_access_token = $access_token;
   }
 
   /**
@@ -345,19 +395,12 @@ class Iceberg {
    */
   public function __construct($config) {
     if (true === is_array($config)) {
-      // if you want to access user data
-      $this->setApiKey($config['apiKey']);
-      $this->setApiSecret($config['apiSecret']);
-      $this->setAppNamespace($config['appNamespace']);
-      $this->setEmail($config['email']);
-      $this->setFirstName($config['firstName']);
-      $this->setLastName($config['lastName']);
+      if (isset($config['accessToken'])) {
+        $this->setAccessToken($config['accessToken']);
+        $this->setUsername($config['username']);
+      }
       (isset($config['currency'])) ? $this->setCurrency($config['currency']) : $this->setCurrency(self::DEFAULT_CURRENCY);
       (isset($config['shippingCountry'])) ? $this->setShippingCountry($config['shippingCountry']) : $this->setShippingCountry(self::DEFAULT_SHIPPING_COUNTRY);
-
-      // We get the iceberg api key using the Single Sign On API
-      $this->_single_sign_on_response = $this->_getSingleSignOnResponse();
-      $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
 
       // We save this instance as singleton
       self::setInstance($this);
@@ -365,6 +408,22 @@ class Iceberg {
     } else {
       throw new Exception("Error: __construct() - Configuration data is missing.");
     }
+  }
+
+  public function sso($config)
+  {
+    // if you want to access user data
+    $this->setApiKey($config['apiKey']);
+    $this->setApiSecret($config['apiSecret']);
+    $this->setAppNamespace($config['appNamespace']);
+    $this->setEmail($config['email']);
+    $this->setFirstName($config['firstName']);
+    $this->setLastName($config['lastName']);
+
+    // We get the iceberg api key using the Single Sign On API
+    $this->_single_sign_on_response = $this->_getSingleSignOnResponse();
+    $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
+    return $this;
   }
 
   /**
@@ -394,6 +453,16 @@ class Iceberg {
   }
 
   /**
+   * Function to know if we use accessToken or SSO
+   *
+   * @return Boolean
+   */
+  public function useSso()
+  {
+    return is_null($this->getAccessToken());
+  }
+
+  /**
    * The call operator
    *
    * @param string $function              API resource path
@@ -411,10 +480,17 @@ class Iceberg {
 
     $apiCall = self::API_URL . $path . (('GET' === $method) ? $paramString : null);
 
-    $headers = array(
-      $accept_type,
-      'Authorization: IcebergAccessToken '. $this->_single_sign_on_response->username . ":" . $this->_single_sign_on_response->api_key
-    );
+    if ($this->useSso()) {
+      $headers = array(
+        $accept_type,
+        'Authorization: IcebergAccessToken '. $this->_single_sign_on_response->username . ":" . $this->_single_sign_on_response->api_key
+      );
+    } else {
+      $headers = array(
+        $accept_type,
+        'Authorization: IcebergAccessToken '. $this->getUserName() . ":" . $this->getAccessToken()
+      );
+    }
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $apiCall);
@@ -424,8 +500,8 @@ class Iceberg {
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-    // curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-    // curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+    curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+    curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
     // curl_setopt($ch,CURLOPT_USERAGENT,"ELB-HealthChecker/1.0");
 
     if ('POST' === $method) {
@@ -686,7 +762,11 @@ class Iceberg {
 
   public function getUser()
   {
-    return $this->_single_sign_on_response;
+    if ($this->useSso()) {
+      return $this->_single_sign_on_response;
+    } else {
+      return $this->_makeCall("user/me/", 'GET');
+    }
   }
 
   /**
