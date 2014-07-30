@@ -487,12 +487,12 @@ class Iceberg {
 	{
 		$headers = array();
 		$headers[] = $accept_type;
-		if ($paramlength)
+		if ($paramlength != null)
 			$headers[] = 'Content-length: '.$paramlength;
-		if($this->useSso())
+		/*if($this->useSso())
 			$headers[] = 'Authorization: IcebergAccessToken '.$this->_single_sign_on_response->username.":".$this->_single_sign_on_response->api_key;
-		else
-			$headers = 'Authorization: IcebergAccessToken '.$this->getUserName().":".$this->getAccessToken();
+		else*/
+			$headers[] = 'Authorization: IcebergAccessToken '.$this->getUserName().":".$this->getAccessToken();
 		return $headers;
 	}
 
@@ -864,5 +864,90 @@ class Iceberg {
     return $this->_makeCall("address/$address_id", 'GET', $params, $accept_type);
   }
 
+	/**
+	 * get Current Merchant
+	 *
+	 * @return Object
+	 *
+	 */
+	public function getCurrentMerchant()
+	{
+		try{
+			$seller = $this->_makeCall('merchant/?api_key='.$this->_apikey);
+		} catch (Exception $e){
+			$seller = false;
+		}
+		return $seller;
+	}
+
+
+	public function postFeed($feed_url, $every, $period)
+	{
+		$merchant = $this->getCurrentMerchant();
+		$this->merchant_id = $merchant->objects[0]->id;
+		$merchant = "/v1/merchant/".$this->merchant_id."/";
+		$name = "Prestashop Feed Refresher";
+		$source_type = "iceberg";
+		$data = array('merchant'=>$merchant, 'source_type'=>$source_type, 'every'=>$every, 'period'=>$period, 'name'=>$name, 'feed_url'=>$feed_url);
+		$paramString = json_encode($data);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://api.iceberg.technology/v1/merchant_catalog_feed/");
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getHeaders('Content-Type: application/json'));
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POST, count($data));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim($paramString, '&'));
+		try {
+			$data_answer = $this->curlExec($ch);
+		} catch (Exception $e){
+			$data_answer = false;
+		}
+		curl_close($ch);
+		return ($data_answer);
+	}
+
+	public function getFeed($id)
+	{
+		try {
+			$result = json_encode($this->_makeCall("merchant_catalog_feed/".$id."/"));
+		} catch (Exception $e) {
+			$result = false;
+		}
+		return ($result);
+	}
+
+	public function putFeed($feed_id, $every, $period)
+	{
+		$params = array('period' => $period, 'every' => $every, 'name' => 'PrestaFeed');
+		$paramString = json_encode($params);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, "https://api.iceberg.technology/v1/merchant_catalog_feed/".$feed_id."/");
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getHeaders("Content-Type : application/json", strlen($paramString)));
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $paramString);
+		try {
+			$data_answer = $this->curlExec($ch);
+		} catch (Exception $e) {
+			$data_answer = false;
+		}
+		curl_close($ch);
+		return ($data_answer);
+	}
+
+	public function delFeed($id)
+	{
+		try {
+			$result = json_encode($this->_makeCall("merchant_catalog_feed/".$id."/", 'DELETE'));
+		} catch (Exception $e) {
+			$result = false;
+		}
+		return ($result);
+	}
 
 }
