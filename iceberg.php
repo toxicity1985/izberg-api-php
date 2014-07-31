@@ -887,7 +887,7 @@ class Iceberg {
 		$this->merchant_id = $merchant->objects[0]->id;
 		$merchant = "/v1/merchant/".$this->merchant_id."/";
 		$name = "Prestashop Feed Refresher";
-		$source_type = "iceberg";
+		$source_type = "prestashop";
 		$data = array('merchant'=>$merchant, 'source_type'=>$source_type, 'every'=>$every, 'period'=>$period, 'name'=>$name, 'feed_url'=>$feed_url);
 		$paramString = json_encode($data);
 		$ch = curl_init();
