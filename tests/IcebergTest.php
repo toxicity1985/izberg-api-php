@@ -100,7 +100,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 
 
-    public function getRealAnswer() {
+    public function getRealAnswer()
+    {
         return array(
             "absolute_url" => "/user/sebfie/",
             "age" => "",
@@ -140,7 +141,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         );
     }
 
-    public function getErrorAnswer() {
+    public function getErrorAnswer()
+    {
         return array(
             "error" => array(
                 "msg" => "An error happened"
@@ -311,12 +313,12 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertNotSame($cart1->id, $cart2->id);
     }
 
-    // public function testgetAvailableCreditBalanceShouldReturnAFloat()
-    // {
-    //     $a = $this->getRealIcebergInstance();
-    //     $balance = $a->getAvailableCreditBalance();
-    //     $this->assertEquals(0.0, $balance);
-    // }
+    public function testgetAvailableCreditBalanceShouldReturnAFloat()
+    {
+        $a = $this->getRealIcebergInstance();
+        $balance = $a->getAvailableCreditBalance();
+        $this->assertEquals(0.0, $balance);
+    }
 
     public function testgetAdressesShouldReturnAdresses()
     {
@@ -393,16 +395,60 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 
     // MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
-    // public function testFullOrderProcess()
-    // {
-    //     $a = $this->getRealIcebergInstance();
-    //     // We get the first merchant
-    //     $merchants = $a->getMerchants();
-    //     $merchant = $merchants->objects[0];
+    public function testFullOrderProcess()
+    {
+        $a = $this->getRealIcebergInstance();
+        // We get the first merchant
+        $merchants = $a->getMerchants();
+        $merchant = $merchants->objects[0];
 
-    //     $products = $a->getFullProductImport($merchant->id);
-    //     $product = $products->product;
-    // }
+        $products = $a->getFullProductImport($merchant->id);
+        $product = $products->product;
+        $best_offer_id = (string) $product->best_offer->id;
+
+        $a->setUser(array(
+            "email" => "support@lolote.fr",
+            "first_name" => "lolote",
+            "last_name" => "lolita"
+        ));
+
+        // We create a new cart
+        $a->newCart();
+
+        $a->addCardItem(array(
+            "offer_id" => $best_offer_id,
+            "quantity" => 1
+        ));
+
+        $country = $a->getCountry(array("code" => "FR"));
+
+        $address = $a->createAddresses(array(
+            "address" => "Address line 1",
+            "address2" => "Address line 2",
+            "city" => "St remy de provence",
+            "company" => "Sebfie",
+            "country" => "/v1/country/" . $country->id . "/",
+            "default_billing" => true,
+            "default_shipping" => true,
+            "digicode" => null,
+            "first_name" => "sebastien",
+            "floor" => null,
+            "last_name" => "fieloux",
+            "name" => "House",
+            "phone" => "0698674532",
+            "state" => null,
+            "status" => 10,
+            "zipcode" => "13210"
+        ));
+
+
+        $a->setBillingAddress($address->id);
+        $a->setShippingAddress($address->id);
+
+        $order = $a->createOrder(array(
+            // "payment_info_id" => 10
+        ));
+    }
 
 
 }
