@@ -62,7 +62,6 @@ class Iceberg {
    */
   private $_apikey;
 
-
   /**
    * The iceberg application access_token
    *
@@ -98,14 +97,12 @@ class Iceberg {
    */
   private $_timestamp;
 
-
   /**
    * Boolean to know if we have to use sso
    *
    * @var string
    */
   private $_use_sso;
-
 
   /**
    * The user first name
@@ -162,6 +159,13 @@ class Iceberg {
    * @var stdObject
    */
   private $_current_user;
+
+  /**
+   * Debug mode
+   *
+   * @var boolean
+   */
+  private $_debug;
 
   /**
    * API-key Getter
@@ -410,12 +414,23 @@ class Iceberg {
   /**
    * Timestamp Setter
    *
-   * @param string $api_key
+   * @param string $timestamp
    * @return String
    */
   public function setTimestamp($timestamp)
   {
     $this->_timestamp = $timestamp;
+  }
+
+  /**
+   * Debug Setter
+   *
+   * @param string $debug
+   * @return String
+   */
+  public function setDebug($debug)
+  {
+    $this->_debug = $debug;
   }
 
 
@@ -428,6 +443,7 @@ class Iceberg {
   public function __construct($config)
   {
     $this->_use_sso = false;
+    $this->_debug = false;
 
     if (true === is_array($config)) {
       if (isset($config['accessToken'])) {
@@ -736,6 +752,7 @@ class Iceberg {
 
   public function newCart($params = null, $accept_type = 'Accept: application/json')
   {
+    if ($this->_debug) $params["debug"] = true;
     return $this->_makeCall("cart/", 'POST', $params, $accept_type);
   }
 

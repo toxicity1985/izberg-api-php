@@ -285,6 +285,15 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(is_array($items->objects));
     }
 
+    public function testinDebugModeCartShouldReturnDebugEqualToTrue()
+    {
+        $a = $this->getRealIcebergInstance();
+        $a->setDebug(true);
+        $a->newCart();
+        $cart = $a->getCart();
+        $this->assertTrue($cart->debug);
+    }
+
     public function testAddCartItemShouldAddItem()
     {
         $a = $this->getRealIcebergInstance();
