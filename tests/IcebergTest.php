@@ -457,6 +457,9 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $order = $a->createOrder(array(
             // "payment_info_id" => 10
         ));
+
+        // Place the order
+        $order->authorizeOrder();
     }
 
 
