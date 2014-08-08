@@ -167,6 +167,14 @@ class Iceberg {
    */
   private $_debug;
 
+
+  /**
+   * Countries
+   *
+   * @var array
+   */
+  private $_countries;
+
   /**
    * API-key Getter
    *
@@ -709,7 +717,7 @@ class Iceberg {
    */
   public function getCategories($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("category/tree/", 'GET', $params, $accept_type);
+    return $this->_makeCall("category/", 'GET', $params, $accept_type);
   }
 
   /**
@@ -771,7 +779,7 @@ class Iceberg {
    *
    * @return Array
    */
-  public function addCardItem($params = null, $accept_type = 'Accept: application/json')
+  public function addCartItem($params = null, $accept_type = 'Accept: application/json')
   {
     // Params:
     //   offer_id: Integer
@@ -783,11 +791,27 @@ class Iceberg {
   }
 
   /**
+   * update an item to a cart
+   *
+   * @return Array
+   */
+  public function updateCartItem($id, $params = null, $accept_type = 'Accept: application/json')
+  {
+    // Params:
+    //   offer_id: Integer
+    //   variation_id: Integer
+    //   quantity: Integer
+    //   gift: Boolean
+    //   bundled: Boolean
+    return $this->_makeCall("cart_item/" . $id . "/", 'PUT', $params, $accept_type);
+  }
+
+  /**
    * delete an item to a cart
    *
    * @return Array
    */
-  public function removeCardItem($cart_item_id, $params = null, $accept_type = 'Accept: application/json')
+  public function removeCartItem($cart_item_id, $params = null, $accept_type = 'Accept: application/json')
   {
     return $this->_makeCall("cart_item/" . $cart_item_id . "/", 'DELETE', $params, $accept_type);
   }
@@ -865,8 +889,15 @@ class Iceberg {
    */
   public function getCountry($params = null, $accept_type = 'Accept: application/json')
   {
-    $response = $this->_makeCall("country/", 'GET', $params, $accept_type);
-    return $response->objects[0];
+    if (!$this->_countries) $this->_countries = array();
+    if (!isset($this->_countries[$params["code"]])) {
+      $response = $this->_makeCall("country/", 'GET', $params, $accept_type);
+      $result = $response->objects[0];
+      $this->_countries[$params["code"]] = $result;
+    } else {
+      $result = $this->_countries[$params["code"]];
+    }
+    return $result;
   }
 
 
