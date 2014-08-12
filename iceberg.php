@@ -979,18 +979,19 @@ class Iceberg {
 		} catch (Exception $e){
 			$seller = false;
 		}
+		if (isset($seller->meta->total_count) && $seller->meta->total_count == 0)
+			$seller = false;
 		return $seller;
 	}
 
 
-	public function postFeed($feed_url, $every, $period)
+	public function postFeed($feed_url, $every, $period, $shopname)
 	{
 		$merchant = $this->getCurrentMerchant();
 		$this->merchant_id = $merchant->objects[0]->id;
 		$merchant = "/v1/merchant/".$this->merchant_id."/";
-		$name = "Prestashop Feed Refresher";
 		$source_type = "prestashop";
-		$data = array('merchant'=>$merchant, 'source_type'=>$source_type, 'every'=>$every, 'period'=>$period, 'name'=>$name, 'feed_url'=>$feed_url);
+		$data = array('merchant'=>$merchant, 'source_type'=>$source_type, 'every'=>$every, 'period'=>$period, 'name'=>'PrestaFeed-'.$shopname, 'feed_url'=>$feed_url);
 		$paramString = json_encode($data);
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, Self::API_URL."merchant_catalog_feed/");
@@ -1020,9 +1021,9 @@ class Iceberg {
 		return ($result);
 	}
 
-	public function putFeed($feed_id, $every, $period)
+	public function putFeed($feed_id, $every, $period, $shopname)
 	{
-		$params = array('period' => $period, 'every' => $every, 'name' => 'PrestaFeed');
+		$params = array('period' => $period, 'every' => $every, 'name' => 'PrestaFeed-'.$shopname);
 		$paramString = json_encode($params);
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, Self::API_URL."merchant_catalog_feed/".$feed_id."/");
@@ -1084,4 +1085,15 @@ class Iceberg {
 		return ($result);
 	}
 
+	public function testIcebergToken()
+	{
+		try {
+			$result = $this->_makeCall('user/me/');
+		} catch (Exception $e) {
+			$result = false;
+		}
+		if (isset($result->id) && $result->id == 0)
+			$result = false;
+		return ($result);
+	}
 }
