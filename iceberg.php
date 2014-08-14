@@ -62,7 +62,6 @@ class Iceberg {
    */
   private $_apikey;
 
-
   /**
    * The iceberg application access_token
    *
@@ -98,14 +97,12 @@ class Iceberg {
    */
   private $_timestamp;
 
-
   /**
    * Boolean to know if we have to use sso
    *
    * @var string
    */
   private $_use_sso;
-
 
   /**
    * The user first name
@@ -162,6 +159,21 @@ class Iceberg {
    * @var stdObject
    */
   private $_current_user;
+
+  /**
+   * Debug mode
+   *
+   * @var boolean
+   */
+  private $_debug;
+
+
+  /**
+   * Countries
+   *
+   * @var array
+   */
+  private $_countries;
 
   /**
    * API-key Getter
@@ -410,12 +422,23 @@ class Iceberg {
   /**
    * Timestamp Setter
    *
-   * @param string $api_key
+   * @param string $timestamp
    * @return String
    */
   public function setTimestamp($timestamp)
   {
     $this->_timestamp = $timestamp;
+  }
+
+  /**
+   * Debug Setter
+   *
+   * @param string $debug
+   * @return String
+   */
+  public function setDebug($debug)
+  {
+    $this->_debug = $debug;
   }
 
 
@@ -428,6 +451,7 @@ class Iceberg {
   public function __construct($config)
   {
     $this->_use_sso = false;
+    $this->_debug = false;
 
     if (true === is_array($config)) {
       if (isset($config['accessToken'])) {
@@ -693,7 +717,7 @@ class Iceberg {
    */
   public function getCategories($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("category/tree/", 'GET', $params, $accept_type);
+    return $this->_makeCall("category/", 'GET', $params, $accept_type);
   }
 
   /**
@@ -736,6 +760,7 @@ class Iceberg {
 
   public function newCart($params = null, $accept_type = 'Accept: application/json')
   {
+    if ($this->_debug) $params["debug"] = true;
     return $this->_makeCall("cart/", 'POST', $params, $accept_type);
   }
 
@@ -754,7 +779,7 @@ class Iceberg {
    *
    * @return Array
    */
-  public function addCardItem($params = null, $accept_type = 'Accept: application/json')
+  public function addCartItem($params = null, $accept_type = 'Accept: application/json')
   {
     // Params:
     //   offer_id: Integer
@@ -766,11 +791,27 @@ class Iceberg {
   }
 
   /**
+   * update an item to a cart
+   *
+   * @return Array
+   */
+  public function updateCartItem($id, $params = null, $accept_type = 'Accept: application/json')
+  {
+    // Params:
+    //   offer_id: Integer
+    //   variation_id: Integer
+    //   quantity: Integer
+    //   gift: Boolean
+    //   bundled: Boolean
+    return $this->_makeCall("cart_item/" . $id . "/", 'PUT', $params, $accept_type);
+  }
+
+  /**
    * delete an item to a cart
    *
    * @return Array
    */
-  public function removeCardItem($cart_item_id, $params = null, $accept_type = 'Accept: application/json')
+  public function removeCartItem($cart_item_id, $params = null, $accept_type = 'Accept: application/json')
   {
     return $this->_makeCall("cart_item/" . $cart_item_id . "/", 'DELETE', $params, $accept_type);
   }
@@ -848,8 +889,15 @@ class Iceberg {
    */
   public function getCountry($params = null, $accept_type = 'Accept: application/json')
   {
-    $response = $this->_makeCall("country/", 'GET', $params, $accept_type);
-    return $response->objects[0];
+    if (!$this->_countries) $this->_countries = array();
+    if (!isset($this->_countries[$params["code"]])) {
+      $response = $this->_makeCall("country/", 'GET', $params, $accept_type);
+      $result = $response->objects[0];
+      $this->_countries[$params["code"]] = $result;
+    } else {
+      $result = $this->_countries[$params["code"]];
+    }
+    return $result;
   }
 
 
