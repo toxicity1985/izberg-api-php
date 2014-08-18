@@ -1068,10 +1068,13 @@ class Iceberg {
 		curl_setopt($ch, CURLOPT_POST, count($data));
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $paramString);
 		try {
-			$data_answer = $this->curlExec($ch); }
+			$data_answer = $this->curlExec($ch);
+			$status_code = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);}
 		catch (Exception $e) {
 			$data_answer = false; }
 		curl_close($ch);
+		if ($status_code > 300)
+			$data_andwer = false;
 		return ($data_answer);
 	}
 
