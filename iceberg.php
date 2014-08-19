@@ -1099,4 +1099,9 @@ class Iceberg {
 			$result = false;
 		return ($result);
 	}
+
+	public function updateOrderStatus($id_order_ref, $status)
+	{
+ 		return	($this->_makeCall('merchant_order/'.$id_order_ref.'/'.$status.'/', 'POST'));
+	}
 }
