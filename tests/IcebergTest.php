@@ -433,7 +433,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         ));
 
         $country = $a->getCountry(array("code" => "FR"));
-
         $address = $a->createAddresses(array(
             "address" => "Address line 1",
             "address2" => "Address line 2",
