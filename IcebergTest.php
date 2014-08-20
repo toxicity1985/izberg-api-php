@@ -426,7 +426,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         // We create a new cart
         $a->newCart();
 
-        $a->addCardItem(array(
+        $a->addCartItem(array(
             "offer_id" => $best_offer_id,
             "quantity" => 1
         ));
