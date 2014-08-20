@@ -168,7 +168,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(Iceberg::DEFAULT_CURRENCY, $a->getCurrency());
         $this->assertEquals(Iceberg::DEFAULT_SHIPPING_COUNTRY, $a->getShippingCountry());
     }
-
+    
     public function testConstructorGetIcebergApiKey()
     {
         $a = $this->mockSuccessSingleSignOnResponse();
@@ -186,13 +186,13 @@ class IcebergTest extends PHPUnit_Framework_TestCase
        $a = $this->mockSuccessSingleSignOnResponse();
        $this->assertEquals($a, Iceberg::getInstance());
     }
-
+    
     public function testGetProductShouldReturnProducts()
     {
         $a = $this->getRealIcebergInstance();
         $a->getProducts();
     }
-
+    
     public function testGetFullProductImportShouldReturnAllProducts()
     {
         $a = $this->getRealIcebergInstance();
@@ -209,7 +209,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
-
+    
     public function testGetProductSchemaShouldReturnProductSchema()
     {
         $a = $this->getRealIcebergInstance();
@@ -261,7 +261,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($user->email, "sebastien.fieloux@gmail.com");
     }
 
-
+    
     public function testgetCartShouldReturnACart()
     {
         $a = $this->getRealIcebergInstance();
@@ -293,7 +293,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $cart = $a->getCart();
         $this->assertTrue($cart->debug);
     }
-
+    
     public function testAddCartItemShouldAddItem()
     {
         $a = $this->getRealIcebergInstance();
@@ -344,7 +344,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
       $country = $a->getCountry(array("code" => "FR"));
       $this->assertEquals($country->code, 'FR');
     }
-
+    /*
     public function testcreateAddressesShouldReturnACreatedAddress()
     {
         $a = $this->getRealIcebergInstance();
@@ -463,6 +463,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         // Place the order
         $order->authorizeOrder();
     }
+    */
 
 
 }
