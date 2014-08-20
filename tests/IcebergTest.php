@@ -404,7 +404,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $new_address = $a->getAddress($address->id);
         $this->assertEquals($new_address->id, $address->id);
     }
-    /*
 
     // MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
     public function testFullOrderProcess()
@@ -464,7 +463,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         // Place the order
         $order->authorizeOrder();
     }
-    */
+    
 
 
 }
