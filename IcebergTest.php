@@ -322,12 +322,14 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertNotSame($cart1->id, $cart2->id);
     }
 
+    /*
     public function testgetAvailableCreditBalanceShouldReturnAFloat()
     {
         $a = $this->getRealIcebergInstance();
         $balance = $a->getAvailableCreditBalance();
         $this->assertEquals(0.0, $balance);
     }
+    */
 
     public function testgetAdressesShouldReturnAdresses()
     {
