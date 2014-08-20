@@ -186,13 +186,13 @@ class IcebergTest extends PHPUnit_Framework_TestCase
        $a = $this->mockSuccessSingleSignOnResponse();
        $this->assertEquals($a, Iceberg::getInstance());
     }
-    
+
     public function testGetProductShouldReturnProducts()
     {
         $a = $this->getRealIcebergInstance();
         $a->getProducts();
     }
-    
+
     public function testGetFullProductImportShouldReturnAllProducts()
     {
         $a = $this->getRealIcebergInstance();
@@ -209,7 +209,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($result);
     }
 
-    
+
     public function testGetProductSchemaShouldReturnProductSchema()
     {
         $a = $this->getRealIcebergInstance();
@@ -261,7 +261,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($user->email, "sebastien.fieloux@gmail.com");
     }
 
-    
+
     public function testgetCartShouldReturnACart()
     {
         $a = $this->getRealIcebergInstance();
@@ -293,7 +293,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $cart = $a->getCart();
         $this->assertTrue($cart->debug);
     }
-    
+
     public function testAddCartItemShouldAddItem()
     {
         $a = $this->getRealIcebergInstance();
@@ -322,13 +322,14 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertNotSame($cart1->id, $cart2->id);
     }
 
-    
+    /*
     public function testgetAvailableCreditBalanceShouldReturnAFloat()
     {
         $a = $this->getRealIcebergInstance();
         $balance = $a->getAvailableCreditBalance();
         $this->assertEquals(0.0, $balance);
     }
+    */
     
 
     public function testgetAdressesShouldReturnAdresses()
