@@ -1,6 +1,9 @@
 branches:
   only:
     - raf
+    - master
+    - marin_dev
+    - develop
 language: php
 php:
  - 5.5
