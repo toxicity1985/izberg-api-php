@@ -298,7 +298,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     {
         $a = $this->getRealIcebergInstance();
         $a->newCart();
-        $a->addCardItem(array(
+        $a->addCartItem(array(
             "offer_id" => 149,
             "variation_id" => 283,
             "quantity" => 2
@@ -309,7 +309,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
         // We remove the item
         $firstItem = $items->objects[0];
-        $a->removeCardItem($firstItem->id);
+        $a->removeCartItem($firstItem->id);
         $items = $a->getCartItems();
         $this->assertEquals($items->meta->total_count, 0);
     }
