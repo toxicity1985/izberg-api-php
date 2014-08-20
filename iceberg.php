@@ -529,6 +529,20 @@ class Iceberg {
     return $this->_use_sso;
   }
 
+
+	public function getHeaders($accept_type = 'Accept : application/json', $paramlength = null)
+	{
+		$headers = array();
+		$headers[] = $accept_type;
+		if ($paramlength != null)
+			$headers[] = 'Content-length: '.$paramlength;
+		/*if($this->useSso())
+			$headers[] = 'Authorization: IcebergAccessToken '.$this->_single_sign_on_response->username.":".$this->_single_sign_on_response->api_key;
+		else*/
+		$headers[] = 'Authorization: IcebergAccessToken '.$this->getUserName().":".$this->getAccessToken();
+		return $headers;
+	}
+
   /**
    * The call operator
    *
@@ -983,5 +997,142 @@ class Iceberg {
     return $this->_makeCall("/v1/payment_card_alias/", 'GET', $params, $accept_type);
   }
 
+	/**
+	 * get Current Merchant
+	 *
+	 * @return Object
+	 *
+	 */
+	public function getCurrentMerchant()
+	{
+		try{
+			$seller = $this->_makeCall('merchant/?api_key='.$this->_apikey);
+		} catch (Exception $e){
+			$seller = false;
+		}
+		if (isset($seller->meta->total_count) && $seller->meta->total_count == 0)
+			$seller = false;
+		return $seller;
+	}
 
+
+	public function postFeed($feed_url, $every, $period, $shopname)
+	{
+		$merchant = $this->getCurrentMerchant();
+		$this->merchant_id = $merchant->objects[0]->id;
+		$merchant = "/v1/merchant/".$this->merchant_id."/";
+		$source_type = "prestashop";
+		$data = array('merchant'=>$merchant, 'source_type'=>$source_type, 'every'=>$every, 'period'=>$period, 'name'=>'PrestaFeed-'.$shopname, 'feed_url'=>$feed_url);
+		$paramString = json_encode($data);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, Self::API_URL."merchant_catalog_feed/");
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getHeaders('Content-Type: application/json'));
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POST, count($data));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim($paramString, '&'));
+		try {
+			$data_answer = $this->curlExec($ch);
+		} catch (Exception $e){
+			$data_answer = false;
+		}
+		curl_close($ch);
+		return ($data_answer);
+	}
+
+	public function getFeed($id)
+	{
+		try {
+			$result = json_encode($this->_makeCall("merchant_catalog_feed/".$id."/"));
+		} catch (Exception $e) {
+			$result = false;
+		}
+		return ($result);
+	}
+
+	public function putFeed($feed_id, $every, $period, $shopname)
+	{
+		$params = array('period' => $period, 'every' => $every, 'name' => 'PrestaFeed-'.$shopname);
+		$paramString = json_encode($params);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, Self::API_URL."merchant_catalog_feed/".$feed_id."/");
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getHeaders("Content-Type : application/json", strlen($paramString)));
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $paramString);
+		try {
+			$data_answer = $this->curlExec($ch);
+		} catch (Exception $e) {
+			$data_answer = false;
+		}
+		curl_close($ch);
+		return ($data_answer);
+	}
+
+	public function delFeed($id)
+	{
+		try {
+			$result = json_encode($this->_makeCall("merchant_catalog_feed/".$id."/", 'DELETE'));
+		} catch (Exception $e) {
+			$result = false;
+		}
+		return ($result);
+	}
+
+	public function addWebHook($url, $event, $application = null)
+	{
+		$id = 13;
+		$data = array('application'=>$application, 'event'=>$event, 'url'=>$url);
+		$paramString = json_encode($data);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, Self::API_URL.'webhook/');
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $this->getHeaders('Content-Type: application/json'));
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_POST, count($data));
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $paramString);
+		try {
+			$data_answer = $this->curlExec($ch);
+			$status_code = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);}
+		catch (Exception $e) {
+			$data_answer = false; }
+		curl_close($ch);
+		if ($status_code > 300)
+			$data_andwer = false;
+		return ($data_answer);
+	}
+
+	public function delWebHook($id)
+	{
+		try {
+			$result = json_encode($this->_makeCall("webhook/".$id."/", 'DELETE'));
+		} catch (Exception $e) {
+			$result = false;
+		}
+		return ($result);
+	}
+
+	public function testIcebergToken()
+	{
+		try {
+			$result = $this->_makeCall('user/me/');
+		} catch (Exception $e) {
+			$result = false;
+		}
+		if (isset($result->id) && $result->id == 0)
+			$result = false;
+		return ($result);
+	}
+
+	public function updateOrderStatus($id_order_ref, $status)
+	{
+ 		return	($this->_makeCall('merchant_order/'.$id_order_ref.'/'.$status.'/', 'POST'));
+	}
 }
