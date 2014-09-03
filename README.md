@@ -52,6 +52,23 @@ You can use your access token or our Single Sign On system :
 ?>
 ```
 
+#### Sandbox
+
+To use our sandbox environment, just pass the param `sandbox` in options when you create your iceberg object :
+
+```php
+<?php
+    require_once 'iceberg.php';
+
+    $iceberg = new Iceberg(array(
+      'appNamespace' => 'YOUR_APP_NAMESPACE',
+      'sandbox' => 'true'
+    ));
+
+?>
+```
+
+**Note** : It will request a none https url.
 
 #### Authentification
 

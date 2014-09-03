@@ -13,10 +13,16 @@
  */
 class Iceberg {
 
+
   /**
-   * The API base URL
+   * The API production URL
    */
-  const API_URL = 'https://api.iceberg.technology/v1/';
+  const PRODUCTION_API_URL = 'https://api.iceberg.technology/v1/';
+
+  /**
+   * The API sandbox URL
+   */
+  const SANDBOX_API_URL = 'http://api.sandbox.iceberg.technology/v1/';
 
   /**
    * The Single Sign On URL
@@ -40,6 +46,12 @@ class Iceberg {
    * @var Iceberg
    */
   protected static $_singleton;
+
+
+  /**
+   * The API base URL
+   */
+  protected static $_api_url;
 
   /**
    * The iceberg application namespace
@@ -454,6 +466,8 @@ class Iceberg {
     $this->_debug = false;
 
     if (true === is_array($config)) {
+      self::$_api_url = (isset($config['sandbox']) && $config['sandbox'] === true) ? self::SANDBOX_API_URL : self::PRODUCTION_API_URL;
+
       if (isset($config['accessToken'])) {
         $this->setAccessToken($config['accessToken']);
         $this->setUsername($config['username']);
@@ -546,7 +560,7 @@ class Iceberg {
       $paramString = null;
     }
 
-    $apiCall = self::API_URL . $path . (('GET' === $method) ? $paramString : null);
+    $apiCall = self::$_api_url . $path . (('GET' === $method) ? $paramString : null);
 
     if ($this->useSso()) {
       $headers = array(
@@ -613,7 +627,7 @@ class Iceberg {
     $params["application"] = $this->getAppNamespace();
     $params["timestamp"] = $this->getTimeStamp();
 
-    $apiCall = self::API_URL . self::SINGLE_SIGN_ON_URL . "?" . http_build_query($params);
+    $apiCall = self::$_api_url . self::SINGLE_SIGN_ON_URL . "?" . http_build_query($params);
 
     $headers = array(
       'Accept: application/json',
