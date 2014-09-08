@@ -21,7 +21,10 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
     public function getRealIcebergInstance()
     {
-         $a = $this->getIceberg(array("appNamespace" => "lolote"))->sso(array(
+         $a = $this->getIceberg(array(
+             "appNamespace" => "lolote",
+             "sandbox" => true
+         ))->sso(array(
              "apiKey" => "d43fce48-836c-43d3-9ddb-7da2e70af9f1",
              "apiSecret" => "6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0",
              "email" => "sebfie@yahoo.fr",
@@ -168,7 +171,20 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertEquals(Iceberg::DEFAULT_CURRENCY, $a->getCurrency());
         $this->assertEquals(Iceberg::DEFAULT_SHIPPING_COUNTRY, $a->getShippingCountry());
     }
+<<<<<<< HEAD
     
+=======
+
+    public function testSandboxParamIsWellUsedForUrlToRequest()
+    {
+        $a = new Iceberg(array("sandbox" => true, "appNamespace" => "lolote"));
+        $this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "http://api.sandbox.iceberg.technology/v1/");
+
+        $a = new Iceberg(array("appNamespace" => "lolote"));
+        $this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.iceberg.technology/v1/");
+    }
+
+>>>>>>> 6bc3b9a6e3d6dc58df6825438a320227190b366c
     public function testConstructorGetIcebergApiKey()
     {
         $a = $this->mockSuccessSingleSignOnResponse();
@@ -322,6 +338,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
         $this->assertNotSame($cart1->id, $cart2->id);
     }
 
+<<<<<<< HEAD
     /*
     public function testgetAvailableCreditBalanceShouldReturnAFloat()
     {
@@ -331,6 +348,14 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     }
     */
     
+=======
+    // public function testgetAvailableCreditBalanceShouldReturnAFloat()
+    // {
+    //     $a = $this->getRealIcebergInstance();
+    //     $balance = $a->getAvailableCreditBalance();
+    //     $this->assertEquals(0.0, $balance);
+    // }
+>>>>>>> 6bc3b9a6e3d6dc58df6825438a320227190b366c
 
     public function testgetAdressesShouldReturnAdresses()
     {
@@ -409,6 +434,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     /*
     public function testFullOrderProcess()
     {
+        ini_set("memory_limit","1024M");
+
         $a = $this->getRealIcebergInstance();
         // We get the first merchant
         $merchants = $a->getMerchants();
