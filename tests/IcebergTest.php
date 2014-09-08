@@ -391,7 +391,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     }
 
     // MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
-    /*
+    
     public function testFullOrderProcess()
     {
         ini_set("memory_limit","1024M");
@@ -440,5 +440,5 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     // Place the order
         $order->authorizeOrder();
     }
-    */
+    
 }
