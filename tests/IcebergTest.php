@@ -7,7 +7,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
     //            TESTS FUNCTIONS
     // ======================================
 
-    $sandbox= true;
 
     public function getDefaultOptions()
     {
