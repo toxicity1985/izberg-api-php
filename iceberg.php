@@ -2,7 +2,7 @@
 
 /**
  * Iceberg API class
- * API Documentation: http://developers.modizy.com/documentation/
+ * API Documentation: http://dashboard.iceberg-marketplace.com/documentation/
  * Class Documentation: https://github.com/Modizy/Iceberg-API-PHP
  *
  * @author Sebastien FIELOUX
