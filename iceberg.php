@@ -163,7 +163,7 @@ class Iceberg {
    *
    * @var stdObject
    */
-  private $_current_order;
+  private $current_order;
 
   /**
    * The current_user
@@ -749,6 +749,17 @@ class Iceberg {
   }
 
   /**
+   * get a specific Merchant from an iceberg account
+   *
+   * @id int $id
+   * @return Array
+   */
+  public function getMerchantById($id = 0)
+  {
+    return $this->_makeCall("merchant/", "GET");
+  }
+
+  /**
    * get Merchants schema
    *
    * @return Array
@@ -901,7 +912,7 @@ class Iceberg {
    *    code: FR
    * @return StdObject
    */
-  public function getCountry($params = null, $accept_type = 'Accept: application/json')
+  public function getCountry($params = array("code" => "FR"), $accept_type = 'Accept: application/json')
   {
     if (!$this->_countries) $this->_countries = array();
     if (!isset($this->_countries[$params["code"]])) {
