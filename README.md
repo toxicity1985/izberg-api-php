@@ -148,7 +148,7 @@ Now we can set the Shipping and Billing addresses.
         $address = $IcebergInstance->createAddresses(array(
             "address" => "ADDRESS LINE 1",
             "address2" => "ADDRESS LINE 2",
-            "city" => "CITY NAME
+            "city" => "CITY NAME"
             "company" => "OPTIONNAL COMPANY NAME",
             "country" => "/v1/country/" . $country->id . "/",
             "default_billing" => true,
@@ -234,7 +234,7 @@ Now that we have an offer ID, the process is the same as above
     $address = $IcebergInstance->createAddresses(array(
             "address" => "ADDRESS LINE 1",
             "address2" => "ADDRESS LINE 2",
-            "city" => "CITY NAME
+            "city" => "CITY NAME"
             "company" => "OPTIONNAL COMPANY NAME",
             "country" => "/v1/country/" . $country->id . "/",
             "default_billing" => true,
