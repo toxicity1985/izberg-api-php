@@ -1018,7 +1018,6 @@ class Iceberg {
 	public function create_object($name, $params = null)
 	{
 		return $this->_makeCall($name."/", 'POST', $params, $accept_type);
-		return null;
 	}
 
 	public function update_object($name, $id)
