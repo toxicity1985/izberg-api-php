@@ -246,9 +246,10 @@ Now that we have an offer ID, the process is the same as above
             "name" => "ADDRESS NAME",
             "phone" => "PHONE NUMBER",
             "state" => "OPTIONNAL STATE NAME",
-            "status" => 10, // 0 : INACTIVE // 10 : ACTIVE // 90 : HIDDEN
+			//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
+            "status" => 10,
             "zipcode" => "ZIPCODE"
-        ));
+   	    	));
 
 	$IcebergInstance->setBillingAddress($address->id);
     $IcebergInstance->setShippingAddress($address->id);
