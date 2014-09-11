@@ -22,10 +22,10 @@ You can use your access token or our Single Sign On system :
 
     $iceberg = new Iceberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
-      'accessToken'      => 'YOUR_ACCESSTOKEN',
-      'username'   => 'YOUR_USERNAME',
-      'apiKey'      => 'YOUR_APP_KEY',
-      'apiSecret'   => 'YOUR_APP_SECRET'
+      'accessToken'  => 'YOUR_ACCESSTOKEN',
+      'username'   	 => 'YOUR_USERNAME',
+      'apiKey'       => 'YOUR_APP_KEY',
+      'apiSecret'    => 'YOUR_APP_SECRET'
     ));
 
 ?>
@@ -39,14 +39,14 @@ You can use your access token or our Single Sign On system :
 
     $iceberg = new Iceberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
-      'apiKey'      => 'YOUR_APP_KEY',
-      'apiSecret'   => 'YOUR_APP_SECRET'
+      'apiKey'       => 'YOUR_APP_KEY',
+      'apiSecret'    => 'YOUR_APP_SECRET'
     ));
 
     $iceberg->sso(array(
-      "email" => "YOUR_EMAIL",
+      "email"     => "YOUR_EMAIL",
       "firstName" => "YOUR_ACCOUNT_FIRST_NAME",
-      "lastName" => "YOUR_ACCOUNT_LAST_NAME"
+      "lastName"  => "YOUR_ACCOUNT_LAST_NAME"
     ));
 
 ?>
@@ -62,7 +62,7 @@ To use our sandbox environment, just pass the param `sandbox` in options when yo
 
     $iceberg = new Iceberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
-      'sandbox' => 'true'
+      'sandbox'      => 'true'
     ));
 
 ?>
@@ -78,9 +78,9 @@ By default we authenticate the admin user with informations specified on initial
 <?php
 
   $iceberg->setUser(array(
-    "email" => "myemail@yahoo.fr",
+    "email"      => "myemail@yahoo.fr",
     "first_name" => "seb",
-    "last_name" => "fie"
+    "last_name"  => "fie"
   ));
 ?>
 ```
@@ -102,10 +102,10 @@ Creating an order on Iceberg is really easy, the only thing you need is the Item
 
 	$valid_array = array(
   		'appNamespace' => 'YOUR_APP_NAMESPACE',
-  		'accessToken'      => 'YOUR_ACCESSTOKEN',
-  		'username'   => 'YOUR_USERNAME',
-  		'apiKey'      => 'YOUR_APP_KEY',
-  		'apiSecret'   => 'YOUR_APP_SECRET'
+  		'accessToken'  => 'YOUR_ACCESSTOKEN',
+  		'username'     => 'YOUR_USERNAME',
+  		'apiKey'       => 'YOUR_APP_KEY',
+  		'apiSecret'    => 'YOUR_APP_SECRET'
 	  )
 
 	$IcebergInstance = new Iceberg($valid_array);

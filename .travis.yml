@@ -4,6 +4,7 @@ branches:
     - master
     - marin_dev
     - develop
+    - marin_reform
 language: php
 php:
  - 5.5
