@@ -111,9 +111,9 @@ Creating an order on Iceberg is really easy, the only thing you need is the Item
 	$IcebergInstance = new Iceberg($valid_array);
 
     $IcebergInstance->setUser(array(
-            "email" => "EMAIL_ADDRESS",
-            "first_name" => "FIRST_NAME",
-            "last_name" => "LAST_NAME"
+    	"email" => "EMAIL_ADDRESS",
+        "first_name" => "FIRST_NAME",
+        "last_name" => "LAST_NAME"
         ));
 
 ```
@@ -138,31 +138,30 @@ You have to use addCartItem() for each different offer you want to add to your c
 We need the country_id in in order to set the customer's address (Default value is "FR").
 
 ```php
-
-        $country = $IcebergInstance->getCountry(array("code" => "FR"));
+	$country = $IcebergInstance->getCountry(array("code" => "FR"));
 ```
 Now we can set the Shipping and Billing addresses.
 
 ```php
 
-        $address = $IcebergInstance->createAddresses(array(
-            "address" => "ADDRESS LINE 1",
-            "address2" => "ADDRESS LINE 2",
-            "city" => "CITY NAME"
-            "company" => "OPTIONNAL COMPANY NAME",
-            "country" => "/v1/country/" . $country->id . "/",
-            "default_billing" => true,
-            "default_shipping" => true,
-            "digicode" => null,
-            "first_name" => "FIRST NAME",
-            "floor" => null,
-            "last_name" => "LAST NAME",
-            "name" => "ADDRESS NAME",
-            "phone" => "PHONE NUMBER",
-            "state" => "OPTIONNAL STATE NAME",
-            "status" => 10, // 0 : INACTIVE // 10 : ACTIVE // 90 : HIDDEN
-            "zipcode" => "ZIPCODE"
-        	));
+	$address = $IcebergInstance->createAddresses(array(
+        "address" => "ADDRESS LINE 1",
+        "address2" => "ADDRESS LINE 2",
+        "city" => "CITY NAME"
+        "company" => "OPTIONNAL COMPANY NAME",          "country" => "/v1/country/" . $country->id . "/",
+        "default_billing" => true,
+        "default_shipping" => true,
+        "digicode" => null,
+        "first_name" => "FIRST NAME",
+        "floor" => null,
+        "last_name" => "LAST NAME",
+        "name" => "ADDRESS NAME",
+        "phone" => "PHONE NUMBER",
+        "state" => "OPTIONNAL STATE NAME",
+		//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
+        "status" => 10,
+        "zipcode" => "ZIPCODE"
+        ));
 
  		$IcebergInstance->setBillingAddress($address->id);
         $IcebergInstance->setShippingAddress($address->id);
@@ -194,19 +193,19 @@ We get the first merchant with getMerchants()
 	require_once "iceberg.php";
 
 	$valid_array = array(
-	  'appNamespace' => 'YOUR_APP_NAMESPACE',
-      'accessToken'      => 'YOUR_ACCESSTOKEN',
-      'username'   => 'YOUR_USERNAME',
-      'apiKey'      => 'YOUR_APP_KEY',
-      'apiSecret'   => 'YOUR_APP_SECRET'
-	  )
+		'appNamespace' => 'YOUR_APP_NAMESPACE',
+    	'accessToken'      => 'YOUR_ACCESSTOKEN',
+    	'username'   => 'YOUR_USERNAME',
+    	'apiKey'      => 'YOUR_APP_KEY',
+    	'apiSecret'   => 'YOUR_APP_SECRET'
+		)
 
 	$IcebergInstance = new Iceberg($valid_array);
 	$merchants = $IcebergInstance->getMerchants();
 	$my_merchant = $merchants->object[0];
 
 ```
-and we get his products using getFullProductImport(), then we get the best offer's id from the first product.
+And we get his products using getFullProductImport(), then we get the best offer's id from the first product.
 
 ```php
 
@@ -220,9 +219,9 @@ Now that we have an offer ID, the process is the same as above
 ```php
 
     $IcebergInstance->setUser(array(
-            "email" => "EMAIL_ADDRESS",
-            "first_name" => "FIRST_NAME",
-            "last_name" => "LAST_NAME"
+        "email" => "EMAIL_ADDRESS",
+        "first_name" => "FIRST_NAME",
+        "last_name" => "LAST_NAME"
         ));
 
 	$my_cart = IcebergInstance->newCart();
@@ -232,24 +231,24 @@ Now that we have an offer ID, the process is the same as above
 		));
     $country = $IcebergInstance->getCountry(array("code" => "FR"));
     $address = $IcebergInstance->createAddresses(array(
-            "address" => "ADDRESS LINE 1",
-            "address2" => "ADDRESS LINE 2",
-            "city" => "CITY NAME"
-            "company" => "OPTIONNAL COMPANY NAME",
-            "country" => "/v1/country/" . $country->id . "/",
-            "default_billing" => true,
-            "default_shipping" => true,
-            "digicode" => null,
-            "first_name" => "FIRST NAME",
-            "floor" => null,
-            "last_name" => "LAST NAME",
-            "name" => "ADDRESS NAME",
-            "phone" => "PHONE NUMBER",
-            "state" => "OPTIONNAL STATE NAME",
-			//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
-            "status" => 10,
-            "zipcode" => "ZIPCODE"
-   	    	));
+		"address" => "ADDRESS LINE 1",
+		"address2" => "ADDRESS LINE 2",
+        "city" => "CITY NAME"
+        "company" => "OPTIONNAL COMPANY NAME",
+        "country" => "/v1/country/" . $country->id . "/",
+        "default_billing" => true,
+        "default_shipping" => true,
+        "digicode" => null,
+        "first_name" => "FIRST NAME",
+        "floor" => null,
+        "last_name" => "LAST NAME",
+        "name" => "ADDRESS NAME",
+        "phone" => "PHONE NUMBER",
+        "state" => "OPTIONNAL STATE NAME",
+		//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
+        "status" => 10,
+        "zipcode" => "ZIPCODE"
+     	));
 
 	$IcebergInstance->setBillingAddress($address->id);
     $IcebergInstance->setShippingAddress($address->id);
