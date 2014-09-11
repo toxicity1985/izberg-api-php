@@ -96,7 +96,21 @@ Creating an order on Iceberg is really easy, the only thing you need is the Item
 
 ```php
 
-        $IcebergInstance->setUser(array(
+<?php
+	
+	require_once "iceberg.php";
+
+	$valid_array = array(
+  		'appNamespace' => 'YOUR_APP_NAMESPACE',
+  		'accessToken'      => 'YOUR_ACCESSTOKEN',
+  		'username'   => 'YOUR_USERNAME',
+  		'apiKey'      => 'YOUR_APP_KEY',
+  		'apiSecret'   => 'YOUR_APP_SECRET'
+	  )
+
+	$IcebergInstance = new Iceberg($valid_array);
+
+    $IcebergInstance->setUser(array(
             "email" => "EMAIL_ADDRESS",
             "first_name" => "FIRST_NAME",
             "last_name" => "LAST_NAME"
@@ -121,11 +135,16 @@ Now that we have set the User informations, we can add the offer to the cart.
 
 You have to use addCartItem() for each different offer you want to add to your cart.
 
-Now we can set the Shipping and Billing addresses.
+We need the country_id in in order to set the customer's address (Default value is "FR").
 
 ```php
 
         $country = $IcebergInstance->getCountry(array("code" => "FR"));
+```
+Now we can set the Shipping and Billing addresses.
+
+```php
+
         $address = $IcebergInstance->createAddresses(array(
             "address" => "ADDRESS LINE 1",
             "address2" => "ADDRESS LINE 2",
@@ -157,6 +176,7 @@ Now that both addresses are set, we can place the order.
         $order = $IcebergInstance->createOrder();
         $order->authorizeOrder();
 
+?>
 
 ```
 
@@ -168,6 +188,10 @@ Here is an arbitrary exemple of a complete order process.
 We get the first merchant with getMerchants()
 
 ```php
+
+<?php
+	
+	require_once "iceberg.php";
 
 	$valid_array = array(
 	  'appNamespace' => 'YOUR_APP_NAMESPACE',
@@ -232,6 +256,7 @@ Now that we have an offer ID, the process is the same as above
 	$order = $IcebergInstance->createOrder();    
 	$order->authorizeOrder();
 
+?>
 
 ```
 
