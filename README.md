@@ -88,6 +88,47 @@ By default we authenticate the admin user with informations specified on initial
 This is useful when you want to link your api calls to a user, you will need it during an order process.
 
 
+##Ressources
+
+###Merchant
+
+First of all, you can get the merchant ressource's schema using the getMerchantsSchema() function
+
+```php
+<?php
+	require_once "iceberg.php";
+
+	$valid_array = array(
+  		'appNamespace' => 'YOUR_APP_NAMESPACE',
+  		'accessToken'  => 'YOUR_ACCESSTOKEN',
+  		'username'     => 'YOUR_USERNAME',
+  		'apiKey'       => 'YOUR_APP_KEY',
+  		'apiSecret'    => 'YOUR_APP_SECRET'
+	  )
+	
+		$IcebergInstance = new Iceberg($valid_array);
+		var_export($IcebergInstance->getMerchantsSchema());
+?>
+```
+
+You can all the merchant on your marketplace using getMerchants()
+
+```php
+
+	var_export($IcebergInstance->getMerchants());
+
+```
+
+Or you can get a specific merchant using getMerchantById
+
+
+```php
+
+	$id_merchant = "VALID MERCHANT ID";
+	var_export($IcebergInstance->getMerchantById());
+
+```
+
 ## Order Process
 
 ### Simple Order
@@ -194,10 +235,10 @@ We get the first merchant with getMerchants()
 
 	$valid_array = array(
 		'appNamespace' => 'YOUR_APP_NAMESPACE',
-    	'accessToken'      => 'YOUR_ACCESSTOKEN',
-    	'username'   => 'YOUR_USERNAME',
-    	'apiKey'      => 'YOUR_APP_KEY',
-    	'apiSecret'   => 'YOUR_APP_SECRET'
+    	'accessToken'  => 'YOUR_ACCESSTOKEN',
+    	'username'     => 'YOUR_USERNAME',
+    	'apiKey'       => 'YOUR_APP_KEY',
+    	'apiSecret'    => 'YOUR_APP_SECRET'
 		)
 
 	$IcebergInstance = new Iceberg($valid_array);
