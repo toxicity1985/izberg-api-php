@@ -129,7 +129,7 @@ Now that we have set the User informations, we can add the offer to the cart.
 	$IcebergInstance->addCartItem(array(
 		'offer_id' => $id_offer,
 		'quantity' => (int)$quantity,
-		)
+		));
 
 ```
 
@@ -162,7 +162,7 @@ Now we can set the Shipping and Billing addresses.
             "state" => "OPTIONNAL STATE NAME",
             "status" => 10, // 0 : INACTIVE // 10 : ACTIVE // 90 : HIDDEN
             "zipcode" => "ZIPCODE"
-        ));
+        	));
 
  		$IcebergInstance->setBillingAddress($address->id);
         $IcebergInstance->setShippingAddress($address->id);
@@ -229,7 +229,7 @@ Now that we have an offer ID, the process is the same as above
 	$IcebergInstance->addCartItem(array(
 		'offer_id' => $best_offer_id,
 		'quantity' => 1
-		)
+		));
     $country = $IcebergInstance->getCountry(array("code" => "FR"));
     $address = $IcebergInstance->createAddresses(array(
             "address" => "ADDRESS LINE 1",
