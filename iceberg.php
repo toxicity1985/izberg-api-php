@@ -687,7 +687,7 @@ class Iceberg {
 	 */
 	public function getProducts($params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("product/", "GET", $params, $accept_type);
+		return $this->get_object("product", $params, $accept_type);
 	}
 
 	/**
@@ -698,7 +698,7 @@ class Iceberg {
 	 */
 	public function getProduct($id, $params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("product/$id", "GET", $params, $accept_type);
+		return $this->get_object("product/$id", $params, $accept_type);
 	}
 
 	/**
@@ -708,7 +708,7 @@ class Iceberg {
 	 */
 	public function getProductsSchema()
 	{
-		return $this->_makeCall("product/schema/");
+		return $this->get_object("product/schema/");
 	}
 
 	/**
@@ -745,7 +745,7 @@ class Iceberg {
 	 */
 	public function getMerchants($params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("merchant/", "GET", $params, $accept_type = 'Accept: application/json');
+		return $this->get_object("merchant", $params, $accept_type = 'Accept: application/json');
 	}
 
 	/**
@@ -891,7 +891,7 @@ class Iceberg {
 
 	public function getUser()
 	{
-		return $this->_makeCall("user/me/", 'GET');
+		return $this->get_object("user/me");
 	}
 
 	/**
@@ -995,7 +995,7 @@ class Iceberg {
 	 */
 	public function getAddress($address_id, $params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("address/$address_id", 'GET', $params, $accept_type);
+		return $this->get("address/$address_id", 'GET', $params, $accept_type);
 	}
 
 	/**
@@ -1006,13 +1006,16 @@ class Iceberg {
 	public function getPaymentCardAlias($params = null, $accept_type = 'Accept: application/json')
 	{
 		$params["user"] = $this->current_user->id;
-		return $this->_makeCall("/v1/payment_card_alias/", 'GET', $params, $accept_type);
+		return $this->get_object("payment_card_alias", $params, $accept_type);
 	}
 
 	//_makeCall($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
 	public function get_object($name, $id = null, $params = null, $accept_type = "Accept: application/json")
 	{
-		return $this->_makeCall($name."/".$id, 'GET', $params, $accept_type);
+		if ($if)
+			return $this->_makeCall($name."/".$id."/", 'GET', $params, $accept_type);
+		else
+			return $this->_makeCall($name."/", 'GET', $params, $accept_type);
 	}
 
 	public function create_object($name, $params = null)
