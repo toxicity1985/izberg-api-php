@@ -838,7 +838,7 @@ class Iceberg {
 	 */
 	public function removeCartItem($cart_item_id, $params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("cart_item/" . $cart_item_id . "/", 'DELETE', $params, $accept_type);
+		return $this->delete_object("cart_item", $cart_item_id, $params, $accept_type);
 	}
 
 
@@ -1043,15 +1043,16 @@ class Iceberg {
 
 	public function delete_object($name, $id)
 	{
-		if (!$name)
+		if (!$name || !$id)
 			return ;
-		return null;
+		return $this->_makeCall($name . "/" . $id . "/", 'DELETE', $params, $accept_type);
 	}
 
 	public function save_object($data)
 	{
-		if (!$data)
+		if (!$data || (!$data->resource_uri && !$data["resource_uri"]))
 			return ;
-		return ;
+		$data = (array)$data;
+		return $this->_makeCall($data["resource_uri"], 'PUT', $data, $accept_type);
 	}
 }

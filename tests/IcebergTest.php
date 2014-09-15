@@ -403,6 +403,9 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$merchants = $a->getMerchants();
 		$merchant = $merchants->objects[0];
 		$products = $a->getFullProductImport($merchant->id);
+		$my_merchant = getMerchantById(15);
+		$my_merchant->description = "Salut ça marche";
+		$a->save_object($my_merchant);
 		$product = $products->product;
 		$best_offer_id = (string) $product->best_offer->id;
 		$i = 0;
