@@ -1052,6 +1052,6 @@ class Iceberg {
 	{
 		if (!$data)
 			return ;
-		return null;
+		return ;
 	}
 }

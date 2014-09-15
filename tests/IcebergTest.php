@@ -402,6 +402,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$products = $a->getFullProductImport($merchant->id);
 		$product = $products->product;
 		$best_offer_id = (string) $product->best_offer->id;
+		$best_variation = (string) $product->best_offer->variations[0]->id;
 		$a->setUser(array(
 			"email" => "support@lolote.fr",
 			"first_name" => "lolote",
@@ -411,6 +412,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$a->newCart();
 		$a->addCartItem(array(
 			"offer_id" => $best_offer_id,
+			"variation_id" => $best_variation,
 			"quantity" => 1
 			));
 		$country = $a->getCountry(array("code" => "FR"));
@@ -435,7 +437,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$a->setBillingAddress($address->id);
 		$a->setShippingAddress($address->id);
 		$order = $a->createOrder(array(
-	// "payment_info_id" => 10
+			"payment_info_id" => 10
 			));
 	// Place the order
 		$a->authorizeOrder();
