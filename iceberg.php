@@ -1048,9 +1048,9 @@ class Iceberg {
 		return null;
 	}
 
-	public function save_object($name, $id)
+	public function save_object($data)
 	{
-		if (!$name)
+		if (!$data)
 			return ;
 		return null;
 	}
