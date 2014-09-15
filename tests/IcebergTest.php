@@ -403,6 +403,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$product = $products->product;
 		$best_offer_id = (string) $product->best_offer->id;
 		$best_variation = (string) $product->best_offer->variations->variation->id;
+		echo "BEST OFFER VARIATION :" . $best_variation;
 		$a->setUser(array(
 			"email" => "support@lolote.fr",
 			"first_name" => "lolote",
@@ -447,7 +448,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			//"payment_info_id" => 10
 			));
 	// Place the order
-		echo var_export($order, true);
 		$a->authorizeOrder();
 	}
 
