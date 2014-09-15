@@ -447,7 +447,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			//"payment_info_id" => 10
 			));
 	// Place the order
-		echo var_export($a, true);
+		echo var_export($order, true);
 		$a->authorizeOrder();
 	}
 
