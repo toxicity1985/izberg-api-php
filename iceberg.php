@@ -687,7 +687,7 @@ class Iceberg {
 	 */
 	public function getProducts($params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->get_object("product", $params, $accept_type);
+		return $this->get_list("product", $params, $accept_type);
 	}
 
 	/**
@@ -698,7 +698,7 @@ class Iceberg {
 	 */
 	public function getProduct($id, $params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->get_object("product/$id", $params, $accept_type);
+		return $this->get_object("product", $id, $params, $accept_type);
 	}
 
 	/**
@@ -708,7 +708,7 @@ class Iceberg {
 	 */
 	public function getProductsSchema()
 	{
-		return $this->get_object("product/schema/");
+		return $this->get_list("product/schema");
 	}
 
 	/**
@@ -719,7 +719,7 @@ class Iceberg {
 	 */
 	public function getFullProductImport($merchant_id, $params = null, $accept_type = 'Accept: application/xml')
 	{
-		return $this->_makeCall("merchant/$merchant_id/download_export/", 'GET', $params , $accept_type);
+		return $this->get_list("merchant/".$merchant_id."/download_export", $params , $accept_type);
 	}
 
 
@@ -731,7 +731,7 @@ class Iceberg {
 	 */
 	public function getCategories($params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("category/", 'GET', $params, $accept_type);
+		return $this->get_list("category", $params, $accept_type);
 	}
 
 	/**
@@ -745,7 +745,7 @@ class Iceberg {
 	 */
 	public function getMerchants($params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->get_object("merchant", $params, $accept_type = 'Accept: application/json');
+		return $this->get_list("merchant", $params, $accept_type = 'Accept: application/json');
 	}
 
 	/**
@@ -756,7 +756,7 @@ class Iceberg {
 	 */
 	public function getMerchantById($id = 0)
 	{
-		return $this->_makeCall("merchant/".$id."/", "GET");
+		return $this->get_object("merchant", $id);
 	}
 
 	/**
@@ -766,8 +766,7 @@ class Iceberg {
 	 */
 	public function getMerchantsSchema($params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("merchant/schema/", 'GET', $params, $accept_type);
-
+		return $this->get_object("merchant", "schema", $params, $accept_type);
 	}
 
 	/**
@@ -778,15 +777,16 @@ class Iceberg {
 	public function getCart($params = null, $accept_type = 'Accept: application/json')
 	{
 		if (!$this->_current_cart) {
-			$this->_current_cart = $this->_makeCall("cart/mine/", 'GET', $params, $accept_type);
+			$this->_current_cart = $this->get_object("cart", "mine", $params, $accept_type);
 		}
 		return $this->_current_cart;
 	}
 
 	public function newCart($params = null, $accept_type = 'Accept: application/json')
 	{
-		if ($this->_debug) $params["debug"] = true;
-		return $this->_makeCall("cart/", 'POST', $params, $accept_type);
+		if ($this->_debug)
+			$params["debug"] = true;
+		return $this->create_object("cart", $params, $accept_type);
 	}
 
 	/**
@@ -828,7 +828,7 @@ class Iceberg {
 		//   quantity: Integer
 		//   gift: Boolean
 		//   bundled: Boolean
-		return $this->_makeCall("cart_item/" . $id . "/", 'PUT', $params, $accept_type);
+		return $this->update_object("cart_item", $id, $params, $accept_type);
 	}
 
 	/**
@@ -917,7 +917,7 @@ class Iceberg {
 		if (!$this->_countries)
 			$this->_countries = array();
 		if (!isset($this->_countries[$params["code"]])) {
-			$response = $this->_makeCall("country/", 'GET', $params, $accept_type);
+			$response = $this->get_object("country", null, $params, $accept_type);
 			$result = $response->objects[0];
 			$this->_countries[$params["code"]] = $result;
 		} else {
@@ -934,7 +934,7 @@ class Iceberg {
 	 */
 	public function getAddresses($params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("address/", 'GET', $params, $accept_type);
+		return $this->get_list("address", $params, $accept_type);
 	}
 
 	/**
@@ -945,7 +945,7 @@ class Iceberg {
 	public function setBillingAddress($id, $params = null, $accept_type = 'Accept: application/json')
 	{
 		$params["billing_address"] = "/v1/address/$id/" ;
-		return $this->_makeCall("cart/" . $this->_current_cart->id . "/", 'PUT', $params, $accept_type);
+		return $this->update_object("cart", $this->_current_cart->id, $params, $accept_type);
 	}
 
 	/**
@@ -956,7 +956,7 @@ class Iceberg {
 	public function setShippingAddress($id, $params = null, $accept_type = 'Accept: application/json')
 	{
 		$params["shipping_address"] = "/v1/address/$id/";
-		return $this->_makeCall("cart/" . $this->_current_cart->id . "/", 'PUT', $params, $accept_type);
+		return $this->update_object("cart", $this->_current_cart->id, $params, $accept_type);
 	}
 
 	/**
@@ -985,7 +985,7 @@ class Iceberg {
 		//   10: Active address
 		//   90: Hidden address
 		// zipcode
-		return $this->_makeCall("address/", 'POST', $params, $accept_type);
+		return $this->create_object("address", $params, $accept_type);
 	}
 
 	/**
@@ -995,7 +995,7 @@ class Iceberg {
 	 */
 	public function getAddress($address_id, $params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->get("address/$address_id", 'GET', $params, $accept_type);
+		return $this->get_object("address", $address_id, $params, $accept_type);
 	}
 
 	/**
@@ -1012,33 +1012,47 @@ class Iceberg {
 	//_makeCall($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
 	public function get_object($name, $id = null, $params = null, $accept_type = "Accept: application/json")
 	{
-		if ($if)
+		if (!$name)
+			return ;
+		if ($id)
 			return $this->_makeCall($name."/".$id."/", 'GET', $params, $accept_type);
 		else
 			return $this->_makeCall($name."/", 'GET', $params, $accept_type);
 	}
 
+	public function get_list($name, $id)
+	{
+		if (!$name)
+			return ;
+		return $this->_makeCall($name."/", 'GET', $params, $accept_type);
+		return null;
+	}
+
 	public function create_object($name, $params = null)
 	{
+		if (!$name)
+			return ;
 		return $this->_makeCall($name."/", 'POST', $params, $accept_type);
 	}
 
-	public function update_object($name, $id)
+	public function update_object($name, $id, $params = null, $accept_type = "Accept: application/json")
 	{
-		return null;
+		if (!$name)
+			return ;
+		return $this->_makeCall($name . "/" . $id . "/", 'PUT', $params, $accept_type);
 	}
 
 	public function delete_object($name, $id)
 	{
+		if (!$name)
+			return ;
 		return null;
 	}
 
 	public function save_object($name, $id)
 	{
+		if (!$name)
+			return ;
 		return null;
 	}
 
-	public function get_list($name, $id)
-	{
-		return null;
-	}
