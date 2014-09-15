@@ -1020,15 +1020,14 @@ class Iceberg {
 			return $this->_makeCall($name."/", 'GET', $params, $accept_type);
 	}
 
-	public function get_list($name, $id)
+	public function get_list($name, $params = null, $accept_type = "Accept: application/json")
 	{
 		if (!$name)
 			return ;
 		return $this->_makeCall($name."/", 'GET', $params, $accept_type);
-		return null;
 	}
 
-	public function create_object($name, $params = null)
+	public function create_object($name, $params = null, $accept_type = "Accept: application/json")
 	{
 		if (!$name)
 			return ;
