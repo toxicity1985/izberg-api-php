@@ -403,8 +403,11 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$product = $products->product;
 		$best_offer_id = (string) $product->best_offer->id;
 		$i = 0;
-		while ($product->best_offer->variations->variation[$i]->stock == 0)
+		while ((int)$product->best_offer->variations->variation[$i]->stock === 0)
+		{
+			echo"\nCURRENT VAR : " . $product->best_offer->variations->variation[$i]->id;
 			$i++;
+		}
 		$best_variation = (string) $product->best_offer->variations->variation[$i]->id;
 		echo "\nVARIATION STOCK" . $product->best_offer->variations->variation[$i]->stock;
 		echo "\nBEST OFFER VARIATION :" . $best_variation;
