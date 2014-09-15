@@ -444,7 +444,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$a->setBillingAddress($address->id);
 		$a->setShippingAddress($address->id);
 		$order = $a->createOrder(array(
-			"payment_info_id" => 10
+			//"payment_info_id" => 10
 			));
 	// Place the order
 		$a->authorizeOrder();
