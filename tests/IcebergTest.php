@@ -402,7 +402,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$products = $a->getFullProductImport($merchant->id);
 		$product = $products->product;
 		$best_offer_id = (string) $product->best_offer->id;
-		$best_variation = (string) $product->best_offer->variations[0]->id;
+		$best_variation = (string) $product->best_offer->variations->variation->id;
 		$a->setUser(array(
 			"email" => "support@lolote.fr",
 			"first_name" => "lolote",
