@@ -410,9 +410,16 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			));
 	// We create a new cart
 		$a->newCart();
+		/*
 		$a->addCartItem(array(
 			"offer_id" => $best_offer_id,
 			"variation_id" => $best_variation,
+			"quantity" => 1
+			));
+			*/
+		$a->addCartItem(array(
+			"offer_id" => 149,
+			"variation_id" => 283,
 			"quantity" => 1
 			));
 		$country = $a->getCountry(array("code" => "FR"));
