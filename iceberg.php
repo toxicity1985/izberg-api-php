@@ -1053,6 +1053,6 @@ class Iceberg {
 		if (!$data || (!$data->resource_uri && !$data["resource_uri"]))
 			return ;
 		$data = (array)$data;
-		return $this->_makeCall($data["resource_uri"], 'PUT', $data, $accept_type);
+		return $this->_makeCall($data["resource_uri"], 'PUT', $data);
 	}
 }
