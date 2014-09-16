@@ -395,8 +395,11 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testSaveObject()
 	{
-		$b = $this->getIceberg(array("accesToken" => "mravenel:e405da7aa2751d695ea420987e5af8759fb9e6ee",
-								"sandbox" => true));
+		$b = $this->getIceberg(array(
+								"username" => "mravenel",
+								"accesToken" => "e405da7aa2751d695ea420987e5af8759fb9e6ee",
+								"sandbox" => true
+								));
 		$my_merchant = $b->getMerchantById(15);
 		echo "MERCHANT :::";
 		var_export($my_merchant, true);
