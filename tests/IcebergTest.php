@@ -403,6 +403,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 								"sandbox" => true));
 		$products = $b->getFullProductImport($merchant->id);
 		$my_merchant = $b->getMerchantById(15);
+		var_export($my_merchant, true);
 		$my_merchant->description = "Salut ça marche";
 		$b->save_object($my_merchant);
 
