@@ -473,10 +473,12 @@ class Iceberg {
 				$this->setUsername($config['username']);
 			}
 
-			if (isset($config['apiKey'])) $this->setApiKey($config['apiKey']);
-			if (isset($config['apiSecret'])) $this->setApiSecret($config['apiSecret']);
-
-			$this->setAppNamespace($config['appNamespace']);
+			if (isset($config['apiKey']))
+				$this->setApiKey($config['apiKey']);
+			if (isset($config['apiSecret']))
+				$this->setApiSecret($config['apiSecret']);
+			if (isset($config['appNamespace']))
+				$this->setAppNamespace($config['appNamespace']);
 			(isset($config['currency'])) ? $this->setCurrency($config['currency']) : $this->setCurrency(self::DEFAULT_CURRENCY);
 			(isset($config['shippingCountry'])) ? $this->setShippingCountry($config['shippingCountry']) : $this->setShippingCountry(self::DEFAULT_SHIPPING_COUNTRY);
 
