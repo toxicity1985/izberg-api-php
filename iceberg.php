@@ -1055,6 +1055,10 @@ class Iceberg {
 		if (!$data || (!$data->resource_uri && !$data["resource_uri"]))
 			return ;
 		$data = (array)$data;
+		if (strncmp("http", $data["resource_uri"], 4) == 0)
+			$data["resource_uri"] = substr($data["resource_uri"], strlen(self::$_api_url));
+		else if ($data["resource_uri"][0] == '/')
+			$data["resource_uri"] = substr($data["resource_uri"], 1);
 		return $this->_makeCall($data["resource_uri"], 'PUT', $data);
 	}
 }
