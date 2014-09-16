@@ -393,25 +393,29 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($new_address->id, $address->id);
 	}
 
+	public function testSaveObject()
+	{
+		$b = $this->getIceberg(array("accesToken" => "mravenel:e405da7aa2751d695ea420987e5af8759fb9e6ee",
+								"sandbox" => true));
+		$my_merchant = $b->getMerchantById(15);
+		echo "MERCHANT :::";
+		var_export($my_merchant, true);
+		$my_merchant->description = "Salut ça marche";
+		$b->save_object($my_merchant);
+		$merchant_check = $b->getMerchantById(15);
+		$this->assertEquals($my_merchant, $merchant_check);
+	}
+
 	// MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
 
 	public function testFullOrderProcess()
 	{
 		ini_set("memory_limit","1024M");
-
-		$b = new $Iceberg(array("accesToken" => "mravenel:e405da7aa2751d695ea420987e5af8759fb9e6ee",
-								"sandbox" => true));
-		$products = $b->getFullProductImport($merchant->id);
-		$my_merchant = $b->getMerchantById(15);
-		var_export($my_merchant, true);
-		$my_merchant->description = "Salut ça marche";
-		$b->save_object($my_merchant);
-
-
 		$a = $this->getRealIcebergInstance();
 	// We get the first merchant
 		$merchants = $a->getMerchants();
 		$merchant = $merchants->objects[0];
+		$products = $a->getFullProductImport($merchant->id);
 		$product = $products->product;
 		$best_offer_id = (string) $product->best_offer->id;
 		$i = 0;
