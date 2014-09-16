@@ -397,20 +397,20 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	{
 		$b = $this->getIceberg(array(
 								"username" => "mravenel",
-								"accesToken" => "e405da7aa2751d695ea420987e5af8759fb9e6ee",
+								"accessToken" => "e405da7aa2751d695ea420987e5af8759fb9e6ee",
 								"sandbox" => true
 								));
+		$description = "random description ".rand(0, 1000);
 		$my_merchant = $b->getMerchantById(15);
-		echo "MERCHANT :::";
-		var_export($my_merchant, true);
-		$my_merchant->description = "Salut ça marche";
-		$b->save_object($my_merchant);
+		$my_merchant->description = $description;
+		$test = $b->save_object($my_merchant);
+		//$test = $b->save_object($my_merchant);
 		$merchant_check = $b->getMerchantById(15);
 		$this->assertEquals($my_merchant, $merchant_check);
 	}
 
 	// MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
-
+/*
 	public function testFullOrderProcess()
 	{
 		ini_set("memory_limit","1024M");
@@ -469,5 +469,5 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	// Place the order
 		$a->authorizeOrder();
 	}
-
+ */
 }
