@@ -1,3 +1,5 @@
+before_install:
+    openssl aes-256-cbc -K $encrypted_4c5164587105_key -iv $encrypted_4c5164587105_iv -in test.txt.enc -out test.txt -d
 branches:
     only:
         - raf
@@ -12,8 +14,3 @@ php:
     - 5.3
 script:
     - phpunit tests/IcebergTest.php
-env :
-    secure:
-        "XeJ0zfa1nOqE3NIEWnYcMLRxUmN0AzuvMXKP1v+GBJQ00m+CCd/DO59EQ6z50Kw7tzYVu7ufPt/Ty+damm0XWUvn8Qfm5dCSSTdWr9UoYjYHaCPCQbVIRAttLsHTU2pxKvn/UIyJstdpNaTMR6hvB3omDm3pbPFUlBrkfRbQxhA="
-env:
-    secure: "A5m0srxdsu4JJf5apz4Ima+ezDdw2WRgXHz6qMPc6R7sUj6nwVMY6Ipcesuf8T8hgK+UfEMsUgcti53Q7/ipTaMgHv3tjvdC61fZk36YTu/unnfN7id9gg8QA93By0/F0s5wLSuYHXVxMr2m/xRrg6mZtLSwfSSsY75B9iahSsw="
