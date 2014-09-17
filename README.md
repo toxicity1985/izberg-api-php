@@ -99,8 +99,7 @@ The get_list() method will return all the ressource's elements
 
 ```php
 
-get_list($name, $params = null, $accept_type = "Accept: application/json")
-
+public function get_list($name, $params = null, $accept_type = "Accept: application/json")
 ```
 The first parameter is the ressource's name, the second one are the eventual parameters, the last one is the accept type, for most of the action, you will only need the $name parameter
 
@@ -108,8 +107,7 @@ For exemple, the following will return the list of all the merchants on your mar
 
 ```php
 
-get_list("merchant");
-
+$Iceberg->get_list("merchant");
 ```
 
 ####Get Object
@@ -118,16 +116,14 @@ The get_object() method works like get_list(), but it returns only one object, y
 
 ```php
 
-	get_object($name, $id = null, $params = null, $accept_type = "Accept: application/json")
-
+public function get_object($name, $id = null, $params = null, $accept_type = "Accept: application/json")
 ```
 
 For exemple, the following will return the cart object of id '963'
 
 ```php
 
-get_object("cart", 963);
-
+$Iceberg->get_object("cart", 963);
 ```
 
 ####Create Object
@@ -136,19 +132,20 @@ The create_object() method will create a new element of the specified ressource
 
 ```php
 
-create_object($name, $params = null, $accept_type = "Accept: application/json")
-
+public function create_object($name, $params = null, $accept_type = "Accept: application/json")
 ```
 
 $name is the ressource's name and $params are the object you want to create ($params can be either an object or an array)
 
+The following example will create a new address
+
 ```php
 
-create_object("address", array(
+$Iceberg->create_object("address", array(
 							"address" => "ADDRESS LINE 1",
        						"address2" => "ADDRESS LINE 2",
         					"city" => "CITY NAME",
-     		 			 	"company" => "OPTIONNAL COMPANY"          "country" => "COUNTRY_ID",
+     		 			 	"company" => "OPTIONNAL COMPANY",          "country" => "COUNTRY_ID",
      					    "default_billing" => true,
     					    "default_shipping" => true,
      					    "digicode" => null,
@@ -162,7 +159,62 @@ create_object("address", array(
         					"zipcode" => "ZIPCODE"
 							)
 				);
+```
 
+####Update Object
+
+The update_object() method will update one element from the specified ressource
+
+```php
+
+public function update_object($name, $id, $params = null, $accept_type = "Accept: application/json")
+```
+
+$name is the ressource's name, $id is the object's id and $params are the fields you want to update.
+
+The following example will update an existing merchant
+
+```php
+
+$Iceberg->update_object("merchant", 15, array("description" => "An updated merchant"));
+```
+
+####Save Object
+
+The save_object() method is an easiest way of updating an object.
+
+```php
+
+	public function save_object($data)
+```
+The only argument is the object you want to update, save_object will automatically update it.
+
+The following code gets the merchant of id 15, changes his description, and update it using save_object()
+```php
+
+$merchant = $Iceberg->get_object("merchant", 15);
+
+$merchant->description = "An Updated Merchant";
+
+$Iceberg->save_object($merchant);
+
+```
+
+####Delete Object
+
+The delete_object() method is used to delete an element from a specific ressource
+
+```php
+
+	public function delete_object($name, $id)
+```
+$name is the ressource's name and $id is the element's id
+
+The following code deletes the cart of id 963
+
+```php
+
+	$Iceberg->delete_object("cart", 963);
 ```
 
 ###Merchant
