@@ -547,6 +547,24 @@ class Iceberg {
 	}
 
 	/**
+	 * The Log Function
+	 *
+	 * @param string $Message               Your log message
+	 * @param string [optional]             Log type (default is "ERROR")
+	 * @param string [optional]             Directory path for logs, CWD by default
+	**/
+	public function log($message, $level="error", $path = null)
+	{
+		date_default_timezone_set("Europe/berlin");
+		if (false === self::LOGS)
+			return ;
+		if (false === is_dir($path))
+			$path = null;
+		else if (substr($path, -1) != '/')
+			$path .= '/';
+		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ")." : ".$message."\n", FILE_APPEND);
+	}
+	/**
 	 * The call operator
 	 *
 	 * @param string $function              API resource path
@@ -1050,18 +1068,6 @@ class Iceberg {
 			return ;
 		return $this->_makeCall($name . "/" . $id . "/", 'DELETE', $params, $accept_type);
 	}
-	
-	public function log($message, $level, $path = null)
-	{
-		date_default_timezone_set("Europe/berlin");
-		if (false === self::LOGS)
-			return ;
-		if (false === is_dir($path))
-			$path = null;
-		else if (substr($path, -1) != '/')
-			$path .= '/';
-		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ")." : ".$message."\n", FILE_APPEND);
-	}
 
 	public function save_object($data)
 	{
@@ -1074,4 +1080,5 @@ class Iceberg {
 			$data["resource_uri"] = substr($data["resource_uri"], 1);
 		return $this->_makeCall($data["resource_uri"], 'PUT', $data);
 	}
-}
+
+	}
