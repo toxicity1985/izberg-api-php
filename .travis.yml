@@ -1,20 +1,17 @@
 branches:
-  only:
-    - raf
+    only:
+        - raf
     - master
     - marin_dev
     - develop
     - marin_reform
 language: php
 php:
- - 5.5
- - 5.4
- - 5.3
+    - 5.5
+    - 5.4
+    - 5.3
 script:
-  - phpunit tests/IcebergTest.php
-notifications:
-  campfire:
-    rooms:
-      secure:
-          - "wOOS+c3i8UQPKg11f7i0miX7+nRFCCosgM0f8F+xkil/FF/IOnnOG65b86nVPHEvrCCMDPL20+CMcT8cOH74EHoTgeGzc3LdtnCjIfd0lihirAz3OtpJlEJegETdzJNebb1h1W0Swet9xbVdKJq3RPm/srZFUmP9NeB+ONDFR+U="
-          - "YA7HkuGKoUYzeISYfNInC6GvRTcmjFKOjS/dg6l1ykXnVAPxh1+mOWvlU0PLLdjJ7OCHJwz5vhXQ3542CJDCiiEpoWUmcv6xgqLT7J/qx/blmXR6x3mGRLdrp9DHOR3qKJLEpl3JAWEZw03DmTo7Vd0xAE6YyUshELENWoH65FQ="
+    - phpunit tests/IcebergTest.php
+env :
+    - "wOOS+c3i8UQPKg11f7i0miX7+nRFCCosgM0f8F+xkil/FF/IOnnOG65b86nVPHEvrCCMDPL20+CMcT8cOH74EHoTgeGzc3LdtnCjIfd0lihirAz3OtpJlEJegETdzJNebb1h1W0Swet9xbVdKJq3RPm/srZFUmP9NeB+ONDFR+U="
+    - "YA7HkuGKoUYzeISYfNInC6GvRTcmjFKOjS/dg6l1ykXnVAPxh1+mOWvlU0PLLdjJ7OCHJwz5vhXQ3542CJDCiiEpoWUmcv6xgqLT7J/qx/blmXR6x3mGRLdrp9DHOR3qKJLEpl3JAWEZw03DmTo7Vd0xAE6YyUshELENWoH65FQ="
