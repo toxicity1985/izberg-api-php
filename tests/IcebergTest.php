@@ -396,8 +396,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testSaveObject()
 	{
 		$b = $this->getIceberg(array(
-								"username" => "mravenel",
-								"accessToken" => "e405da7aa2751d695ea420987e5af8759fb9e6ee",
+								"username" => $_ENV['USERNAME1'],
+								"accessToken" => $_ENV['TOKEN1'],
 								"sandbox" => true
 								));
 		$description = "random description ".rand(0, 1000);
