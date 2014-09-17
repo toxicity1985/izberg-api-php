@@ -552,7 +552,7 @@ class Iceberg {
 	 * @param string $Message               Your log message
 	 * @param string [optional]             Log type (default is "ERROR")
 	 * @param string [optional]             Directory path for logs, CWD by default
-	**/
+	 **/
 	public function log($message, $level="error", $path = null)
 	{
 		date_default_timezone_set("Europe/berlin");
@@ -1030,7 +1030,12 @@ class Iceberg {
 		return $this->get_object("payment_card_alias", $params, $accept_type);
 	}
 
-	//_makeCall($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
+	/**
+	 * Get Object
+	 *
+	 * @return Object
+	 *
+	**/
 	public function get_object($name, $id = null, $params = null, $accept_type = "Accept: application/json")
 	{
 		if (!$name)
@@ -1038,9 +1043,15 @@ class Iceberg {
 		if ($id)
 			return $this->_makeCall($name."/".$id."/", 'GET', $params, $accept_type);
 		else
-			return $this->_makeCall($name."/", 'GET', $params, $accept_type);
+			return $this->get_list($name, $params, $accept_type);
 	}
 
+	/**
+	 * Get all objects from ressource
+	 *
+	 * @return Object
+	 *
+	**/
 	public function get_list($name, $params = null, $accept_type = "Accept: application/json")
 	{
 		if (!$name)
@@ -1048,6 +1059,12 @@ class Iceberg {
 		return $this->_makeCall($name."/", 'GET', $params, $accept_type);
 	}
 
+	/**
+	 * Creates Object
+	 *
+	 * @return Object
+	 *
+	**/
 	public function create_object($name, $params = null, $accept_type = "Accept: application/json")
 	{
 		if (!$name)
@@ -1055,6 +1072,12 @@ class Iceberg {
 		return $this->_makeCall($name."/", 'POST', (array)$params, $accept_type);
 	}
 
+	/**
+	 * Updates Object
+	 *
+	 * @return Object
+	 *
+	**/
 	public function update_object($name, $id, $params = null, $accept_type = "Accept: application/json")
 	{
 		if (!$name)
@@ -1062,6 +1085,12 @@ class Iceberg {
 		return $this->_makeCall($name . "/" . $id . "/", 'PUT', $params, $accept_type);
 	}
 
+	/**
+	 * Deletes Object
+	 *
+	 * @return Object
+	 *
+	**/
 	public function delete_object($name, $id)
 	{
 		if (!$name || !$id)
@@ -1069,6 +1098,12 @@ class Iceberg {
 		return $this->_makeCall($name . "/" . $id . "/", 'DELETE', $params, $accept_type);
 	}
 
+	/**
+	 * Updates Object
+	 *
+	 * @return Object
+	 *
+	**/
 	public function save_object($data)
 	{
 		if (!$data || (!$data->resource_uri && !$data["resource_uri"]))
@@ -1081,4 +1116,161 @@ class Iceberg {
 		return $this->_makeCall($data["resource_uri"], 'PUT', $data);
 	}
 
+	/**
+	 * get Current Merchant
+	 *
+	 * @return Object
+	 *
+	 */
+	public function getCurrentMerchant()
+	{
+		try{
+			$seller = $this->_makeCall('merchant/?api_key='.$this->_apikey);
+		} catch (Exception $e){
+			$seller = false;
+		}
+		if (!isset($seller->meta->total_count))
+			$seller = false;
+		else if ($seller->meta->total_count == 0)
+			$seller = false;
+		return $seller;
 	}
+
+
+	/**
+	 * Creates new feed
+	 *
+	 * @return json string
+	 *
+	 **/
+	public function postFeed($feed_url, $every, $period, $shopname)
+	{
+		$merchant = $this->getCurrentMerchant();
+		if (!$merchant)
+			return false;
+		$this->merchant_id = $merchant->objects[0]->id;
+		$merchant = "/v1/merchant/".$this->merchant_id."/";
+		$source_type = "prestashop";
+		$data = array('merchant'=>$merchant, 'source_type'=>$source_type, 'every'=>$every, 'period'=>$period, 'name'=>'PrestaFeed-'.$shopname, 'feed_url'=>$feed_url);
+		try {
+			$data_answer = $this->create_object("merchant_catalog_feed", $data, "Content-Type: Application/json");
+		} catch (Exception $e){
+			$data_answer = false;
+		}
+		return ($data_answer);
+	}
+
+	/**
+	 * get Existing Feed
+	 *
+	 * @return json string
+	 *
+	 **/
+	public function getFeed($id)
+	{
+		try {
+			$result = json_encode($this->get_object("merchant_catalog_feed", $id));
+		} catch (Exception $e) {
+			$result = false;
+		}
+		return ($result);
+	}
+
+	/**
+	 * updates Existing Feed
+	 *
+	 * @return object
+	 *
+	 **/
+	public function putFeed($feed_id, $every, $period, $shopname)
+	{
+		$params = array('period' => $period, 'every' => $every, 'name' => 'PrestaFeed-'.$shopname);
+		try {
+			$data_answer = $this->update_object("merchant_catalog_feed", $feed_id, "Content-Type: Application/json");
+		} catch (Exception $e) {
+			$data_answer = false;
+		}
+		return ($data_answer);
+	}
+
+	/**
+	 * deletes Existing Feed
+	 *
+	 * @return json string
+	 *
+	**/
+	
+	public function delFeed($id)
+	{
+		try {
+			$result = json_encode($this->delete_object("merchant_catalog_feed", $id));
+		} catch (Exception $e) {
+			$result = false;
+		}
+		return ($result);
+	}
+
+	/**
+	 * Creates a new webHook
+	 *
+	 * @returns object
+	 *
+	**/
+	public function addWebHook($url, $event, $application = null)
+	{
+		$data = array('application'=>$application, 'event'=>$event, 'url'=>$url);
+		try {
+			$data_answer = $this->create_object("webhook", $data, "Content-Type: Application/json");}
+		catch (Exception $e) {
+			$data_answer = false; }
+		if ($status_code > 300)
+			$data_andwer = false;
+		return ($data_answer);
+	}
+
+	/**
+	 * Deletes existing webHook
+	 *
+	 * @return json_string
+	 *
+	**/
+	public function delWebHook($id)
+	{
+		try {
+			$result = json_encode($this->delete_object("webhook", $id));
+		} catch (Exception $e) {
+			$result = false;
+		}
+		return ($result);
+	}
+
+	/**
+	 * Test if AcessToken is valid
+	 *
+	 * @returns object
+	 *
+	**/
+	public function testIcebergToken()
+	{
+		try {
+			$result = $this->_makeCall('user/me/');
+		} catch (Exception $e) {
+				$result = false;
+		}
+		if (isset($result->id) && $result->id == 0)
+			$result = false;
+		return ($result);
+	}
+
+	/**
+	 * Updates status of existing order
+	 *
+	 * @returns object
+	 *
+	**/
+	public function updateOrderStatus($id_order_ref, $status)
+	{
+		return	($this->_makeCall('merchant_order/'.$id_order_ref.'/'.$status.'/', 'POST'));
+	}
+
+}

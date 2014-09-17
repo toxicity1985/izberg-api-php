@@ -1,5 +1,7 @@
 #Iceberg-API-PHP
 
+[![Build Status](https://travis-ci.org/Modizy/Iceberg-API-PHP.svg?branch=master)](https://travis-ci.org/Modizy/Iceberg-API-PHP)
+
 ## About
 
 Wrapper PHP around the Iceberg API
@@ -215,45 +217,6 @@ The following code deletes the cart of id 963
 ```php
 
 	$Iceberg->delete_object("cart", 963);
-```
-
-###Merchant
-
-First of all, you can get the merchant ressource's schema using the getMerchantsSchema() function
-
-```php
-<?php
-	require_once "iceberg.php";
-
-	$valid_array = array(
-  		'appNamespace' => 'YOUR_APP_NAMESPACE',
-  		'accessToken'  => 'YOUR_ACCESSTOKEN',
-  		'username'     => 'YOUR_USERNAME',
-  		'apiKey'       => 'YOUR_APP_KEY',
-  		'apiSecret'    => 'YOUR_APP_SECRET'
-	  )
-	
-		$IcebergInstance = new Iceberg($valid_array);
-		var_export($IcebergInstance->getMerchantsSchema());
-?>
-```
-
-You can get all the merchants on your marketplace using getMerchants()
-
-```php
-
-	var_export($IcebergInstance->getMerchants());
-
-```
-
-Or you can get a specific merchant using getMerchantById
-
-
-```php
-
-	$id_merchant = "VALID MERCHANT ID";
-	var_export($IcebergInstance->getMerchantById());
-
 ```
 
 ## Order Process
