@@ -1052,7 +1052,7 @@ class Iceberg {
 	{
 		if (!$name)
 			return ;
-		return $this->_makeCall($name."/", 'POST', $params, $accept_type);
+		return $this->_makeCall($name."/", 'POST', (array)$params, $accept_type);
 	}
 
 	public function update_object($name, $id, $params = null, $accept_type = "Accept: application/json")

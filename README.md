@@ -90,6 +90,81 @@ This is useful when you want to link your api calls to a user, you will need it 
 
 ##Ressources
 
+Basically, all ressources are handled the same way, using the following methods :
+
+####Get List
+
+The get_list() method will return all the ressource's elements
+
+
+```php
+
+get_list($name, $params = null, $accept_type = "Accept: application/json")
+
+```
+The first parameter is the ressource's name, the second one are the eventual parameters, the last one is the accept type, for most of the action, you will only need the $name parameter
+
+For exemple, the following will return the list of all the merchants on your marketplace.
+
+```php
+
+get_list("merchant");
+
+```
+
+####Get Object
+
+The get_object() method works like get_list(), but it returns only one object, you have to specify the object's id
+
+```php
+
+	get_object($name, $id = null, $params = null, $accept_type = "Accept: application/json")
+
+```
+
+For exemple, the following will return the cart object of id '963'
+
+```php
+
+get_object("cart", 963);
+
+```
+
+####Create Object
+
+The create_object() method will create a new element of the specified ressource
+
+```php
+
+create_object($name, $params = null, $accept_type = "Accept: application/json")
+
+```
+
+$name is the ressource's name and $params are the object you want to create ($params can be either an object or an array)
+
+```php
+
+create_object("address", array(
+							"address" => "ADDRESS LINE 1",
+       						"address2" => "ADDRESS LINE 2",
+        					"city" => "CITY NAME",
+     		 			 	"company" => "OPTIONNAL COMPANY"          "country" => "COUNTRY_ID",
+     					    "default_billing" => true,
+    					    "default_shipping" => true,
+     					    "digicode" => null,
+        					"first_name" => "FIRST NAME",
+        					"floor" => null,
+        					"last_name" => "LAST NAME",
+        					"name" => "ADDRESS NAME",
+      						"phone" => "PHONE NUMBER",
+        					"state" => "OPTIONNAL STATE NAME",
+        					"status" => 10,
+        					"zipcode" => "ZIPCODE"
+							)
+				);
+
+```
+
 ###Merchant
 
 First of all, you can get the merchant ressource's schema using the getMerchantsSchema() function
@@ -111,7 +186,7 @@ First of all, you can get the merchant ressource's schema using the getMerchants
 ?>
 ```
 
-You can all the merchant on your marketplace using getMerchants()
+You can get all the merchants on your marketplace using getMerchants()
 
 ```php
 
