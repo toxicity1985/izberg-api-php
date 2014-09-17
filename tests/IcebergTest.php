@@ -23,12 +23,12 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function getRealIcebergInstance()
 	{
 		$a = $this->getIceberg(array(
-			"appNamespace" => getenv("APPNAMESPACE1"),
+			"appNamespace" => "lolote",
 			"sandbox" => true
 		))->sso(array(
 			"apiKey" => getenv("APIKEY1"),
 			"apiSecret" => getenv("APISECRET1"),
-			"email" => getenv("EMAIL1"),
+			"email" => "sebfie@yahoo.fr",
 			"firstName" => "sébastien",
 			"lastName" => "fieloux")
 		);
