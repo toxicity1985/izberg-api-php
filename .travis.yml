@@ -13,5 +13,4 @@ php:
 script:
     - phpunit tests/IcebergTest.php
 env :
-    global:
-        secure: "DCBdmxQvCnhOOIWXXXMB+nHGAQRgHmHzQW8V0HY/LvT2jh21H/s2GjBgPQRjgj0l3vPOh4GGm+NCtHG4T/NTicVRKfsiv6UWILWyAzWGPQ8hgKmR+37dmrxTNaa31PgmTsFatSlR25uJTL+XHbORA1oCipq10Fy/C940nBxMOrM="
+    secure: "n2F6gRtKENTaZPPg9SmQP5YnqAp3wKqN3QLNQhBAhMdYNz5NuO1jZLJRSXFKSo6mu3R16ugk6hODyaIP6s2lJoejSqk2/KL/OtBdI6fEUWq5tubnovYp7kXWvD0rwZnZ3m1S66wNaB4eIz1XTX28GXGEGfHNGYiiIcG1Hf9BwH8="
