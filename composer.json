@@ -1,5 +1,13 @@
 {
-  "require": {
-    "soundasleep/html2text": "~0.1.1"
-  }
+    "name": "iceberg/api-php",
+    "description": "Iceberg Api PHP",
+    "require": {
+        "apt142/htmltotext": "dev-master"
+    },
+    "authors": [
+        {
+            "name": "Iceberg Team",
+            "email": "contact@iceberg-marketplace.com"
+        }
+    ]
 }

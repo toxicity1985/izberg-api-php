@@ -11,6 +11,9 @@
  * @version 2.0
  * @license BSD http://www.opensource.org/licenses/bsd-license.php
  */
+
+require_once "vendor/autoload.php";
+
 class Iceberg {
 
 	const LOGS = true;
@@ -1272,6 +1275,12 @@ class Iceberg {
 	public function updateOrderStatus($id_order_ref, $status)
 	{
 		return	($this->_makeCall('merchant_order/'.$id_order_ref.'/'.$status.'/', 'POST'));
+	}
+
+	public function convertHtml($html)
+	{
+		$converter = new \HtmlToText\HtmlToText($html);
+		return $converter->convert();
 	}
 
 }
