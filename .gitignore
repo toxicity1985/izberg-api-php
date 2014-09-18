@@ -2,5 +2,3 @@ phpunit.phar
 test.txt
 test.php
 
-/vendor/
-composer.lock
