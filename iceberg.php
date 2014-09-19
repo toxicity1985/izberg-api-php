@@ -576,7 +576,7 @@ class Iceberg {
 	 * @param string [optional] $method     Request type GET|POST
 	 * @return mixed
 	 */
-	protected function _makeCall($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
+	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
 	{
 		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
 			$paramString = json_encode($params);
@@ -727,29 +727,6 @@ class Iceberg {
 	}
 
 	/**
-	 * get Products schema
-	 *
-	 * @return Array
-	 */
-	public function getProductsSchema()
-	{
-		return $this->get_list("product/schema");
-	}
-
-	/**
-	 * get Products of an iceberg merchant
-	 *
-	 * @param string $merchant_id
-	 * @return String || SimpleXMLElement depending of the $to_simplexml_object parameter
-	 */
-	public function getFullProductImport($merchant_id, $params = null, $accept_type = 'Accept: application/xml')
-	{
-		return $this->get_list("merchant/".$merchant_id."/download_export", $params , $accept_type);
-	}
-
-
-
-	/**
 	 * get all categories of Iceberg catalog
 	 *
 	 * @return Array
@@ -757,41 +734,6 @@ class Iceberg {
 	public function getCategories($params = null, $accept_type = 'Accept: application/json')
 	{
 		return $this->get_list("category", $params, $accept_type);
-	}
-
-	/**
-	 * get Merchants of an iceberg account
-	 *
-	 * @param array $params
-	 * $params can contain this keys :
-	 *   offset: Integer => The offset of the request (for pagination)
-	 *   limit: Integer => The limit of the request
-	 * @return Array
-	 */
-	public function getMerchants($params = null, $accept_type = 'Accept: application/json')
-	{
-		return $this->get_list("merchant", $params, $accept_type = 'Accept: application/json');
-	}
-
-	/**
-	 * get a specific Merchant from an iceberg account
-	 *
-	 * @id int $id
-	 * @return Array
-	 */
-	public function getMerchantById($id = 0)
-	{
-		return $this->get_object("merchant", $id);
-	}
-
-	/**
-	 * get Merchants schema
-	 *
-	 * @return Array
-	 */
-	public function getMerchantsSchema($params = null, $accept_type = 'Accept: application/json')
-	{
-		return $this->get_object("merchant", "schema", $params, $accept_type);
 	}
 
 	/**
@@ -821,7 +763,7 @@ class Iceberg {
 	 */
 	public function getCartItems($params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("cart/" . $this->getCart()->id . "/items/", 'GET', $params, $accept_type);
+		return $this->Call("cart/" . $this->getCart()->id . "/items/", 'GET', $params, $accept_type);
 	}
 
 	/**
@@ -837,7 +779,7 @@ class Iceberg {
 		//   quantity: Integer
 		//   gift: Boolean
 		//   bundled: Boolean
-		return $this->_makeCall("cart/" . $this->getCart()->id . "/items/", 'POST', $params, $accept_type);
+		return $this->Call("cart/" . $this->getCart()->id . "/items/", 'POST', $params, $accept_type);
 	}
 
 	/**
@@ -875,7 +817,7 @@ class Iceberg {
 	// We will fix it later
 	// public function getAvailableCreditBalance($params = null, $accept_type = 'Accept: application/json')
 	// {
-	//   return floatval($this->_makeCall("cart/" . $this->getCart()->id . "/get_available_credit_balance/", 'GET', $params, $accept_type));
+	//   return floatval($this->Call("cart/" . $this->getCart()->id . "/get_available_credit_balance/", 'GET', $params, $accept_type));
 	// }
 
 
@@ -891,7 +833,7 @@ class Iceberg {
 		//   - payment_info_id: Integer. Id of the payment card if pay with registered card
 		//   - pre_auth_id: Integer. Id of the PreAuthorization object from the payment backend
 
-		$this->current_order = $this->_makeCall("cart/" . $this->getCart()->id . "/createOrder/", 'POST', $params, $accept_type);
+		$this->current_order = $this->Call("cart/" . $this->getCart()->id . "/createOrder/", 'POST', $params, $accept_type);
 		// We also clear the cart
 		$this->_current_cart = null;
 
@@ -905,7 +847,7 @@ class Iceberg {
 	 */
 	public function authorizeOrder($params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->_makeCall("order/" . $this->current_order->id . "/authorizeOrder/", 'POST', $params, $accept_type);
+		return $this->Call("order/" . $this->current_order->id . "/authorizeOrder/", 'POST', $params, $accept_type);
 	}
 
 	/**
@@ -1034,112 +976,6 @@ class Iceberg {
 		return $this->get_object("payment_card_alias", $params, $accept_type);
 	}
 
-	/**
-	 * Get Object
-	 *
-	 * @return Object
-	 *
-	**/
-	public function get_object($name, $id = null, $params = null, $accept_type = "Accept: application/json")
-	{
-		if (!$name)
-			return ;
-		if ($id)
-			return $this->_makeCall($name."/".$id."/", 'GET', $params, $accept_type);
-		else
-			return $this->get_list($name, $params, $accept_type);
-	}
-
-	/**
-	 * Get all objects from ressource
-	 *
-	 * @return Object
-	 *
-	**/
-	public function get_list($name, $params = null, $accept_type = "Accept: application/json")
-	{
-		if (!$name)
-			return ;
-		return $this->_makeCall($name."/", 'GET', $params, $accept_type);
-	}
-
-	/**
-	 * Creates Object
-	 *
-	 * @return Object
-	 *
-	**/
-	public function create_object($name, $params = null, $accept_type = "Accept: application/json")
-	{
-		if (!$name)
-			return ;
-		return $this->_makeCall($name."/", 'POST', (array)$params, $accept_type);
-	}
-
-	/**
-	 * Updates Object
-	 *
-	 * @return Object
-	 *
-	**/
-	public function update_object($name, $id, $params = null, $accept_type = "Accept: application/json")
-	{
-		if (!$name)
-			return ;
-		return $this->_makeCall($name . "/" . $id . "/", 'PUT', $params, $accept_type);
-	}
-
-	/**
-	 * Deletes Object
-	 *
-	 * @return Object
-	 *
-	**/
-	public function delete_object($name, $id)
-	{
-		if (!$name || !$id)
-			return ;
-		return $this->_makeCall($name . "/" . $id . "/", 'DELETE', $params, $accept_type);
-	}
-
-	/**
-	 * Updates Object
-	 *
-	 * @return Object
-	 *
-	**/
-	public function save_object($data)
-	{
-		if (!$data || (!$data->resource_uri && !$data["resource_uri"]))
-			return ;
-		$data = (array)$data;
-		if (strncmp("http", $data["resource_uri"], 4) == 0)
-			$data["resource_uri"] = substr($data["resource_uri"], strlen(self::$_api_url));
-		else if ($data["resource_uri"][0] == '/')
-			$data["resource_uri"] = substr($data["resource_uri"], 1);
-		return $this->_makeCall($data["resource_uri"], 'PUT', $data);
-	}
-
-	/**
-	 * get Current Merchant
-	 *
-	 * @return Object
-	 *
-	 */
-	public function getCurrentMerchant()
-	{
-		try{
-			$seller = $this->_makeCall('merchant/?api_key='.$this->_apikey);
-		} catch (Exception $e){
-			$seller = false;
-		}
-		if (!isset($seller->meta->total_count))
-			$seller = false;
-		else if ($seller->meta->total_count == 0)
-			$seller = false;
-		return $seller;
-	}
-
 
 	/**
 	 * Creates new feed
@@ -1257,7 +1093,7 @@ class Iceberg {
 	public function testIcebergToken()
 	{
 		try {
-			$result = $this->_makeCall('user/me/');
+			$result = $this->Call('user/me/');
 		} catch (Exception $e) {
 				$result = false;
 		}
@@ -1274,7 +1110,7 @@ class Iceberg {
 	**/
 	public function updateOrderStatus($id_order_ref, $status)
 	{
-		return	($this->_makeCall('merchant_order/'.$id_order_ref.'/'.$status.'/', 'POST'));
+		return	($this->Call('merchant_order/'.$id_order_ref.'/'.$status.'/', 'POST'));
 	}
 
 	public function convertHtml($html)
