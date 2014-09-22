@@ -13,6 +13,7 @@
  */
 
 require_once "vendor/autoload.php";
+require_once "resources/loader.php";
 
 class Iceberg {
 
@@ -488,6 +489,7 @@ class Iceberg {
 
 			// We save this instance as singleton
 			self::setInstance($this);
+            Resource::setIceberg($this);
 
 		} else {
 			throw new Exception("Error: __construct() - Configuration data is missing.");
