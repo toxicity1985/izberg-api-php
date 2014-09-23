@@ -1,10 +1,10 @@
 <?php
-
+namespace Ice;
 
 require_once("resource.class.php");
 
 
-class iceMerchant extends iceResource
+class Merchant extends Resource
 {
 
     public function __construct()

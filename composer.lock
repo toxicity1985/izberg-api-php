@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2344d87581f7ab6a9d4ec4c9d041550a",
+    "hash": "4b6dd04ff915bcfec91a19e16890668c",
     "packages": [
         {
             "name": "apt142/htmltotext",

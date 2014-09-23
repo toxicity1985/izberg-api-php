@@ -1,6 +1,7 @@
 <?php
+namespace Ice;
 
-abstract class iceResource
+abstract class Resource
 {
     private static	$Iceberg = null;
 
@@ -11,7 +12,7 @@ abstract class iceResource
 
     private function setName($name)
     {
-        $this->_name = substr(strtolower($name), 3);
+        $this->_name = substr(strtolower($name), 4);
     }
 
     public function getName()
@@ -37,7 +38,7 @@ abstract class iceResource
      * @param Iceberg Object
      *
      **/
-    public static function setIceberg(Iceberg $instance)
+    public static function setIceberg($instance)
     {
         self::$Iceberg = $instance;
     }

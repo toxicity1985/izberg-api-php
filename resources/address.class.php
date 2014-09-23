@@ -1,8 +1,8 @@
 <?php
-
+namespace Ice;
 require_once("resource.class.php");
 
-class iceAddress extends iceResource
+class Address extends Resource
 {
 	public function __construct()
 	{

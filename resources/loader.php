@@ -5,3 +5,4 @@ require_once "cart.class.php";
 require_once "merchant.class.php";
 require_once "product.class.php";
 require_once "user.class.php";
+require_once "order.class.php";

@@ -6,5 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Ice' => array($baseDir . '/resources'),
     'HtmlToText\\' => array($vendorDir . '/apt142/htmltotext/src'),
 );

@@ -1,8 +1,8 @@
 <?php
-
+namespace Ice;
 require_once "resource.class.php";
 
-class iceProduct extends iceResource
+class Product extends Resource
 {
 	const Iceberg = null;
 }

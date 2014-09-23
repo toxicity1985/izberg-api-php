@@ -1,8 +1,8 @@
 <?php
-
+namespace Ice;
 require_once("resource.class.php");
 
-class iceCart extends iceResource
+class Cart extends Resource
 {
 
     private $_current;

@@ -1,8 +1,8 @@
 <?php
-
+namespace Ice;
 require_once("resource.class.php");
 
-class iceUser extends iceResource
+class User extends Resource
 {
     public function __construct()
     {

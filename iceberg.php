@@ -504,12 +504,12 @@ class Iceberg {
 
             // We save this instance as singleton
             self::setInstance($this);
-            iceResource::setIceberg($this);
-            $this->merchant = new iceMerchant();
-            $this->product = new iceProduct();
-            $this->order = new iceOrder();
-            $this->user = new iceUser();
-            $this->cart = new iceCart();
+            Ice\Resource::setIceberg($this);
+            $this->merchant = new Ice\Merchant();
+            $this->product = new Ice\Product();
+            $this->order = new Ice\Order();
+            $this->user = new Ice\User();
+            $this->cart = new Ice\Cart();
 
         } else {
             throw new Exception("Error: __construct() - Configuration data is missing.");

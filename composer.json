@@ -9,5 +9,10 @@
             "name": "Iceberg Team",
             "email": "contact@iceberg-marketplace.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-0": {
+            "Ice": "resources/"
+        }
+    }
 }
