@@ -2,7 +2,7 @@
 
 require_once("resource.class.php");
 
-class Order extends Resource
+class iceOrder extends iceResource
 {
 	public function __construct()
 	{

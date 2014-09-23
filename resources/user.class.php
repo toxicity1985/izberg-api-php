@@ -2,10 +2,16 @@
 
 require_once("resource.class.php");
 
-class User extends Resource
+class iceUser extends iceResource
 {
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function get_current()
+    {
+        return $this->get("me");
+    }
+
 }

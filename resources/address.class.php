@@ -2,7 +2,7 @@
 
 require_once("resource.class.php");
 
-class Address extends Resource
+class iceAddress extends iceResource
 {
 	public function __construct()
 	{
