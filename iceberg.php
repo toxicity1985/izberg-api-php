@@ -677,6 +677,28 @@ class Iceberg {
   // =============
 
   /**
+   * create webhook
+   *
+   * @param array
+   * @return Object
+   */
+   public function createWebhook($params = null, $accept_type = 'Accept: application/json')
+   {
+     return $this->_makeCall("webhook/", "POST", $params, $accept_type);
+   }
+
+   /**
+   * get webhook
+   *
+   * @param array
+   * @return Object
+   */
+   public function getWebhooks($params = null, $accept_type = 'Accept: application/json')
+   {
+     return $this->_makeCall("webhook/", "GET", $params, $accept_type);
+   }
+
+  /**
    * get Products of an iceberg account
    *
    * @param array $params
