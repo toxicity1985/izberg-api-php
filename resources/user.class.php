@@ -11,7 +11,9 @@ class User extends Resource
 
     public function get_current()
     {
-        return $this->get("me");
+        if (!$this->_current)
+            $this->_current = $this->get("me");
+        return $this->_current;
     }
 
 }

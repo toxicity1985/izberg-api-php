@@ -720,79 +720,6 @@ class Iceberg {
     }
 
     /**
-     * get current user cart
-     *
-     * @return StdObject
-     */
-    public function getCart($params = null, $accept_type = 'Accept: application/json')
-    {
-        if (!$this->_current_cart) {
-            $this->_current_cart = $this->get_object("cart", "mine", $params, $accept_type);
-        }
-        return $this->_current_cart;
-    }
-
-    public function newCart($params = null, $accept_type = 'Accept: application/json')
-    {
-        if ($this->_debug)
-            $params["debug"] = true;
-        return $this->create_object("cart", $params, $accept_type);
-    }
-
-    /**
-     * get current cart items
-     *
-     * @return Array
-     */
-    public function getCartItems($params = null, $accept_type = 'Accept: application/json')
-    {
-        return $this->Call("cart/" . $this->getCart()->id . "/items/", 'GET', $params, $accept_type);
-    }
-
-    /**
-     * add an item to a cart
-     *
-     * @return Array
-     */
-    public function addCartItem($params = null, $accept_type = 'Accept: application/json')
-    {
-        // Params:
-        //   offer_id: Integer
-        //   variation_id: Integer
-        //   quantity: Integer
-        //   gift: Boolean
-        //   bundled: Boolean
-        return $this->Call("cart/" . $this->getCart()->id . "/items/", 'POST', $params, $accept_type);
-    }
-
-    /**
-     * update an item to a cart
-     *
-     * @return Array
-     */
-    public function updateCartItem($id, $params = null, $accept_type = 'Accept: application/json')
-    {
-        // Params:
-        //   offer_id: Integer
-        //   variation_id: Integer
-        //   quantity: Integer
-        //   gift: Boolean
-        //   bundled: Boolean
-        return $this->update_object("cart_item", $id, $params, $accept_type);
-    }
-
-    /**
-     * delete an item to a cart
-     *
-     * @return Array
-     */
-    public function removeCartItem($cart_item_id, $params = null, $accept_type = 'Accept: application/json')
-    {
-        return $this->delete_object("cart_item", $cart_item_id, $params, $accept_type);
-    }
-
-
-    /**
      * get current user credit balance
      *
      * @return Float
@@ -802,26 +729,6 @@ class Iceberg {
     // {
     //   return floatval($this->Call("cart/" . $this->getCart()->id . "/get_available_credit_balance/", 'GET', $params, $accept_type));
     // }
-
-
-    /**
-     * create order from current cart
-     *
-     * @return StdObject
-     */
-    public function createOrder($params = null, $accept_type = 'Accept: application/json')
-    {
-        // params:
-        //   - credit_use: Decimal. Amount to be use from user credit balance
-        //   - payment_info_id: Integer. Id of the payment card if pay with registered card
-        //   - pre_auth_id: Integer. Id of the PreAuthorization object from the payment backend
-
-        $this->current_order = $this->Call("cart/" . $this->getCart()->id . "/createOrder/", 'POST', $params, $accept_type);
-        // We also clear the cart
-        $this->_current_cart = null;
-
-        return $this->current_order;
-    }
 
     /**
      * confirm order
@@ -857,88 +764,6 @@ class Iceberg {
     }
 
     /**
-     * Get country from params
-     * @param array $params
-     *    code: FR
-     * @return StdObject
-     */
-    public function getCountry($params = array("code" => "FR"), $accept_type = 'Accept: application/json')
-    {
-        if (!$this->_countries)
-            $this->_countries = array();
-        if (!isset($this->_countries[$params["code"]])) {
-            $response = $this->get_object("country", null, $params, $accept_type);
-            $result = $response->objects[0];
-            $this->_countries[$params["code"]] = $result;
-        } else {
-            $result = $this->_countries[$params["code"]];
-        }
-        return $result;
-    }
-
-
-    /**
-     * Get current user's addresses
-     *
-     * @return StdObject
-     */
-    public function getAddresses($params = null, $accept_type = 'Accept: application/json')
-    {
-        return $this->get_list("address", $params, $accept_type);
-    }
-
-
-    /**
-     * Set cart shipping address
-     *
-     * @return StdObject
-     */
-    public function setShippingAddress($id, $params = null, $accept_type = 'Accept: application/json')
-    {
-        $params["shipping_address"] = "/v1/address/$id/";
-        return $this->update_object("cart", $this->_current_cart->id, $params, $accept_type);
-    }
-
-    /**
-     * Create a user for the current user
-     *
-     * @return StdObject
-     */
-    public function createAddresses($params = null, $accept_type = 'Accept: application/json')
-    {
-        // address: string
-        // address2: string
-        // city: string
-        // company: string
-        // country: string
-        // default_billing: boolean
-        // default_shipping: boolean
-        // digicode: string
-        // first_name: string
-        // floor: string
-        // last_name: string
-        // name: string
-        // phone: string
-        // state: string
-        // status:
-        //   0: Inactive address
-        //   10: Active address
-        //   90: Hidden address
-        // zipcode
-        return $this->create_object("address", $params, $accept_type);
-    }
-
-    /**
-     * Get address from id
-     *
-     * @return StdObject
-     */
-    public function getAddress($address_id, $params = null, $accept_type = 'Accept: application/json')
-    {
-        return $this->get_object("address", $address_id, $params, $accept_type);
-    }
-
-    /**
      * Get user payment informations
      *
      * @return StdObject
@@ -947,114 +772,6 @@ class Iceberg {
     {
         $params["user"] = $this->current_user->id;
         return $this->get_object("payment_card_alias", $params, $accept_type);
-    }
-
-
-    /**
-     * Creates new feed
-     *
-     * @return json string
-     *
-     **/
-    public function postFeed($feed_url, $every, $period, $shopname)
-    {
-        $merchant = $this->getCurrentMerchant();
-        if (!$merchant)
-            return false;
-        $this->merchant_id = $merchant->objects[0]->id;
-        $merchant = "/v1/merchant/".$this->merchant_id."/";
-        $source_type = "prestashop";
-        $data = array('merchant'=>$merchant, 'source_type'=>$source_type, 'every'=>$every, 'period'=>$period, 'name'=>'PrestaFeed-'.$shopname, 'feed_url'=>$feed_url);
-        try {
-            $data_answer = $this->create_object("merchant_catalog_feed", $data, "Content-Type: application/json");
-        } catch (Exception $e){
-            $data_answer = false;
-        }
-        return ($data_answer);
-    }
-
-    /**
-     * get Existing Feed
-     *
-     * @return json string
-     *
-     **/
-    public function getFeed($id)
-    {
-        try {
-            $result = json_encode($this->get_object("merchant_catalog_feed", $id));
-        } catch (Exception $e) {
-            $result = false;
-        }
-        return ($result);
-    }
-
-    /**
-     * updates Existing Feed
-     *
-     * @return object
-     *
-     **/
-    public function putFeed($feed_id, $every, $period, $shopname)
-    {
-        $params = array('period' => $period, 'every' => $every, 'name' => 'PrestaFeed-'.$shopname);
-        try {
-            $data_answer = $this->update_object("merchant_catalog_feed", $feed_id, $params);
-        } catch (Exception $e) {
-            $data_answer = false;
-        }
-        return ($data_answer);
-    }
-
-    /**
-     * deletes Existing Feed
-     *
-     * @return json string
-     *
-     **/
-
-    public function delFeed($id)
-    {
-        try {
-            $result = json_encode($this->delete_object("merchant_catalog_feed", $id));
-        } catch (Exception $e) {
-            $result = false;
-        }
-        return ($result);
-    }
-
-    /**
-     * Creates a new webHook
-     *
-     * @returns object
-     *
-     **/
-    public function addWebHook($url, $event, $application = null)
-    {
-        $data = array('application'=>$application, 'event'=>$event, 'url'=>$url);
-        try {
-            $data_answer = $this->create_object("webhook", $data, "Content-Type: application/json");}
-        catch (Exception $e) {
-            $data_answer = false; }
-        if ($status_code > 300)
-            $data_andwer = false;
-        return ($data_answer);
-    }
-
-    /**
-     * Deletes existing webHook
-     *
-     * @return json_string
-     *
-     **/
-    public function delWebHook($id)
-    {
-        try {
-            $result = json_encode($this->delete_object("webhook", $id));
-        } catch (Exception $e) {
-            $result = false;
-        }
-        return ($result);
     }
 
     /**
@@ -1073,17 +790,6 @@ class Iceberg {
         if (isset($result->id) && $result->id == 0)
             $result = false;
         return ($result);
-    }
-
-    /**
-     * Updates status of existing order
-     *
-     * @returns object
-     *
-     **/
-    public function updateOrderStatus($id_order_ref, $status)
-    {
-        return	($this->Call('merchant_order/'.$id_order_ref.'/'.$status.'/', 'POST'));
     }
 
     public function convertHtml($html)

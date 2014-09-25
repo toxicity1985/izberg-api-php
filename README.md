@@ -229,7 +229,7 @@ Creating an order on Iceberg is really easy, the only thing you need is the Item
 ```php
 
 <?php
-	
+
 	require_once "iceberg.php";
 
 	$valid_array = array(

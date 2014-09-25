@@ -1,11 +1,9 @@
-<?php
-namespace Ice;
+<?php namespace Ice;
+
 require_once("resource.class.php");
 
 class Cart extends Resource
 {
-
-    private $_current;
 
     public function __construct()
     {
@@ -84,5 +82,12 @@ class Cart extends Resource
         $this->getCurrent();
         $params["billing_address"] = "/v1/address/$id/";
         return $this->update($this->_current->id, $params);
+    }
+
+    public function createOrder($params = null, $accept_type = 'Accept: application/json')
+    {
+        $order = new Order();
+        $order->_current = self::$Iceberg->Call("cart/" . $this->_current->id . "/createOrder/", 'POST', $params, $accept_type);
+        return $order;
     }
 }
