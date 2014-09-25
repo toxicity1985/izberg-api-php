@@ -5,8 +5,9 @@ abstract class Resource
 	private static	$Iceberg = null;
 
 	private			$_name;
-	private			$_id;
 	private			$_current;
+	protected		$_id;
+	protected		$_uri;
 
 
 	private function setName($name)
@@ -26,6 +27,8 @@ abstract class Resource
 		if ($id)
 		{
 			$this->_current = $this->get($id);
+			$this->_id = $this->_current->id;
+			$this->_uri = "/v1/".$this->getName()."/".$this->_id."/";
 		}
 		$this->setName(get_class($this));
 	}
