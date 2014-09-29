@@ -505,11 +505,6 @@ class Iceberg {
 			// We save this instance as singleton
 			self::setInstance($this);
 			Ice\Resource::setIceberg($this);
-			$this->merchant = new Ice\Merchant();
-			$this->product = new Ice\Product();
-			$this->order = new Ice\Order();
-			$this->user = new Ice\User();
-			$this->cart = new Ice\Cart();
 
 		} else {
 			throw new Exception("Error: __construct() - Configuration data is missing.");
@@ -646,7 +641,7 @@ class Iceberg {
 
 		$data = $this->curlExec($ch);
 		if (false === $data) {
-			throw new Exception("Error: _makeCall() - cURL error: " . curl_error($ch));
+			throw new Exception("Error: Call() - cURL error: " . curl_error($ch));
 		}
 		curl_close($ch);
 
@@ -791,11 +786,31 @@ class Iceberg {
 			$result = false;
 		return ($result);
 	}
+	/**
+	 * Converts html string to simple string
+	 *
+	 * @returns string
+	 *
+	 **/
 
 	public function convertHtml($html)
 	{
 		$converter = new \HtmlToText\HtmlToText($html);
 		return $converter->convert();
+	}
+	/**
+	 * Factory method, use it to build resources
+	 *
+	 * @returns object
+	 *
+	 **/
+
+
+	public function make($resource, $id = null)
+	{
+		if (strncmp("Ice\\", $resource, 4) != 0)
+			$resource = "Ice\\".$resource;
+		return new $resource($id);	
 	}
 
 }

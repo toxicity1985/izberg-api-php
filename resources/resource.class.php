@@ -2,23 +2,27 @@
 
 abstract class Resource
 {
-	private static	$Iceberg = null;
+	protected static $Iceberg = null;
 
-	private			$_name;
-	private			$_current;
+	protected		$_name;
+	protected		$_current;
 	protected		$_id;
 	protected		$_uri;
 
+	public function getCurrent()
+	{
+		return $this->_current;
+	}
 
 	private function setName($name = null)
 	{
-	/*
+		/*
 		** If name isn't specified we convert the class name into ressource name.
 		*/
 		if ($name === null)
 		{
-			$name = substr(get_class(), 4);
-			$pieces = preg_split('/(?=[A-Z])/',$str);
+			$name = substr(str_replace("\\", "", get_class($this)), 3);
+			$pieces = preg_split('/(?=[A-Z])/',$name);
 			$final_str = "";
 			foreach ($pieces as $piece)
 			{
@@ -27,7 +31,7 @@ abstract class Resource
 				$final_str .= strtolower($piece);
 			}
 		}
-		$this->_name = $name;
+		$this->_name = $final_str;
 	}
 
 	public function getName()
@@ -40,34 +44,34 @@ abstract class Resource
 		if (self::$Iceberg === null)
 			throw new Exception("Can't create instance of ".get_class().", no valid Iceberg singleton");
 		if (!$this->getName())
-			$this->setName(get_class($this));
+			$this->setName();
 		if ($id)
 		{
-			$this->_current = $this->get($id);
+			$this->get($id);
 			$this->_id = $this->_current->id;
 			$this->_uri = "/v1/".$this->getName()."/".$this->_id."/";
 		}
 	}
 
 	/**
-	 * Every Resource may have the current Iceberg object as singleton
-	 * In order to contact the API
-	 *
-	 * @param Iceberg Object
-	 *
-	 **/
+	* Every Resource may have the current Iceberg object as singleton
+	* In order to contact the API
+	*
+	* @param Iceberg Object
+	*
+	**/
 	public static function setIceberg($instance)
 	{
 		self::$Iceberg = $instance;
 	}
 
 	/**
-	 * The Log Function
-	 *
-	 * @param string $Message     Your log message
-	 * @param string [optional]   Log type (default is "ERROR")
-	 * @param string [optional]   Directory path for logs, CWD by default
-	 **/
+	* The Log Function
+	*
+	* @param string $Message     Your log message
+	* @param string [optional]   Log type (default is "ERROR")
+	* @param string [optional]   Directory path for logs, CWD by default
+	**/
 	public function log($message, $level="error", $path = null)
 	{
 		date_default_timezone_set("Europe/berlin");
@@ -93,7 +97,8 @@ abstract class Resource
 		if ($id)
 		{
 			$this->id = $id;
-			return self::$Iceberg->Call($name."/".$id."/", 'GET', $params, $accept_type);
+			$this->_current = self::$Iceberg->Call($name."/".$id."/", 'GET', $params, $accept_type);
+			return $this->_current;
 		}
 		return self::$Iceberg->Call($name."/", 'GET', $params, $accept_type);
 	}

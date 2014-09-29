@@ -5,11 +5,6 @@ require_once("resource.class.php");
 class Cart extends Resource
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function getCurrent()
     {
         if (!$this->_current)

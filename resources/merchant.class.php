@@ -7,11 +7,6 @@ require_once("resource.class.php");
 class Merchant extends Resource
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function get_catalog($merchant_id = null, $params = null, $accept_type = 'Accept: application/xml')
     {
         if (!$merchant_id)
@@ -20,11 +15,13 @@ class Merchant extends Resource
     }
 
 
-    public function get_current()
+    public function getCurrent()
     {
-        try
+		if ($this->_current)
+			return $this->_current;
+		try
         {
-            $seller = $this->Call('merchant/?api_key='.self::$Iceberg->getApiKey());
+            $seller = parent::$Iceberg->Call('merchant/?api_key='.parent::$Iceberg->getApiKey());
         }
         catch (Exception $e)
         {
@@ -34,6 +31,8 @@ class Merchant extends Resource
             $seller = false;
         else if ($seller->meta->total_count == 0)
             $seller = false;
+		else
+			$this->_current = $seller;
         return $seller;
     }
 }
