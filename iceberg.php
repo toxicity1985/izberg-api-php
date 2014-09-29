@@ -136,13 +136,6 @@ class Iceberg {
 	private $_last_name;
 
 	/**
-	 * The user currency
-	 *
-	 * @var string
-	 */
-	private $_currency;
-
-	/**
 	 * The user shipping country
 	 *
 	 * @var string
@@ -264,14 +257,6 @@ class Iceberg {
 		return $this->_username;
 	}
 
-	/**
-	 * Currency Getter
-	 *
-	 * @return String
-	 */
-	public function getCurrency() {
-		return $this->_currency;
-	}
 
 	/**
 	 * Shipping Country Getter
@@ -298,16 +283,6 @@ class Iceberg {
 	 */
 	public function getTimestamp() {
 		return $this->_timestamp;
-	}
-
-	/**
-	 *   Cart Getter
-	 *
-	 * @return Object
-	 **/
-	public function getCurrentCart()
-	{
-		return $this->_current_cart;
 	}
 
 	/**
@@ -413,16 +388,6 @@ class Iceberg {
 		$this->_last_name = $lastname;
 	}
 
-	/**
-	 * Currency Setter
-	 *
-	 * @param string $currency
-	 * @return void
-	 */
-	public function setCurrency($currency)
-	{
-		$this->_currency = $currency;
-	}
 
 	/**
 	 * Shipping country Setter
@@ -455,11 +420,6 @@ class Iceberg {
 	public function setTimestamp($timestamp)
 	{
 		$this->_timestamp = $timestamp;
-	}
-
-	public function setCurrentCart($cart)
-	{
-		$this->_current_cart = $cart;
 	}
 
 	/**
@@ -714,60 +674,6 @@ class Iceberg {
 		return curl_getinfo($ch, $name);
 	}
 
-	/**
-	 * get current user credit balance
-	 *
-	 * @return Float
-	 */
-	// We will fix it later
-	// public function getAvailableCreditBalance($params = null, $accept_type = 'Accept: application/json')
-	// {
-	//   return floatval($this->Call("cart/" . $this->getCart()->id . "/get_available_credit_balance/", 'GET', $params, $accept_type));
-	// }
-
-	/**
-	 * confirm order
-	 *
-	 * @return StdObject
-	 */
-	public function authorizeOrder($params = null, $accept_type = 'Accept: application/json')
-	{
-		return $this->Call("order/" . $this->current_order->id . "/authorizeOrder/", 'POST', $params, $accept_type);
-	}
-
-	/**
-	 * get current authenticated user
-	 *
-	 * @return StdObject
-	 */
-
-	public function getUser()
-	{
-		return $this->Call("user/me");
-	}
-
-	/**
-	 * Use this user for current connection
-	 *
-	 * @return null
-	 */
-	public function setUser($params)
-	{
-		$this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
-		$this->current_user = $this->getUser();
-		$this->setIcebergApiKey($this->_single_sign_on_response->api_key);
-	}
-
-	/**
-	 * Get user payment informations
-	 *
-	 * @return StdObject
-	 */
-	public function getPaymentCardAlias($params = null, $accept_type = 'Accept: application/json')
-	{
-		$params["user"] = $this->current_user->id;
-		return $this->get_object("payment_card_alias", $params, $accept_type);
-	}
 
 	/**
 	 * Test if AcessToken is valid
@@ -786,26 +692,25 @@ class Iceberg {
 			$result = false;
 		return ($result);
 	}
+
 	/**
 	 * Converts html string to simple string
 	 *
 	 * @returns string
 	 *
 	 **/
-
 	public function convertHtml($html)
 	{
 		$converter = new \HtmlToText\HtmlToText($html);
 		return $converter->convert();
 	}
+
 	/**
 	 * Factory method, use it to build resources
 	 *
 	 * @returns object
 	 *
 	 **/
-
-
 	public function make($resource, $id = null)
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
