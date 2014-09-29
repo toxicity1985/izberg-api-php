@@ -86,8 +86,33 @@ class Cart extends Resource
 
     public function createOrder($params = null, $accept_type = 'Accept: application/json')
     {
-        $order = new Order();
-        $order->_current = self::$Iceberg->Call("cart/" . $this->_current->id . "/createOrder/", 'POST', $params, $accept_type);
-        return $order;
+        return self::$Iceberg->Call("cart/" . $this->_current->id . "/createOrder/", 'POST', $params, $accept_type);
     }
+
+	public function addVariation($product_variation_id, $product_offer_id)
+	{
+        $params = array(
+            'variation_id'=> $product_variation_id,
+            'offer_id'=> $product_offer_id,
+            'quantity'=> 1
+		);            
+		return self::$Iceberg->Call($this->getName()."/items/", "POST", $params);
+	}
+
+	public function addOffer($product_offer_id)
+	{
+		/*
+        **	Add an offer to the Cart
+	 	*/
+        $params = array(
+            'offer_id'=> $product_offer_id,
+            'quantity'=> 1
+		);
+		return self::$Iceberg->Call($this->getName()."/items/", "POST", $params);
+	}
+
+}
+
+class CartItem extends Resource
+{
 }
