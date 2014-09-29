@@ -9,6 +9,6 @@ class Message extends Resource
 	*/
 	public function read()
 	{
-		return self::$Iceberg->Call($this->getName()."/read/", "POST");
+		return parent::$Iceberg->Call($this->getName()."/read/", "POST");
 	}	
 }

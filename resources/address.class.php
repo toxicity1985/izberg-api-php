@@ -25,7 +25,6 @@ class Address extends Resource
           90: Hidden address
         zipcode: integer
      */
-
 }
 
 class MerchantAddress extends Resource

@@ -4,10 +4,6 @@ require_once("resource.class.php");
 
 class Hook extends Resource
 {
-    public function __construct()
-    {
-        parent::__construct();
-    }
       /*
         Params:
             application: string
@@ -15,7 +11,7 @@ class Hook extends Resource
             url: string
       */
 
-    public function create($params, $name = null, $accept_type = "Content-Type: application/json")
+public function create($params, $name = null, $accept_type = "Content-Type: application/json")
     {
         parent::create($params, $name, $accept_type);
     }

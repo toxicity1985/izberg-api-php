@@ -3,7 +3,6 @@ namespace Ice;
 
 require_once("resource.class.php");
 
-
 class Merchant extends Resource
 {
 

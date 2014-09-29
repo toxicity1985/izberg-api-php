@@ -20,7 +20,7 @@ class Order extends Resource
 		if ($status != "updateOrderPayment" && $status != "authorizeOrder" && $status != "cancel")
 			throw new Exception("Wrong Status : authorizeOrder | updateOrderPayment");
 		$id = $id_order ? $id_order : $this->_id;
-		return	(self::$Iceberg->Call($this->_name.'/'.$id.'/'.$status.'/', 'POST'));
+		return	(parent::$Iceberg->Call($this->_name.'/'.$id.'/'.$status.'/', 'POST'));
 	}
 
 }
@@ -43,7 +43,7 @@ class MerchantOrder extends Resource
 		if ($status != "confirm" && $status != "send" && $status != "cancel")
 			throw new Exception("Wrong Status : send | confirm | cancel");
 		$id = $id_order ? $id_order : $this->_id;
-		return	(self::$Iceberg->Call($this->_name.'/'.$id.'/'.$status.'/', 'POST'));
+		return	(parent::$Iceberg->Call($this->_name.'/'.$id.'/'.$status.'/', 'POST'));
 	}
 }
 
