@@ -10,9 +10,24 @@ abstract class Resource
 	protected		$_uri;
 
 
-	private function setName($name)
+	private function setName($name = null)
 	{
-		$this->_name = substr(strtolower($name), 4);
+		/*
+		** If name isn't specified we convert the class name into ressource name.
+		*/
+		if ($name === null)
+		{
+			$name = substr(get_class(), 4);
+			$pieces = preg_split('/(?=[A-Z])/',$str);
+			$final_str = "";
+			foreach ($pieces as $piece)
+			{
+				if (strlen($final_str) > 0)
+					$final_str .= "_";
+				$final_str .= strtolower($piece);
+			}
+		}
+		$this->_name = $name;
 	}
 
 	public function getName()
@@ -24,13 +39,14 @@ abstract class Resource
 	{
 		if (self::$Iceberg === null)
 			throw new Exception("Can't create instance of ".get_class().", no valid Iceberg singleton");
+		if (!$this->getName())
+			$this->setName(get_class($this));
 		if ($id)
 		{
 			$this->_current = $this->get($id);
 			$this->_id = $this->_current->id;
 			$this->_uri = "/v1/".$this->getName()."/".$this->_id."/";
 		}
-		$this->setName(get_class($this));
 	}
 
 	/**

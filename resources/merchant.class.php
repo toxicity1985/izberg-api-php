@@ -37,3 +37,8 @@ class Merchant extends Resource
         return $seller;
     }
 }
+
+
+class MerchantImage extends Resource
+{
+}

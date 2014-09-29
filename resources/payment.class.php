@@ -2,13 +2,13 @@
 
 require_once("resource.class.php");
 
+class Payment extends Resource
+{
+
+}
+
 class PaymentCardAlias extends Resource
 {
-	public function __construct()
-	{
-		parent::__construct();
-	}
-
 	public function get($user_id, $accept_type = "Accept: application/json")
 	{
 		$params = array("user" => $user_id);
