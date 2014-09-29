@@ -12,7 +12,7 @@ abstract class Resource
 
 	private function setName($name = null)
 	{
-		/*
+	/*
 		** If name isn't specified we convert the class name into ressource name.
 		*/
 		if ($name === null)
@@ -175,7 +175,7 @@ abstract class Resource
 
 	public function get_schema($params = null, $name = null, $accept_type = 'Accept: application/json')
 	{
-		if (!$name)
+	if (!$name)
 			$name = $this->getName();
 		return $this->get("schema", $params, $name, $accept_type);
 	}
