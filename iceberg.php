@@ -150,40 +150,12 @@ class Iceberg {
 	private $_single_sign_on_response;
 
 	/**
-	 * The user current cart
-	 *
-	 * @var stdObject
-	 */
-	private $_current_cart;
-
-	/**
-	 * The current_order
-	 *
-	 * @var stdObject
-	 */
-	private $current_order;
-
-	/**
-	 * The current_user
-	 *
-	 * @var stdObject
-	 */
-	private $_current_user;
-
-	/**
 	 * Debug mode
 	 *
 	 * @var boolean
 	 */
 	private $_debug;
 
-
-	/**
-	 * Countries
-	 *
-	 * @var array
-	 */
-	private $_countries;
 
 	/**
 	 * API-key Getter
