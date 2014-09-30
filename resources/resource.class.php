@@ -9,6 +9,11 @@ abstract class Resource
 	protected		$_id;
 	protected		$_uri;
 
+	public function setCurrent($current)
+	{
+		$this->_current = $current;
+	}
+
 	public function getCurrent()
 	{
 		return $this->_current;
@@ -171,7 +176,7 @@ abstract class Resource
 			return ;
 		$data = (array)$data;
 		if (strncmp("http", $data["resource_uri"], 4) == 0)
-			$data["resource_uri"] = substr($data["resource_uri"], strlen(self::$_api_url));
+			$data["resource_uri"] = substr($data["resource_uri"], strlen(self::$Iceberg->getApiUrl()));
 		else if ($data["resource_uri"][0] == '/')
 			$data["resource_uri"] = substr($data["resource_uri"], 1);
 		return self::$Iceberg->Call($data["resource_uri"], 'PUT', $data);

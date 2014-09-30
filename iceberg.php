@@ -143,6 +143,13 @@ class Iceberg {
 	private $_shipping_country;
 
 	/**
+	 * The user currency
+	 *
+	 * @var string
+	 */
+	private $_currency;
+
+	/**
 	 * The single sign on response
 	 *
 	 * @var array
@@ -229,6 +236,14 @@ class Iceberg {
 		return $this->_username;
 	}
 
+	/**
+	 * Currency Getter
+	 *
+	 * @return String
+	 */
+	public function getCurrency() {
+		return $this->_currency;
+	}
 
 	/**
 	 * Shipping Country Getter
@@ -237,6 +252,11 @@ class Iceberg {
 	 */
 	public function getShippingCountry() {
 		return $this->_shipping_country;
+	}
+
+	public static function getApiUrl()
+	{
+		return self::$_api_url;
 	}
 
 	/**
@@ -339,6 +359,28 @@ class Iceberg {
 	}
 
 	/**
+	 * get current authenticated user
+	 *
+	 * @return StdObject
+	 */
+	public function getUser()
+	{
+		return $this->make("User")->getCurrent();
+	}
+
+	/**
+	 * Use this user for current connection
+	 *
+	 * @return null
+	 */
+	public function setUser($params)
+	{
+		$this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
+		$this->current_user = $this->getUser();
+		$this->setIcebergApiKey($this->_single_sign_on_response->api_key);
+	}
+
+	/**
 	 * First name Setter
 	 *
 	 * @param string $firstname
@@ -360,6 +402,16 @@ class Iceberg {
 		$this->_last_name = $lastname;
 	}
 
+	/**
+	 * Currency Setter
+	 *
+	 * @param string $currency
+	 * @return void
+	 */
+	public function setCurrency($currency)
+	{
+		$this->_currency = $currency;
+	}
 
 	/**
 	 * Shipping country Setter
@@ -655,9 +707,12 @@ class Iceberg {
 	 **/
 	public function testIcebergToken()
 	{
-		try {
+		try
+		{
 			$result = $this->Call('user/me/');
-		} catch (Exception $e) {
+		}
+		catch (Exception $e)
+		{
 			$result = false;
 		}
 		if (isset($result->id) && $result->id == 0)
