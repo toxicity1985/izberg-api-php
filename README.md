@@ -1,6 +1,6 @@
 #Iceberg-API-PHP
 
-[![Build Status](https://travis-ci.org/Modizy/Iceberg-API-PHP.svg?branch=master)](https://travis-ci.org/Modizy/Iceberg-API-PHP)
+[![Build Status](https://travis-ci.org/Modizy/iceberg-api-php.svg?branch=master)](https://travis-ci.org/Modizy/iceberg-api-php)
 
 ## About
 
