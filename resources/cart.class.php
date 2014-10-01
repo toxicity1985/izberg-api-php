@@ -90,8 +90,15 @@ class Cart extends Resource
             'variation_id'=> $product_variation_id,
             'offer_id'=> $product_offer_id,
             'quantity'=> 1
-		);            
+		);
 		return parent::$Iceberg->Call($this->getName()."/items/", "POST", $params);
+	}
+
+	public function create($params = null,$name = null, $accept_type = "Content-Type: application/json")
+	{
+		if (parent::$Iceberg->getDebug())
+			$params["debug"] = true;
+		return parent::create($params, $name, $accept_type);
 	}
 
 	public function addOffer($product_offer_id)

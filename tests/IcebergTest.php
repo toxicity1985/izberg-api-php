@@ -45,7 +45,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			"appNamespace" => "lolote",
 			"username" => "sebfie",
 			"accessToken" => "156d219e38f84953c159a857738119bc0c35de96",
-			"apiSecret" => "6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0"
+			"apiSecret" => "6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0",
+			"sandbox"=>true
 		));
 		return $a;
 	}
@@ -210,7 +211,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$this->assertTrue(is_a($result, "SimpleXMLElement"));
 		// It return false if we specify an unexisting merchant id
 		$merchant_id = 511;
-		$merchant = $a->make("merchant");
 		$result = $merchant->get_catalog($merchant_id);
 		$this->assertFalse($result);
 	}
@@ -257,7 +257,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	{
 		$a = $this->getRealIcebergInstance();
 		$user = $a->getUser();
-		$this->assertEquals($user->email, "sebfie@yahoo.fr");
+		$this->assertEquals("sebfie@yahoo.fr", $user->email);
 		// We set a new user
 		$a->setUser(array(
 			"email" => "sebastien.fieloux@gmail.com",
@@ -293,7 +293,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$a->setDebug(true);
 		$cart = $a->make('cart');
 		$cart->setCurrent($cart->create());
-		$this->assertTrue($cart->getCurrent->debug);
+		$this->assertTrue($cart->getCurrent()->debug);
 	}
 
 	public function testAddCartItemShouldAddItem()
@@ -323,7 +323,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$a = $this->getRealIcebergInstance();
 		$cart = $a->make('cart');
 		$cart1 = $cart->create();
-		$cart2 = $$cart->create();
+		$cart2 = $cart->create();
 		$this->assertNotSame($cart1->id, $cart2->id);
 	}
 
@@ -345,8 +345,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	{
 		$a = $this->getRealIcebergInstance();
 		$country = $a->make("country");
-		$country->get(array("code" => "FR"));
-		$this->assertEquals($country->code, 'FR');
+		$france = $country->get(array("code" => "FR"));
+		$this->assertEquals($france->code, 'FR');
 	}
 
 	public function testcreateAddressesShouldReturnACreatedAddress()

@@ -9,7 +9,7 @@ class Merchant extends Resource
     {
         if (!$merchant_id)
             $merchant_id = $this->id;
-        return $this->get_list($params, "merchant/".$merchant_d."/download_export", $accept_type);
+        return $this->get_list($params, "merchant/".$merchant_id."/download_export", $accept_type);
     }
 
 

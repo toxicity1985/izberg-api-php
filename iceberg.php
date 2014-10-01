@@ -163,6 +163,10 @@ class Iceberg {
 	 */
 	private $_debug;
 
+	public function getDebug()
+	{
+		return $this->_debug;
+	}
 
 	/**
 	 * API-key Getter
@@ -602,6 +606,9 @@ class Iceberg {
 		}
 
 		$ch = curl_init();
+
+		if ($this->getDebug())
+			curl_setopt($ch, CURLOPT_VERBOSE, true);
 		curl_setopt($ch, CURLOPT_URL, $apiCall);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
@@ -612,7 +619,8 @@ class Iceberg {
 		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
 		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
-		if ('POST' === $method) {
+		if ('POST' === $method)
+		{
 			curl_setopt($ch, CURLOPT_POST, count($params));
 			curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
 		} else if ('DELETE' === $method) {
@@ -629,7 +637,10 @@ class Iceberg {
 		}
 		curl_close($ch);
 
-		return ($accept_type == 'Accept: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
+		if ($params)
+			$this->log(var_export(ltrim(ltrim($paramString, '&')), true));
+
+		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
 	}
 
 	/**

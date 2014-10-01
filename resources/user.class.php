@@ -7,10 +7,10 @@ class User extends Resource
 	public function __construct($id = null)
 	{
 		parent::__construct($id);
-		$this->get_current();
+		$this->getCurrent();
 	}
 
-    public function get_current()
+    public function getCurrent()
     {
         if (!$this->_current)
             $this->_current = $this->get("me");

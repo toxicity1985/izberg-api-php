@@ -127,11 +127,11 @@ abstract class Resource
 	 * @return Object
 	 *
 	 **/
-	public function create($params = null,$name = null, $accept_type = "Accept: application/json")
+	public function create($params = null,$name = null, $accept_type = "Content-Type: application/json")
 	{
 		if (!$name)
 			$name = $this->getName();
-		return self::$Iceberg->Call($name."/", 'POST', (array)$params, $accept_type);
+		return self::$Iceberg->Call($name."/", 'POST', $params, $accept_type);
 	}
 
 	/**
