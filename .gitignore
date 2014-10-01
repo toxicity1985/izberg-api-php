@@ -2,3 +2,7 @@ phpunit.phar
 test.txt
 test.php
 testmerchant.php
+composer.lock
+apt142
+autoload.php
+composer
