@@ -9,5 +9,8 @@
             "name": "Iceberg Team",
             "email": "contact@iceberg-marketplace.com"
         }
-    ]
+    ],
+    "autoload": {
+      "classmap": ["lib/"]
+  }
 }

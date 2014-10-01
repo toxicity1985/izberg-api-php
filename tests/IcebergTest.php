@@ -1,6 +1,6 @@
 <?php
 
-require_once "iceberg.php";
+require_once "lib/iceberg.php";
 
 class IcebergTest extends PHPUnit_Framework_TestCase
 {

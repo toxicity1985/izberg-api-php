@@ -12,7 +12,7 @@
  * @license BSD http://www.opensource.org/licenses/bsd-license.php
  */
 
-require_once "../vendor/autoload.php";
+//require_once "../vendor/autoload.php";
 require_once "resources/loader.php";
 
 class Iceberg {
