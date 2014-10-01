@@ -6,5 +6,4 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'HtmlToText\\HtmlToText' => $vendorDir . '/apt142/htmltotext/src/HtmlToText/HtmlToText.php',
 );

@@ -11,8 +11,6 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "Ice": "resources/"
         }
     }
 }

@@ -36,6 +36,8 @@ abstract class Resource
 				$final_str .= strtolower($piece);
 			}
 		}
+		else
+			$final_str = $name;
 		$this->_name = $final_str;
 	}
 

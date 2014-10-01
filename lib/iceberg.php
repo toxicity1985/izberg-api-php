@@ -12,7 +12,7 @@
  * @license BSD http://www.opensource.org/licenses/bsd-license.php
  */
 
-require_once "vendor/autoload.php";
+require_once "../vendor/autoload.php";
 require_once "resources/loader.php";
 
 class Iceberg {
@@ -636,9 +636,6 @@ class Iceberg {
 			throw new Exception("Error: Call() - cURL error: " . curl_error($ch));
 		}
 		curl_close($ch);
-
-		if ($params)
-			$this->log(var_export(ltrim(ltrim($paramString, '&')), true));
 
 		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
 	}
