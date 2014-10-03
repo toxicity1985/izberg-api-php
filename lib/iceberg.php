@@ -15,6 +15,7 @@
 require_once __DIR__."/../HtmlToText/HtmlToText.php";
 require_once __DIR__."/resources/loader.php";
 
+
 class Iceberg
 {
 
@@ -614,8 +615,9 @@ class Iceberg
 
 		$ch = curl_init();
 
-		if ($this->getDebug())
+		if ($this->getDebug()) {
 			curl_setopt($ch, CURLOPT_VERBOSE, true);
+		}
 		curl_setopt($ch, CURLOPT_URL, $apiCall);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);

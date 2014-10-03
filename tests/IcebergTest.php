@@ -24,16 +24,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function getRealIcebergInstance()
 	{
-		//$a = $this->getIceberg(array(
-			//"appNamespace" => "lolote",
-			//"sandbox" => true
-		//))->sso(array(
-			//"apiKey" => getenv("APIKEY1"),
-			//"apiSecret" => getenv("APISECRET1"),
-			//"email" => "sebfie@yahoo.fr",
-			//"firstName" => "sébastien",
-			//"lastName" => "fieloux")
-		//);
 		$a = $this->getRealIcebergInstanceWithToken();
 		return $a;
 	}
@@ -294,12 +284,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$this->assertNotSame($cart1->id, $cart->id);
 	}
 
-	// public function testgetAvailableCreditBalanceShouldReturnAFloat()
-	// {
-	// $a = $this->getRealIcebergInstance();
-	// $balance = $a->getAvailableCreditBalance();
-	// $this->assertEquals(0.0, $balance);
-	// }
 	public function testgetAdressesShouldReturnAdresses()
 	{
 		$a = $this->getRealIcebergInstance();
