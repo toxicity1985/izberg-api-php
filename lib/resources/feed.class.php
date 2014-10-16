@@ -1,6 +1,7 @@
 <?php namespace Ice;
 
 require_once("resource.class.php");
+require_once("merchant.class.php");
 
 class Feed extends Resource
 {
@@ -11,9 +12,9 @@ class Feed extends Resource
      *     name: string
      */
 
-    private function setName($name)
+     public function getName($name)
     {
-        $this->_name = "merchant_catalog_feed";
+        return "merchant_catalog_feed";
     }
 
     public function __construct()
@@ -21,19 +22,24 @@ class Feed extends Resource
         parent::__construct();
     }
 
-    public function post($feed_url, $every, $period, $name, $merchant_id, $souce_type)
+    public function post($feed_url, $every, $period, $name, $source_type = "prestashop")
     {
-        $merchant = "/v1/merchant/".$this->merchant_id."/";
+		$merchanthandler = new Merchant();
+		$merchant_obj = $merchanthandler->getCurrent();
+		if (!$merchant_obj)
+			return false;
+		$merchant_id = $merchant_obj->objects[0]->id;
+        $merchant = "/v1/merchant/".$merchant_id."/";
         $data = array(
                         'merchant'=>$merchant,
-                        'source_type'=>$source_type,
                         'every'=>$every,
                         'period'=>$period,
                         'name'=>$name,
+                        'source_type'=>$source_type,
                         'feed_url'=>$feed_url
                     );
 
-          return $this->create($data, null, "Content-Type: application/json");
+		return $this->create($data, null, "Content-Type: application/json");
     }
 
 }

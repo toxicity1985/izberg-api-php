@@ -2,7 +2,7 @@
 
 require_once("resource.class.php");
 
-class Hook extends Resource
+class Webhook extends Resource
 {
       /*
         Params:
@@ -10,9 +10,4 @@ class Hook extends Resource
             event: string
             url: string
       */
-
-public function create($params, $name = null, $accept_type = "Content-Type: application/json")
-    {
-        parent::create($params, $name, $accept_type);
-    }
 }

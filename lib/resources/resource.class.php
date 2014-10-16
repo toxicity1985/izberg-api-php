@@ -86,7 +86,7 @@ abstract class Resource
 			return ;
 		if (false === is_dir($path))
 			$path = null;
-		else if (substr($path, -1) != '/')
+		else if ($path && substr($path, -1) != '/')
 			$path .= '/';
 		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ")." : ".$message."\n", FILE_APPEND);
 	}
