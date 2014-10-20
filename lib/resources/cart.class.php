@@ -55,6 +55,16 @@ class Cart extends Resource
     }
 
     /**
+     * delete an item to a cart
+     *
+     * @return Array
+     */
+    public function deleteItem($id, $accept_type = 'Accept: application/json')
+    {
+        return $this->delete($id, "cart_item", $accept_type);
+    }
+    
+    /**
      * Set cart shipping address
      *
      * @return StdObject

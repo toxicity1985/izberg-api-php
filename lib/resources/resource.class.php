@@ -103,7 +103,7 @@ abstract class Resource
 			$name = $this->getName();
 		if ($id)
 		{
-			$this->id = $id;
+			$this->_id = $id;
 			$this->_current = self::$Iceberg->Call($name."/".$id."/", 'GET', $params, $accept_type);
 			return $this->_current;
 		}

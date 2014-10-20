@@ -594,9 +594,13 @@ class Iceberg {
 		$apiCall = self::$_api_url . $path . (('GET' === $method) ? $paramString : null);
 
 		if ($this->useSso()) {
+			if (strtolower($this->_single_sign_on_response->username) == 'anonymous')
+				$h = $this->_single_sign_on_response->username . ":" . $this->getAppNamespace() .":".$this->_single_sign_on_response->api_key;
+			else
+				$h = $this->_single_sign_on_response->username . ":" .$this->_single_sign_on_response->api_key;
 			$headers = array(
 				$accept_type,
-				'Authorization: IcebergAccessToken '. $this->_single_sign_on_response->username . ":" . $this->_single_sign_on_response->api_key
+				'Authorization: IcebergAccessToken '. $h
 			);
 		} else {
 			$headers = array(
