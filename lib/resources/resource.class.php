@@ -56,6 +56,7 @@ abstract class Resource
 		{
 			$this->get($id);
 			$this->_id = $this->_current->id;
+			$this->id = $this->_current->id;
 			$this->_uri = "/v1/".$this->getName()."/".$this->_id."/";
 		}
 	}
