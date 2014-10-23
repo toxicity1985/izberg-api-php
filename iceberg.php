@@ -179,6 +179,12 @@ class Iceberg {
    */
   private $_debug;
 
+   /**
+   * Anonymous
+   *
+   * @var boolean
+   */
+  private $_anonymous;
 
   /**
    * Countries
@@ -473,10 +479,13 @@ class Iceberg {
         $this->setUsername($config['username']);
       }
 
+      $this->_anonymous = (isset($config["anonymous"]) && $config["anonymous"] == true) ? true : false;
+
       if (isset($config['apiKey'])) $this->setApiKey($config['apiKey']);
       if (isset($config['apiSecret'])) $this->setApiSecret($config['apiSecret']);
 
       $this->setAppNamespace($config['appNamespace']);
+
       (isset($config['currency'])) ? $this->setCurrency($config['currency']) : $this->setCurrency(self::DEFAULT_CURRENCY);
       (isset($config['shippingCountry'])) ? $this->setShippingCountry($config['shippingCountry']) : $this->setShippingCountry(self::DEFAULT_SHIPPING_COUNTRY);
 
@@ -491,20 +500,25 @@ class Iceberg {
   public function sso($config)
   {
     // if you want to access user data
-    $this->setApiKey($config['apiKey']);
-    $this->setApiSecret($config['apiSecret']);
+    if (isset($config['apiKey']))
+      $this->setApiKey($config['apiKey']);
+
+    if (isset($config['apiSecret']))
+      $this->setApiSecret($config['apiSecret']);
+
     if (isset($config['appNamespace'])) $this->setAppNamespace($config['appNamespace']);
-    $this->setEmail($config['email']);
-    $this->setFirstName($config['firstName']);
-    $this->setLastName($config['lastName']);
+
+    $this->setEmail( isset($config['email']) ? $config['email'] : "");
+    $this->setFirstName( isset($config['firstName']) ? $config['firstName'] : "");
+    $this->setLastName( isset($config['lastName']) ? $config['lastName'] : "");
 
     // We get the iceberg api key using the Single Sign On API
-    $this->setUser(array(
-      "email" => $config['email'],
-      "first_name" => $config['firstName'],
-      "last_name" => $config['lastName'],
+    return $this->setUser(array(
+      "email" => isset($config['email']) ? $config['email'] : "",
+      "first_name" => isset($config['firstName']) ? $config['firstName'] : "",
+      "last_name" => isset($config['lastName']) ? $config['lastName'] : "",
+      "from_session_id" => isset($config['from_session_id']) ? $config['from_session_id'] : null,
     ));
-    return $this;
   }
 
   /**
@@ -552,7 +566,7 @@ class Iceberg {
    * @param string [optional] $method     Request type GET|POST
    * @return mixed
    */
-  protected function _makeCall($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
+  protected function _makeCall($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json', $content_type = 'Content-Type: application/json; charset=UTF-8')
   {
     if (isset($params) && is_array($params)) {
       $paramString = '?' . http_build_query($params);
@@ -562,15 +576,17 @@ class Iceberg {
 
     $apiCall = self::$_api_url . $path . (('GET' === $method) ? $paramString : null);
 
-    if ($this->useSso()) {
+    if (!$this->_anonymous) {
       $headers = array(
+        $content_type,
         $accept_type,
-        'Authorization: IcebergAccessToken '. $this->_single_sign_on_response->username . ":" . $this->_single_sign_on_response->api_key
+        'Authorization: IcebergAccessToken '. $this->getUsername() . ":" . $this->getAccessToken()
       );
     } else {
       $headers = array(
+        $content_type,
         $accept_type,
-        'Authorization: IcebergAccessToken '. $this->getUserName() . ":" . $this->getAccessToken()
+        'Authorization: IcebergAccessToken anonymous:'. $this->getAppNamespace() . ":" . $this->getAccessToken()
       );
     }
 
@@ -588,12 +604,12 @@ class Iceberg {
 
     if ('POST' === $method) {
       curl_setopt($ch, CURLOPT_POST, count($params));
-      curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
+      curl_setopt($ch, CURLOPT_POSTFIELDS, count($params) > 0 ? json_encode($params) : "");
     } else if ('DELETE' === $method) {
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
     } else if ('PUT' === $method) {
       curl_setopt($ch, CURLOPT_POST, count($params));
-      curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
+      curl_setopt($ch, CURLOPT_POSTFIELDS, count($params) > 0 ? json_encode($params) : "" );
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
     }
 
@@ -757,6 +773,16 @@ class Iceberg {
   }
 
   /**
+   * get all categories of Iceberg catalog
+   *
+   * @return Array
+   */
+  public function getCategory($id, $params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("category/" . $id , 'GET', $params, $accept_type);
+  }
+
+  /**
    * get Merchants of an iceberg account
    *
    * @param array $params
@@ -768,6 +794,21 @@ class Iceberg {
   public function getMerchants($params = null, $accept_type = 'Accept: application/json')
   {
     return $this->_makeCall("merchant/", "GET", $params, $accept_type = 'Accept: application/json');
+  }
+
+
+  /**
+   * get Merchants of an iceberg account
+   *
+   * @param array $params
+   * $params can contain this keys :
+   *   offset: Integer => The offset of the request (for pagination)
+   *   limit: Integer => The limit of the request
+   * @return Array
+   */
+  public function getApplicationMerchants($params = null, $accept_type = 'Accept: application/json')
+  {
+    return $this->_makeCall("application/" . $this->getAppNamespace() . "/merchants/", "GET", $params, $accept_type = 'Accept: application/json');
   }
 
   /**
@@ -786,9 +827,9 @@ class Iceberg {
    *
    * @return StdObject
    */
-  public function getCart($params = null, $accept_type = 'Accept: application/json')
+  public function getCart($params = null, $accept_type = 'Accept: application/json', $force = false)
   {
-    if (!$this->_current_cart) {
+    if (!$this->_current_cart || $force) {
       $this->_current_cart = $this->_makeCall("cart/mine/", 'GET', $params, $accept_type);
     }
     return $this->_current_cart;
@@ -807,7 +848,7 @@ class Iceberg {
    */
   public function getCartItems($params = null, $accept_type = 'Accept: application/json')
   {
-    return $this->_makeCall("cart/" . $this->getCart()->id . "/items/", 'GET', $params, $accept_type);
+    return $this->_makeCall("cart/" . ($this->getCart()->id ? $this->getCart()->id : "null") . "/items/", 'GET', $params, $accept_type);
   }
 
   /**
@@ -823,7 +864,7 @@ class Iceberg {
     //   quantity: Integer
     //   gift: Boolean
     //   bundled: Boolean
-    return $this->_makeCall("cart/" . $this->getCart()->id . "/items/", 'POST', $params, $accept_type);
+    return $this->_makeCall("cart/" . ($this->getCart()->id ? $this->getCart()->id : "null") . "/items/", 'POST', $params, $accept_type);
   }
 
   /**
@@ -850,6 +891,20 @@ class Iceberg {
   public function removeCartItem($cart_item_id, $params = null, $accept_type = 'Accept: application/json')
   {
     return $this->_makeCall("cart_item/" . $cart_item_id . "/", 'DELETE', $params, $accept_type);
+  }
+
+  /**
+   * delete an item to a cart
+   *
+   * @return Array
+   */
+  public function removeAllCartItems($params = null, $accept_type = 'Accept: application/json')
+  {
+    $items = $this->getCartItems();
+    foreach($items->objects as $item) {
+      return $this->removeCartItem($item->id);
+    }
+    return true;
   }
 
 
@@ -900,9 +955,11 @@ class Iceberg {
    * @return StdObject
    */
 
-  public function getUser()
+  public function getUser($force = false)
   {
-    return $this->_makeCall("user/me/", 'GET');
+    if (!$this->_current_user || $force)
+      $this->_current_user = $this->_makeCall("user/me/", 'GET');
+    return $this->_current_user;
   }
 
   /**
@@ -913,8 +970,10 @@ class Iceberg {
   public function setUser($params)
   {
     $this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
-    $this->current_user = $this->getUser();
+    $this->_current_user = $this->getUser();
     $this->setIcebergApiKey($this->_single_sign_on_response->api_key);
+
+    return $this->_single_sign_on_response;
   }
 
   /**
@@ -1015,7 +1074,7 @@ class Iceberg {
    */
   public function getPaymentCardAlias($params = null, $accept_type = 'Accept: application/json')
   {
-    $params["user"] = $this->current_user->id;
+    $params["user"] = $this->_current_user->id;
     return $this->_makeCall("/v1/payment_card_alias/", 'GET', $params, $accept_type);
   }
 
