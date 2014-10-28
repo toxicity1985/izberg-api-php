@@ -585,7 +585,10 @@ class Iceberg {
 	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
 	{
 		if (isset($params) && is_array($params) && $method == 'POST' || $method == 'PUT')
+		{
 			$paramString = json_encode($params);
+			$accept_type = 'Content-Type: application/json';
+		}
 		else if (isset($params) && is_array($params) && $method == 'GET')
 			$paramString = '?' . http_build_query($params);
 		else
