@@ -572,6 +572,7 @@ class Iceberg {
 			$path .= '/';
 		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ")." : ".$message."\n", FILE_APPEND);
 	}
+
 	/**
 	 * The call operator
 	 *
@@ -583,13 +584,11 @@ class Iceberg {
 	 */
 	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
 	{
-		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
+		if (isset($params) && is_array($params))
 			$paramString = json_encode($params);
-		else if (isset($params) && is_array($params)) {
-			$paramString = '?' . http_build_query($params);
-		} else {
+		else 
 			$paramString = null;
-		}
+		
 
 		$apiCall = self::$_api_url . $path . (('GET' === $method) ? $paramString : null);
 
