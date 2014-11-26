@@ -6,8 +6,8 @@ class Product extends Resource
 {
 	public function reviews($id = null)
 	{
-		if ($id === null && $this->_id)
-			$id = $this->_id; 
+		if ($id === null && $this->id)
+			$id = $this->id; 
 		return $this->get("review", $params = array("product"=>$id));
 	}
 }

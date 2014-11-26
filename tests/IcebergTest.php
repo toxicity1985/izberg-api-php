@@ -280,7 +280,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	{
 		$a = $this->getRealIcebergInstance();
 		$cart = $a->make("cart");
-		$cur_cart = $cart->create();
+		$cart->create();
 		$items = $cart->getItems();
 		$this->assertTrue(is_a($items, "stdClass"));
 		$this->assertEquals($items->meta->total_count, 0);
@@ -292,8 +292,9 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$a = $this->getRealIcebergInstance();
 		$a->setDebug(true);
 		$cart = $a->make('cart');
-		$cart->setCurrent($cart->create());
-		$this->assertTrue($cart->getCurrent()->debug);
+		$cart->create();
+		$cart->getCurrent();
+		$this->assertTrue($cart->debug);
 	}
 
 	public function testAddCartItemShouldAddItem()
@@ -322,9 +323,10 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	{
 		$a = $this->getRealIcebergInstance();
 		$cart = $a->make('cart');
-		$cart1 = $cart->create();
-		$cart2 = $cart->create();
-		$this->assertNotSame($cart1->id, $cart2->id);
+		$cart1 = $a->make('cart');
+		$cart->create();
+		$cart1->create();
+		$this->assertNotSame($cart1->id, $cart->id);
 	}
 
 	// public function testgetAvailableCreditBalanceShouldReturnAFloat()
@@ -345,8 +347,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	{
 		$a = $this->getRealIcebergInstance();
 		$country = $a->make("country");
-		$france = $country->get(array("code" => "FR"));
-		$this->assertEquals($france->code, 'FR');
+		$country->get(array("code" => "FR"));
+		$this->assertEquals($country->code, 'FR');
 	}
 
 	public function testcreateAddressesShouldReturnACreatedAddress()
@@ -355,12 +357,12 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$country = $a->make("country");
 		$country->get();
 		$addr = $a->make("address");
-		$address = $addr->create(array(
+		$addr->create(array(
 			"address" => "Address line 1",
 			"address2" => "Address line 2",
 			"city" => "St remy de provence",
 			"company" => "Sebfie",
-			"country" => "/v1/country/" . $country->getCurrent()->id . "/",
+			"country" => "/v1/country/" . $country->id . "/",
 			"default_billing" => true,
 			"default_shipping" => true,
 			"digicode" => null,
@@ -373,7 +375,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			"status" => 10,
 			"zipcode" => "13210"
 		));
-		$this->assertArrayHasKey("id", (array) $address);
+		$this->assertArrayHasKey("id", (array) $addr);
 		// We check that this address is well linked to the user
 		$adresses = $addr->get_list();
 		$this->assertNotEquals($adresses->meta->total_count, 0);
@@ -385,7 +387,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$country = $a->make("country");
 		$cur_country = $country->get(array("code" => "FR"));
 		$addr = $a->make("address");
-		$address = $addr->create(array(
+		$addr->create(array(
 			"address" => "Address line 1",
 			"address2" => "Address line 2",
 			"city" => "St remy de provence",
@@ -404,8 +406,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			"zipcode" => "13210"
 		));
 		// We check that this address is well linked to the user
-		$new_address = $addr->get($address->id);
-		$this->assertEquals($new_address->id, $address->id);
+		$new_address = $a->make("address", $addr->id);
+		$this->assertEquals($new_address->id, $addr->id);
 	}
 
 	public function testSaveObject()
@@ -417,11 +419,11 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 								));
 		$description = "random description ".rand(0, 1000);
 		$merchant = $b->make("merchant", 15);
-		$my_merchant = $merchant->getCurrent();
-		$my_merchant->description = $description;
-		$test = $merchant->save($my_merchant);
-		$merchant_check = $merchant->get(15);
-		$this->assertEquals($my_merchant, $merchant_check);
+		$merchant->getCurrent();
+		$merchant->description = $description;
+		$merchant->save();
+		$merchant_check = $b->make("merchant", 15);
+		$this->assertEquals($merchant, $merchant_check);
 	}
 
 	// MAIN FUNCTION TO TEST THE FULL ORDER PROCESS

@@ -12,16 +12,16 @@
  * @license BSD http://www.opensource.org/licenses/bsd-license.php
  */
 
-//require_once "../vendor/autoload.php";
-require_once "resources/loader.php";
+require_once __DIR__."/../HtmlToText/HtmlToText.php";
+require_once __DIR__."/resources/loader.php";
 
 class Iceberg {
 
 	const LOGS = true;
 
 	/**
-	 * The API production URL
-	 */
+	* The API production URL
+	*/
 	const PRODUCTION_API_URL = 'https://api.iceberg.technology/v1/';
 
 	/**
@@ -572,7 +572,6 @@ class Iceberg {
 			$path .= '/';
 		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ")." : ".$message."\n", FILE_APPEND);
 	}
-
 	/**
 	 * The call operator
 	 *
@@ -584,17 +583,13 @@ class Iceberg {
 	 */
 	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
 	{
-		if (isset($params) && is_array($params) && $method == 'POST' || $method == 'PUT')
-		{
+		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
 			$paramString = json_encode($params);
-			$accept_type = 'Content-Type: application/json';
-		}
-		else if (isset($params) && is_array($params) && $method == 'GET')
+		else if (isset($params) && is_array($params)) {
 			$paramString = '?' . http_build_query($params);
-		else
+		} else {
 			$paramString = null;
-		
-		
+		}
 
 		$apiCall = self::$_api_url . $path . (('GET' === $method) ? $paramString : null);
 
@@ -642,7 +637,10 @@ class Iceberg {
 		}
 		curl_close($ch);
 
-		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
+		$data = (($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data));
+		if (isset($data->errors) || isset($data['errors']))
+			return null;
+		return $data;
 	}
 
 	/**
@@ -739,7 +737,7 @@ class Iceberg {
 	 * @returns string
 	 *
 	 **/
-	public function convertHtml($html)
+	public static function convertHtml($html)
 	{
 		$converter = new \HtmlToText\HtmlToText($html);
 		return $converter->convert();
@@ -751,11 +749,87 @@ class Iceberg {
 	 * @returns object
 	 *
 	 **/
-	public function make($resource, $id = null)
+	public function get($resource, $id = null, $params = null, $accept_type = "Accept: application/json")
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".$resource;
-		return new $resource($id);	
+		if (strtolower($resource) == "cart" && !$id)
+			$id = "mine";
+		if (strtolower($resource) == "country" && !$params)
+			$params = array("code" => "FR");
+		$object = new $resource();
+		$response = $this->Call($object->getName()."/".$id."/", 'GET', $params, $accept_type);
+		$object->hydrate($response->objects[0]);
+		return $object;
 	}
 
+
+	/**
+	* Factory method, use it to build resources
+	*
+	* @returns object
+	*
+	**/
+	public function get_list($resource, $params = null, $accept_type = "Accept: application/json")
+	{
+		if (strncmp("Ice\\", $resource, 4) != 0)
+			$resource = "Ice\\".$resource;
+		$handler = new $resource();	
+		$list = $this->Call($handler->getName()."/", 'GET', $params, $accept_type);	
+		$object_list = array();
+		foreach ($list->objects as $object)
+		{
+			$obj = new $resource();
+			$obj->hydrate($object);
+			$object_list[] = $obj;
+		}
+		return $object_list;
+	}
+
+	/**
+	* Factory method, use it to build resources
+	*
+	* @returns object
+	*
+	**/
+	public function create($resource, $params = null, $accept_type = "Accept: application/json")
+	{
+		if (strncmp("Ice\\", $resource, 4) != 0)
+			$resource = "Ice\\".$resource;
+		if (isset($params['debug']))
+			$params["debug"] = true;
+		$object = new $resource();
+		$object = $obj->getName();
+		$response = $this->Call($name."/", 'POST', $params, $accept_type);
+		$object->hydrate($response->objects[0]);
+		return $object;
+	}
+
+	/**
+	* Updates Object
+	*
+	* @return Object
+	*
+	**/
+	public function update($resource = null, $id = null, $params = null, $accept_type = "Accept: application/json")
+	{
+		if (!$id || !$resource)
+			throw new Exception(__METHOD__." needs a valid ID and a valid Resource Name");
+		$obj = new $resource();
+		$name = $obj->getName();
+		$response = $this->Call($name . "/" . $id . "/", 'PUT', $params, $accept_type);
+		$obj->hydrate($response->objects[0]);
+		return $obj;
+	}
+
+	/**
+	* Get Schema
+	*
+	* @return Object
+	*
+	**/
+	public function get_schema($resource, $params = null, $accept_type = 'Accept: application/json')
+	{
+		return $this->get($resource, "schema", $params, $accept_type);
+	}
 }

@@ -2,22 +2,10 @@
 
 abstract class Resource
 {
-	protected static $Iceberg = null;
-
-	protected		$_name;
-	protected		$_current;
-	protected		$_id;
-	protected		$_uri;
-
-	public function setCurrent($current)
-	{
-		$this->_current = $current;
-	}
-
-	public function getCurrent()
-	{
-		return $this->_current;
-	}
+	protected static	$Iceberg = null;
+	protected			$_name;
+	protected			$_id;
+	protected			$_uri;
 
 	private function setName($name = null)
 	{
@@ -52,12 +40,6 @@ abstract class Resource
 			throw new Exception("Can't create instance of ".get_class().", no valid Iceberg singleton");
 		if (!$this->getName())
 			$this->setName();
-		if ($id)
-		{
-			$this->get($id);
-			$this->_id = $this->_current->id;
-			$this->_uri = "/v1/".$this->getName()."/".$this->_id."/";
-		}
 	}
 
 	/**
@@ -92,104 +74,49 @@ abstract class Resource
 	}
 
 	/**
-	 * Get Object
-	 *
-	 * @return Object
-	 *
-	 **/
-	public function get($id = null, $params = null, $name = null, $accept_type = "Accept: application/json")
+	* Hydrate function
+	*
+	* @return void
+	*
+	**/
+	public function hydrate($obj)
 	{
-		if (!$name)
-			$name = $this->getName();
-		if ($id)
-		{
-			$this->id = $id;
-			$this->_current = self::$Iceberg->Call($name."/".$id."/", 'GET', $params, $accept_type);
-			return $this->_current;
-		}
-		return self::$Iceberg->Call($name."/", 'GET', $params, $accept_type);
+		foreach ($obj as $key=>$value)
+			$this->$key = $value;
 	}
 
 	/**
-	 * Get all objects from ressource
-	 *
-	 * @return Object
-	 *
-	 **/
-	public function get_list($params = null,$name = null, $accept_type = "Accept: application/json")
+	* Deletes Object
+	*
+	* @return Object
+	*
+	**/
+	public function delete($params = null)
 	{
-		if (!$name)
-			$name = $this->getName();
-		return self::$Iceberg->Call($name."/", 'GET', $params, $accept_type);
-	}
-
-	/**
-	 * Creates Object
-	 *
-	 * @return Object
-	 *
-	 **/
-	public function create($params = null,$name = null, $accept_type = "Content-Type: application/json")
-	{
-		if (!$name)
-			$name = $this->getName();
-		return self::$Iceberg->Call($name."/", 'POST', $params, $accept_type);
-	}
-
-	/**
-	 * Updates Object
-	 *
-	 * @return Object
-	 *
-	 **/
-	public function update($id = null, $params = null, $name = null, $accept_type = "Accept: application/json")
-	{
-		if (!$id)
+		if (!$this->id)
 			throw new Exception(__METHOD__." needs a valid ID");
-		if (!$name)
-			$name = $this->getName();
-		return self::$Iceberg->Call($name . "/" . $id . "/", 'PUT', $params, $accept_type);
+		$name = $this->getName();
+		return self::$Iceberg->Call( $name . "/" . $this->id . "/", 'DELETE', $params, $accept_type);
 	}
 
 	/**
-	 * Deletes Object
-	 *
-	 * @return Object
-	 *
-	 **/
-	public function delete($id = null, $name = null)
+	* Updates Object
+	*
+	* @return Object
+	*
+	**/
+	public function save()
 	{
-		if (!$id)
-			throw new Exception(__METHOD__." needs a valid ID");
-		if (!$name)
-			$name = $this->getName();
-		return self::$Iceberg->Call( $name . "/" . $id . "/", 'DELETE', $params, $accept_type);
-	}
-
-	/**
-	 * Updates Object
-	 *
-	 * @return Object
-	 *
-	 **/
-	public function save($data)
-	{
-		if (!$data || (!$data->resource_uri && !$data["resource_uri"]))
+		if (!$this->resource_uri)
 			return ;
-		$data = (array)$data;
+		$data = (array)$this;
 		if (strncmp("http", $data["resource_uri"], 4) == 0)
 			$data["resource_uri"] = substr($data["resource_uri"], strlen(self::$Iceberg->getApiUrl()));
 		else if ($data["resource_uri"][0] == '/')
 			$data["resource_uri"] = substr($data["resource_uri"], 1);
-		return self::$Iceberg->Call($data["resource_uri"], 'PUT', $data);
+		self::$Iceberg->Call($data["resource_uri"], 'PUT', $data);
 	}
 
 
-	public function get_schema($params = null, $name = null, $accept_type = 'Accept: application/json')
-	{
-	if (!$name)
-			$name = $this->getName();
-		return $this->get("schema", $params, $name, $accept_type);
-	}
 
 }

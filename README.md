@@ -4,7 +4,7 @@
 
 ## About
 
-Wrapper PHP around the Iceberg API
+PHP Wrapper around the Iceberg API
 
 ## Get started
 
@@ -15,7 +15,7 @@ Wrapper PHP around the Iceberg API
 
 ### Initialize the class
 
-You can use your access token or our Single Sign On system :
+You can use your access token or our Single Sign On system to identify:
 
 #### With Access token :
 
@@ -93,7 +93,13 @@ This is useful when you want to link your api calls to a user, you will need it 
 
 ##Ressources
 
-Basically, all ressources are handled the same way, using the following methods :
+Basically, all ressources are handled the same way, using their respective handler, that you can instanciate with the Iceberg class
+which works like a factory, you have to use the 'make' method with the ressource name as parameter.
+
+```php
+$MerchantHandler = $Iceberg->make('Merchant');
+```
+
 
 ####Get List
 
@@ -145,23 +151,24 @@ The following example will create a new address
 ```php
 
 $Iceberg->create_object("address", array(
-							"address" => "ADDRESS LINE 1",
-       						"address2" => "ADDRESS LINE 2",
-        					"city" => "CITY NAME",
-     		 			 	"company" => "OPTIONNAL COMPANY",          "country" => "COUNTRY_ID",
-     					    "default_billing" => true,
-    					    "default_shipping" => true,
-     					    "digicode" => null,
-        					"first_name" => "FIRST NAME",
-        					"floor" => null,
-        					"last_name" => "LAST NAME",
-        					"name" => "ADDRESS NAME",
-      						"phone" => "PHONE NUMBER",
-        					"state" => "OPTIONNAL STATE NAME",
-        					"status" => 10,
-        					"zipcode" => "ZIPCODE"
-							)
-				);
+						"address" => "ADDRESS LINE 1",
+						"address2" => "ADDRESS LINE 2",
+						"city" => "CITY NAME",
+						"company" => "OPTIONNAL COMPANY",
+						"country" => "COUNTRY_ID",
+						"default_billing" => true,
+						"default_shipping" => true,
+						"digicode" => null,
+						"first_name" => "FIRST NAME",
+						"floor" => null,
+						"last_name" => "LAST NAME",
+						"name" => "ADDRESS NAME",
+						"phone" => "PHONE NUMBER",
+						"state" => "OPTIONNAL STATE NAME",
+						"status" => 10,
+						"zipcode" => "ZIPCODE"
+			)
+		);
 ```
 
 ####Update Object
@@ -233,20 +240,20 @@ Creating an order on Iceberg is really easy, the only thing you need is the Item
 	require_once "iceberg.php";
 
 	$valid_array = array(
-  		'appNamespace' => 'YOUR_APP_NAMESPACE',
-  		'accessToken'  => 'YOUR_ACCESSTOKEN',
-  		'username'     => 'YOUR_USERNAME',
-  		'apiKey'       => 'YOUR_APP_KEY',
-  		'apiSecret'    => 'YOUR_APP_SECRET'
-	  )
+			'appNamespace' => 'YOUR_APP_NAMESPACE',
+			'accessToken'  => 'YOUR_ACCESSTOKEN',
+			'username'     => 'YOUR_USERNAME',
+			'apiKey'       => 'YOUR_APP_KEY',
+			'apiSecret'    => 'YOUR_APP_SECRET'
+			)
 
 	$IcebergInstance = new Iceberg($valid_array);
 
-    $IcebergInstance->setUser(array(
-    	"email" => "EMAIL_ADDRESS",
-        "first_name" => "FIRST_NAME",
-        "last_name" => "LAST_NAME"
-        ));
+	$IcebergInstance->setUser(array(
+				"email" => "EMAIL_ADDRESS",
+				"first_name" => "FIRST_NAME",
+				"last_name" => "LAST_NAME"
+				));
 
 ```
 
@@ -295,7 +302,7 @@ Now we can set the Shipping and Billing addresses.
         "zipcode" => "ZIPCODE"
         ));
 
- 		$IcebergInstance->setBillingAddress($address->id);
+	$IcebergInstance->setBillingAddress($address->id);
         $IcebergInstance->setShippingAddress($address->id);
 
 
@@ -321,15 +328,15 @@ We get the first merchant with getMerchants()
 ```php
 
 <?php
-	
+
 	require_once "iceberg.php";
 
 	$valid_array = array(
 		'appNamespace' => 'YOUR_APP_NAMESPACE',
-    	'accessToken'  => 'YOUR_ACCESSTOKEN',
-    	'username'     => 'YOUR_USERNAME',
-    	'apiKey'       => 'YOUR_APP_KEY',
-    	'apiSecret'    => 'YOUR_APP_SECRET'
+		'accessToken'  => 'YOUR_ACCESSTOKEN',
+		'username'     => 'YOUR_USERNAME',
+		'apiKey'       => 'YOUR_APP_KEY',
+		'apiSecret'    => 'YOUR_APP_SECRET'
 		)
 
 	$IcebergInstance = new Iceberg($valid_array);
@@ -350,42 +357,41 @@ Now that we have an offer ID, the process is the same as above
 
 ```php
 
-    $IcebergInstance->setUser(array(
-        "email" => "EMAIL_ADDRESS",
-        "first_name" => "FIRST_NAME",
-        "last_name" => "LAST_NAME"
-        ));
+$IcebergInstance->setUser(array(
+			"email" => "EMAIL_ADDRESS",
+			"first_name" => "FIRST_NAME",
+			"last_name" => "LAST_NAME"
+			));
 
-	$my_cart = IcebergInstance->newCart();
-	$IcebergInstance->addCartItem(array(
-		'offer_id' => $best_offer_id,
-		'quantity' => 1
-		));
-    $country = $IcebergInstance->getCountry(array("code" => "FR"));
-    $address = $IcebergInstance->createAddresses(array(
-		"address" => "ADDRESS LINE 1",
-		"address2" => "ADDRESS LINE 2",
-        "city" => "CITY NAME"
-        "company" => "OPTIONNAL COMPANY NAME",
-        "country" => "/v1/country/" . $country->id . "/",
-        "default_billing" => true,
-        "default_shipping" => true,
-        "digicode" => null,
-        "first_name" => "FIRST NAME",
-        "floor" => null,
-        "last_name" => "LAST NAME",
-        "name" => "ADDRESS NAME",
-        "phone" => "PHONE NUMBER",
-        "state" => "OPTIONNAL STATE NAME",
-		//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
-        "status" => 10,
-        "zipcode" => "ZIPCODE"
-     	));
+$my_cart = IcebergInstance->newCart();
+$IcebergInstance->addCartItem(array(
+			'offer_id' => $best_offer_id,
+			'quantity' => 1
+			));
+$country = $IcebergInstance->getCountry(array("code" => "FR"));
+$address = $IcebergInstance->createAddresses(array(
+			"address" => "ADDRESS LINE 1",
+			"address2" => "ADDRESS LINE 2",
+			"city" => "CITY NAME"
+			"company" => "OPTIONNAL COMPANY NAME",
+			"country" => "/v1/country/" . $country->id . "/",
+			"default_billing" => true,
+			"default_shipping" => true,
+			"digicode" => null,
+			"first_name" => "FIRST NAME",
+			"floor" => null,
+			"last_name" => "LAST NAME",
+			"name" => "ADDRESS NAME",
+			"phone" => "PHONE NUMBER",
+			"state" => "OPTIONNAL STATE NAME",
+			//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
+			"status" => 10,
+			"zipcode" => "ZIPCODE"
+			));
 
 	$IcebergInstance->setBillingAddress($address->id);
-    $IcebergInstance->setShippingAddress($address->id);
-    
-	$order = $IcebergInstance->createOrder();    
+	$IcebergInstance->setShippingAddress($address->id);
+	$order = $IcebergInstance->createOrder();
 	$order->authorizeOrder();
 
 ?>
