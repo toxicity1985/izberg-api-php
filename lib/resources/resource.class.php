@@ -34,7 +34,7 @@ abstract class Resource
 		return ($this->_name);
 	}
 
-	public function __construct($id = null)
+	public function __construct()
 	{
 		if (self::$Iceberg === null)
 			throw new Exception("Can't create instance of ".get_class().", no valid Iceberg singleton");
@@ -109,6 +109,12 @@ abstract class Resource
 	{
 		if (!$this->resource_uri)
 			return ;
+		if (!$this->id)
+		{
+			$response = self::$Iceberg->Call($this->getName()."/", 'POST', json_encode($this));
+			$this->hydrate($response->objects[0]);
+			return ;
+		}
 		$data = (array)$this;
 		if (strncmp("http", $data["resource_uri"], 4) == 0)
 			$data["resource_uri"] = substr($data["resource_uri"], strlen(self::$Iceberg->getApiUrl()));

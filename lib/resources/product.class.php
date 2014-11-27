@@ -8,16 +8,16 @@ class Product extends Resource
 	{
 		if ($id === null && $this->id)
 			$id = $this->id; 
-		return $this->get("review", $params = array("product"=>$id));
+		return parent::$Iceberg->get("review", $params = array("product"=>$id));
 	}
 }
 
 class ProductOffer extends Resource
 {
-	public function __construct($id = null)
+	public function __construct()
 	{
 		$this->setName("productoffer");
-		parent::construct($id);
+		parent::construct();
 	}
 }
 

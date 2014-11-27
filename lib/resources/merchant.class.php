@@ -4,14 +4,12 @@ require_once("resource.class.php");
 
 class Merchant extends Resource
 {
-
 	public function get_catalog($merchant_id = null, $params = null, $accept_type = 'Accept: application/xml')
 	{
 		if (!$merchant_id)
 			$merchant_id = $this->id;
 		return $this->get_list($params, "merchant/".$merchant_id."/download_export", $accept_type);
 	}
-
 
 	public function getCurrent()
 	{
@@ -33,8 +31,12 @@ class Merchant extends Resource
 			$this->hydrate($seller->objects[0]);
 		return $this;
 	}
-}
 
+	public function getCatalog($params = null, $accept_type = 'Accept: application/xml')
+	{
+		return parent::$Iceberg->Call("merchant/$this->id/download_export/", "GET", $params , $accept_type);
+	}
+}
 
 class MerchantImage extends Resource
 {

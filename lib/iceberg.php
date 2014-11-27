@@ -15,7 +15,8 @@
 require_once __DIR__."/../HtmlToText/HtmlToText.php";
 require_once __DIR__."/resources/loader.php";
 
-class Iceberg {
+class Iceberg
+{
 
 	const LOGS = true;
 
@@ -25,142 +26,142 @@ class Iceberg {
 	const PRODUCTION_API_URL = 'https://api.iceberg.technology/v1/';
 
 	/**
-	 * The API sandbox URL
-	 */
+	* The API sandbox URL
+	*/
 	const SANDBOX_API_URL = 'http://api.sandbox.iceberg.technology/v1/';
 
 	/**
-	 * The Single Sign On URL
-	 */
+	* The Single Sign On URL
+	*/
 	const SINGLE_SIGN_ON_URL = 'user/sso/';
 
 	/**
-	 * The default currency
-	 */
+	* The default currency
+	*/
 	const DEFAULT_CURRENCY = 'EUR';
 
 	/**
-	 * The Default shipping country
-	 */
+	* The Default shipping country
+	*/
 	const DEFAULT_SHIPPING_COUNTRY = 'FR';
 
 
 	/**
-	 * The singleton of Iceberg instance
-	 *
-	 * @var Iceberg
-	 */
+	* The singleton of Iceberg instance
+	*
+	* @var Iceberg
+	*/
 	protected static $_singleton;
 
 
 	/**
-	 * The API base URL
-	 */
+	* The API base URL
+	*/
 	protected static $_api_url;
 
 	/**
-	 * The iceberg application namespace
-	 *
-	 * @var string
-	 */
+	* The iceberg application namespace
+	*
+	* @var string
+	*/
 	private $_appnamespace;
 
 	/**
-	 * The iceberg api secret
-	 *
-	 * @var string
-	 */
+	* The iceberg api secret
+	*
+	* @var string
+	*/
 	private $_apisecret;
 
 	/**
-	 * The iceberg application api key
-	 *
-	 * @var string
-	 */
+	* The iceberg application api key
+	*
+	* @var string
+	*/
 	private $_apikey;
 
 	/**
-	 * The iceberg application access_token
-	 *
-	 * @var string
-	 */
+	* The iceberg application access_token
+	*
+	* @var string
+	*/
 	private $_access_token;
 
 	/**
-	 * The iceberg api key
-	 *
-	 * @var string
-	 */
+	* The iceberg api key
+	*
+	* @var string
+	*/
 	private $_iceberg_apikey;
 
 	/**
-	 * The user email
-	 *
-	 * @var string
-	 */
+	* The user email
+	*
+	* @var string
+	*/
 	private $_email;
 
 	/**
-	 * The username
-	 *
-	 * @var string
-	 */
+	* The username
+	*
+	* @var string
+	*/
 	private $_username;
 
 	/**
-	 * The request timestamp
-	 *
-	 * @var string
-	 */
+	* The request timestamp
+	*
+	* @var string
+	*/
 	private $_timestamp;
 
 	/**
-	 * Boolean to know if we have to use sso
-	 *
-	 * @var string
-	 */
+	* Boolean to know if we have to use sso
+	*
+	* @var string
+	*/
 	private $_use_sso;
 
 	/**
-	 * The user first name
-	 *
-	 * @var string
-	 */
+	* The user first name
+	*
+	* @var string
+	*/
 	private $_first_name;
 
 	/**
-	 * The user last name
-	 *
-	 * @var string
-	 */
+	* The user last name
+	*
+	* @var string
+	*/
 	private $_last_name;
 
 	/**
-	 * The user shipping country
-	 *
-	 * @var string
-	 */
+	* The user shipping country
+	*
+	* @var string
+	*/
 	private $_shipping_country;
 
 	/**
-	 * The user currency
-	 *
-	 * @var string
-	 */
+	* The user currency
+	*
+	* @var string
+	*/
 	private $_currency;
 
 	/**
-	 * The single sign on response
-	 *
-	 * @var array
-	 */
+	* The single sign on response
+	*
+	* @var array
+	*/
 	private $_single_sign_on_response;
 
 	/**
-	 * Debug mode
-	 *
-	 * @var boolean
-	 */
+	* Debug mode
+	*
+	* @var boolean
+	*/
 	private $_debug;
 
 	public function getDebug()
@@ -169,91 +170,91 @@ class Iceberg {
 	}
 
 	/**
-	 * API-key Getter
-	 *
-	 * @return String
-	 */
+	* API-key Getter
+	*
+	* @return String
+	*/
 	public function getApiKey() {
 		return $this->_apikey;
 	}
 
 	/**
-	 * API-secret Getter
-	 *
-	 * @return String
-	 */
+	* API-secret Getter
+	*
+	* @return String
+	*/
 	public function getApiSecret() {
 		return $this->_apisecret;
 	}
 
 	/**
-	 * Access token Getter
-	 *
-	 * @return String
-	 */
+	* Access token Getter
+	*
+	* @return String
+	*/
 	public function getAccessToken() {
 		return $this->_access_token;
 	}
 
 	/**
-	 * NAMESPACE Getter
-	 *
-	 * @return String
-	 */
+	* NAMESPACE Getter
+	*
+	* @return String
+	*/
 	public function getAppNamespace() {
 		return $this->_appnamespace;
 	}
 
 	/**
-	 * Email Getter
-	 *
-	 * @return String
-	 */
+	* Email Getter
+	*
+	* @return String
+	*/
 	public function getEmail() {
 		return $this->_email;
 	}
 
 	/**
-	 * First name Getter
-	 *
-	 * @return String
-	 */
+	* First name Getter
+	*
+	* @return String
+	*/
 	public function getFirstName() {
 		return $this->_first_name;
 	}
 
 	/**
-	 * Last name Getter
-	 *
-	 * @return String
-	 */
+	* Last name Getter
+	*
+	* @return String
+	*/
 	public function getLastName() {
 		return $this->_last_name;
 	}
 
 	/**
-	 * Username Getter
-	 *
-	 * @return String
-	 */
+	* Username Getter
+	*
+	* @return String
+	*/
 	public function getUsername() {
 		return $this->_username;
 	}
 
 	/**
-	 * Currency Getter
-	 *
-	 * @return String
-	 */
+	* Currency Getter
+	*
+	* @return String
+	*/
 	public function getCurrency() {
 		return $this->_currency;
 	}
 
 	/**
-	 * Shipping Country Getter
-	 *
-	 * @return String
-	 */
+	* Shipping Country Getter
+	*
+	* @return String
+	*/
 	public function getShippingCountry() {
 		return $this->_shipping_country;
 	}
@@ -264,28 +265,28 @@ class Iceberg {
 	}
 
 	/**
-	 * Iceberg API key Getter
-	 *
-	 * @return String
-	 */
+	* Iceberg API key Getter
+	*
+	* @return String
+	*/
 	public function getIcebergApiKey() {
 		return $this->_iceberg_apikey;
 	}
 
 	/**
-	 * Timestamp Getter
-	 *
-	 * @return String
-	 */
+	* Timestamp Getter
+	*
+	* @return String
+	*/
 	public function getTimestamp() {
 		return $this->_timestamp;
 	}
 
 	/**
-	 * Message Auth Getter
-	 *
-	 * @return String
-	 */
+	* Message Auth Getter
+	*
+	* @return String
+	*/
 	public function getMessageAuth($email, $first_name, $last_name)
 	{
 		$this->setTimestamp(time());
@@ -299,84 +300,84 @@ class Iceberg {
 
 
 	/**
-	 * API-key Setter
-	 *
-	 * @param string $apiKey
-	 * @return void
-	 */
+	* API-key Setter
+	*
+	* @param string $apiKey
+	* @return void
+	*/
 	public function setApiKey($apiKey)
 	{
 		$this->_apikey = $apiKey;
 	}
 
 	/**
-	 * Username Getter
-	 *
-	 * @return String
-	 */
+	* Username Getter
+	*
+	* @return String
+	*/
 	public function setUsername($username)
 	{
 		$this->_username = $username;
 	}
 
 	/**
-	 * Access token Setter
-	 *
-	 * @return String
-	 */
+	* Access token Setter
+	*
+	* @return String
+	*/
 	public function setAccessToken($access_token)
 	{
 		$this->_access_token = $access_token;
 	}
 
 	/**
-	 * API-secret Setter
-	 *
-	 * @param string $apiSecret
-	 * @return void
-	 */
+	* API-secret Setter
+	*
+	* @param string $apiSecret
+	* @return void
+	*/
 	public function setApiSecret($apiSecret)
 	{
 		$this->_apisecret = $apiSecret;
 	}
 
 	/**
-	 * NAMESPACE Setter
-	 *
-	 * @param string $namespace
-	 * @return void
-	 */
+	* NAMESPACE Setter
+	*
+	* @param string $namespace
+	* @return void
+	*/
 	public function setAppNamespace($namespace)
 	{
 		$this->_appnamespace = $namespace;
 	}
 
 	/**
-	 * Email Setter
-	 *
-	 * @param string $email
-	 * @return void
-	 */
+	* Email Setter
+	*
+	* @param string $email
+	* @return void
+	*/
 	public function setEmail($email)
 	{
 		$this->_email = $email;
 	}
 
 	/**
-	 * get current authenticated user
-	 *
-	 * @return StdObject
-	 */
+	* get current authenticated user
+	*
+	* @return StdObject
+	*/
 	public function getUser()
 	{
 		return $this->make("User")->getCurrent();
 	}
 
 	/**
-	 * Use this user for current connection
-	 *
-	 * @return null
-	 */
+	* Use this user for current connection
+	*
+	* @return null
+	*/
 	public function setUser($params)
 	{
 		$this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
@@ -385,77 +386,77 @@ class Iceberg {
 	}
 
 	/**
-	 * First name Setter
-	 *
-	 * @param string $firstname
-	 * @return void
-	 */
+	* First name Setter
+	*
+	* @param string $firstname
+	* @return void
+	*/
 	public function setFirstName($firstname)
 	{
 		$this->_first_name = $firstname;
 	}
 
 	/**
-	 * Last name Setter
-	 *
-	 * @param string $lastname
-	 * @return void
-	 */
+	* Last name Setter
+	*
+	* @param string $lastname
+	* @return void
+	*/
 	public function setLastName($lastname)
 	{
 		$this->_last_name = $lastname;
 	}
 
 	/**
-	 * Currency Setter
-	 *
-	 * @param string $currency
-	 * @return void
-	 */
+	* Currency Setter
+	*
+	* @param string $currency
+	* @return void
+	*/
 	public function setCurrency($currency)
 	{
 		$this->_currency = $currency;
 	}
 
 	/**
-	 * Shipping country Setter
-	 *
-	 * @param string $shippingCountry
-	 * @return void
-	 */
+	* Shipping country Setter
+	*
+	* @param string $shippingCountry
+	* @return void
+	*/
 	public function setShippingCountry($shippingCountry)
 	{
 		$this->_shipping_country = $shippingCountry;
 	}
 
 	/**
-	 * Iceberg API key Setter
-	 *
-	 * @param string $api_key
-	 * @return String
-	 */
+	* Iceberg API key Setter
+	*
+	* @param string $api_key
+	* @return String
+	*/
 	public function setIcebergApiKey($api_key)
 	{
 		$this->_iceberg_apikey = $api_key;
 	}
 
 	/**
-	 * Timestamp Setter
-	 *
-	 * @param string $timestamp
-	 * @return String
-	 */
+	* Timestamp Setter
+	*
+	* @param string $timestamp
+	* @return String
+	*/
 	public function setTimestamp($timestamp)
 	{
 		$this->_timestamp = $timestamp;
 	}
 
 	/**
-	 * Debug Setter
-	 *
-	 * @param string $debug
-	 * @return String
-	 */
+	* Debug Setter
+	*
+	* @param string $debug
+	* @return String
+	*/
 	public function setDebug($debug)
 	{
 		$this->_debug = $debug;
@@ -463,11 +464,11 @@ class Iceberg {
 
 
 	/**
-	 * Default constructor
-	 *
-	 * @param array|string $config          Iceberg configuration data
-	 * @return void
-	 */
+	* Default constructor
+	*
+	* @param array|string $config          Iceberg configuration data
+	* @return void
+	*/
 	public function __construct($config)
 	{
 		$this->_use_sso = false;
@@ -519,10 +520,10 @@ class Iceberg {
 	}
 
 	/**
-	 * Static function to get the last validated Instance
-	 *
-	 * @return Iceberg
-	 */
+	* Static function to get the last validated Instance
+	*
+	* @return Iceberg
+	*/
 	public static function getInstance()
 	{
 		if (self::$_singleton) {
@@ -533,34 +534,34 @@ class Iceberg {
 	}
 
 	/**
-	 * Set the default instance to a specified instance.
-	 *
-	 * @param Iceberg $iceberg An object instance of type Iceberg,
-	 *   or a subclass.
-	 * @return void
-	 */
+	* Set the default instance to a specified instance.
+	*
+	* @param Iceberg $iceberg An object instance of type Iceberg,
+	*   or a subclass.
+	* @return void
+	*/
 	public static function setInstance(Iceberg $iceberg)
 	{
 		self::$_singleton = $iceberg;
 	}
 
 	/**
-	 * Function to know if we use accessToken or SSO
-	 *
-	 * @return Boolean
-	 */
+	* Function to know if we use accessToken or SSO
+	*
+	* @return Boolean
+	*/
 	public function useSso()
 	{
 		return $this->_use_sso;
 	}
 
 	/**
-	 * The Log Function
-	 *
-	 * @param string $Message               Your log message
-	 * @param string [optional]             Log type (default is "ERROR")
-	 * @param string [optional]             Directory path for logs, CWD by default
-	 **/
+	* The Log Function
+	*
+	* @param string $Message               Your log message
+	* @param string [optional]             Log type (default is "ERROR")
+	* @param string [optional]             Directory path for logs, CWD by default
+	**/
 	public function log($message, $level="error", $path = null)
 	{
 		date_default_timezone_set("Europe/berlin");
@@ -573,14 +574,14 @@ class Iceberg {
 		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ")." : ".$message."\n", FILE_APPEND);
 	}
 	/**
-	 * The call operator
-	 *
-	 * @param string $function              API resource path
-	 * @param array [optional] $params      Additional request parameters
-	 * @param boolean [optional] $auth      Whether the function requires an access token
-	 * @param string [optional] $method     Request type GET|POST
-	 * @return mixed
-	 */
+	* The call operator
+	*
+	* @param string $function              API resource path
+	* @param array [optional] $params      Additional request parameters
+	* @param boolean [optional] $auth      Whether the function requires an access token
+	* @param string [optional] $method     Request type GET|POST
+	* @return mixed
+	*/
 	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
 	{
 		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
@@ -644,10 +645,10 @@ class Iceberg {
 	}
 
 	/**
-	 * Api key Getter
-	 *
-	 * @return String
-	 */
+	* Api key Getter
+	*
+	* @return String
+	*/
 	protected function _getSingleSignOnResponse($params = null)
 	{
 		$this->_use_sso = true;
@@ -711,11 +712,11 @@ class Iceberg {
 
 
 	/**
-	 * Test if AcessToken is valid
-	 *
-	 * @returns object
-	 *
-	 **/
+	* Test if AcessToken is valid
+	*
+	* @returns object
+	*
+	**/
 	public function testIcebergToken()
 	{
 		try
@@ -732,11 +733,11 @@ class Iceberg {
 	}
 
 	/**
-	 * Converts html string to simple string
-	 *
-	 * @returns string
-	 *
-	 **/
+	* Converts html string to simple string
+	*
+	* @returns string
+	*
+	**/
 	public static function convertHtml($html)
 	{
 		$converter = new \HtmlToText\HtmlToText($html);
@@ -744,11 +745,11 @@ class Iceberg {
 	}
 
 	/**
-	 * Factory method, use it to build resources
-	 *
-	 * @returns object
-	 *
-	 **/
+	* Factory method, use it to build resources
+	*
+	* @returns object
+	*
+	**/
 	public function get($resource, $id = null, $params = null, $accept_type = "Accept: application/json")
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
@@ -774,8 +775,8 @@ class Iceberg {
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".$resource;
-		$handler = new $resource();	
-		$list = $this->Call($handler->getName()."/", 'GET', $params, $accept_type);	
+		$handler = new $resource();
+		$list = $this->Call($handler->getName()."/", 'GET', $params, $accept_type);
 		$object_list = array();
 		foreach ($list->objects as $object)
 		{

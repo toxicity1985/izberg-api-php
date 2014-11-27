@@ -4,18 +4,18 @@ require_once("resource.class.php");
 
 class User extends Resource
 {
-	public function __construct($id = null)
+	public function __construct()
 	{
-		parent::__construct($id);
+		parent::__construct();
 		$this->getCurrent();
 	}
 
-    public function getCurrent()
-    {
-        if (!$this->id)
-            $this->get("me");
-        return $this;
-    }
+	public function getCurrent()
+	{
+		if (!$this->id)
+			$object = parent::$Iceberg->get("me");
+		return $this;
+	}
 
 	public function addresses()
 	{
