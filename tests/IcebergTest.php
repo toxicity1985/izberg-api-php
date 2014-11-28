@@ -302,9 +302,9 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testgetAdressesShouldReturnAdresses()
 	{
 		$a = $this->getRealIcebergInstance();
-		$address = $a->get_list("adress");
-		$adresses = $address->get_list();
-		$this->assertTrue($adresses->meta->total_count >= 0);
+		$address = $a->get_list("address");
+		$addresses = $address->get_list();
+		$this->assertTrue($addresses->meta->total_count >= 0);
 	}
 
 	public function testgetCountryShouldReturnTheCountry()
