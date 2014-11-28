@@ -243,8 +243,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testgetCartShouldReturnACart()
 	{
 		$a = $this->getRealIcebergInstance();
-		$cart = $a->make("cart");
-		$firstId =$cart->getCurrent()->id;
+		$cart = $a->get("cart");
 		$this->assertArrayHasKey("id", (array)$cart);
 	}
 
