@@ -8,7 +8,7 @@ class Merchant extends Resource
 	{
 		if (!$merchant_id)
 			$merchant_id = $this->id;
-		return $this->get_list($params, "merchant/".$merchant_id."/download_export", $accept_type);
+		return self::$Iceberg->Call("merchant/".$merchant_id."/download_export", 'GET', $params, $accept_type);
 	}
 
 	public function getCurrent()
