@@ -638,10 +638,7 @@ class Iceberg
 		}
 		curl_close($ch);
 
-		$data = (($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data));
-		if (isset($data->errors) || isset($data['errors']))
-			return null;
-		return $data;
+		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
 	}
 
 	/**
@@ -752,15 +749,18 @@ class Iceberg
 	**/
 	public function get($resource, $id = null, $params = null, $accept_type = "Accept: application/json")
 	{
-		if (strncmp("Ice\\", $resource, 4) != 0)
-			$resource = "Ice\\".$resource;
 		if (strtolower($resource) == "cart" && !$id)
 			$id = "mine";
 		if (strtolower($resource) == "country" && !$params)
 			$params = array("code" => "FR");
+		if (strncmp("Ice\\", $resource, 4) != 0)
+			$resource = "Ice\\".$resource;
 		$object = new $resource();
 		$response = $this->Call($object->getName()."/".$id."/", 'GET', $params, $accept_type);
-		$object->hydrate($response->objects[0]);
+		if (isset($response->objects))
+			$object->hydrate($response->objects[0]);
+		else
+			$object->hydrate($response);
 		return $object;
 	}
 
@@ -793,7 +793,7 @@ class Iceberg
 	* @returns object
 	*
 	**/
-	public function create($resource, $params = null, $accept_type = "Accept: application/json")
+	public function create($resource, $params = null, $accept_type = "Content-Type: application/json")
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".$resource;

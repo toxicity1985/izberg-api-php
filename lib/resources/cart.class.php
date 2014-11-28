@@ -15,12 +15,12 @@ class Cart extends Resource
 	{
 		if (!$this->resource_uri)
 			$this->getCurrent();
-		$list= self::$Iceberg->Call($this->id."/items", 'GET', $params, $accept_type);
+		$list= self::$Iceberg->Call("cart/".$this->id."/items", 'GET', $params, $accept_type);
 		$object_list = array();
 		foreach ($list->objects as $object)
 		{
 			$obj = new CartItem();
-			$obj->hydrate($object);
+			$obj->hydrate(&$object);
 			$object_list[] = $obj;
 		}
 		$this->items = array_merge($this->items, $object_list);

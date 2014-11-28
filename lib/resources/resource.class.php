@@ -4,8 +4,6 @@ abstract class Resource
 {
 	protected static	$Iceberg = null;
 	protected			$_name;
-	protected			$_id;
-	protected			$_uri;
 
 	private function setName($name = null)
 	{
@@ -81,8 +79,11 @@ abstract class Resource
 	**/
 	public function hydrate($obj)
 	{
-		foreach ($obj as $key=>$value)
-			$this->$key = $value;
+		if (isset($obj->objects))
+			$this->hydrate($obj->objects[0]);
+		else
+			foreach ($obj as $key=>$value)
+				$this->$key = $value;
 	}
 
 	/**
@@ -122,7 +123,4 @@ abstract class Resource
 			$data["resource_uri"] = substr($data["resource_uri"], 1);
 		self::$Iceberg->Call($data["resource_uri"], 'PUT', $data);
 	}
-
-
-
 }

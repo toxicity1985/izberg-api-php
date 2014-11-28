@@ -34,7 +34,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			//"firstName" => "sébastien",
 			//"lastName" => "fieloux")
 		//);
-		 $a = $this->getRealIcebergInstanceWithToken();
+		$a = $this->getRealIcebergInstanceWithToken();
 		return $a;
 	}
 
@@ -197,75 +197,48 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testGetProductShouldReturnProducts()
 	{
 		$a = $this->getRealIcebergInstance();
-		$product = $a->make("product");
-		$product->get_list();
+		$products = $a->get_list("product");
+		$this->assertTrue(is_array($products));
 	}
 
 	public function testGetFullProductImportShouldReturnAllProducts()
 	{
 		$a = $this->getRealIcebergInstance();
 		// My little poesy
-		$merchant = $a->make("merchant");
-		$merchant_id = 14;
-		$result = $merchant->get_catalog($merchant_id);
+		$merchant = $a->get("merchant", 14);
+		$result = $merchant->get_catalog();
 		$this->assertTrue(is_a($result, "SimpleXMLElement"));
 		// It return false if we specify an unexisting merchant id
-		$merchant_id = 511;
-		$result = $merchant->get_catalog($merchant_id);
+		$merchant2 = $a->get("merchant", 511);
+		$result = $merchant2->get_catalog();
 		$this->assertFalse($result);
 	}
 
 	public function testGetProductSchemaShouldReturnProductSchema()
 	{
 		$a = $this->getRealIcebergInstance();
-		$product = $a->make("Product");
-		$product->get_schema();
+		$product = $a->get_schema("Product");
 	}
 
 	public function testGetCategoriesShouldReturnCategories()
 	{
 		$a = $this->getRealIcebergInstance();
-		$Category = $a->make("Category");
-		$Category->get_list();
+		$Categories = $a->get_list("Category");
+		$this->assertTrue(is_array($Categories));
 	}
 
 	public function testGetMerchantsShouldReturnMerchants()
 	{
 		$a = $this->getRealIcebergInstance();
-		$merchant = $a->make("merchant");
-		$merchants = $merchant->get_list();
-		$this->assertTrue(is_a($merchants, "stdClass"));
-		$this->assertTrue(is_array($merchants->objects));
+		$merchants = $a->get_list("merchant");
+		$this->assertTrue(is_array($merchants));
 	}
 
 	public function testGetMerchantsSchemaShouldReturnMerchantsSchema()
 	{
 		$a = $this->getRealIcebergInstance();
-		$merchant = $a->make("merchant");
-		$merchantSchema =  $merchant->get_schema();
+		$merchantSchema = $a->get_schema("merchant");
 		$this->assertTrue(is_a($merchantSchema, "stdClass"));
-	}
-
-	public function testgetUserShouldReturnTheCurrentUser()
-	{
-		$a = $this->getRealIcebergInstance();
-		$user = $a->getUser();
-		$this->assertArrayHasKey("id", (array)$user);
-	}
-
-	public function testgetUserShouldReturnTheLastAuthenticatedUser()
-	{
-		$a = $this->getRealIcebergInstance();
-		$user = $a->getUser();
-		$this->assertEquals("sebfie@yahoo.fr", $user->email);
-		// We set a new user
-		$a->setUser(array(
-			"email" => "sebastien.fieloux@gmail.com",
-			"first_name" => "seb",
-			"last_name" => "fie"
-		));
-		$user = $a->getUser();
-		$this->assertEquals($user->email, "sebastien.fieloux@gmail.com");
 	}
 
 	public function testgetCartShouldReturnACart()
@@ -279,21 +252,16 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testgetCartItemsShouldReturnCartItems()
 	{
 		$a = $this->getRealIcebergInstance();
-		$cart = $a->make("cart");
-		$cart->create();
+		$cart = $a->get("cart");
 		$items = $cart->getItems();
-		$this->assertTrue(is_a($items, "stdClass"));
-		$this->assertEquals($items->meta->total_count, 0);
-		$this->assertTrue(is_array($items->objects));
+		$this->assertTrue(is_array($cart->items));
 	}
 
 	public function testinDebugModeCartShouldReturnDebugEqualToTrue()
 	{
 		$a = $this->getRealIcebergInstance();
 		$a->setDebug(true);
-		$cart = $a->make('cart');
-		$cart->create();
-		$cart->getCurrent();
+		$cart = $a->get('cart');
 		$this->assertTrue($cart->debug);
 	}
 
@@ -315,17 +283,15 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$a->removeCartItem($firstItem->id);
 		$items = $a->getCartItems();
 		$this->assertEquals($items->meta->total_count, 0);
-		 */
+		*/
 		return ;
 	}
 
 	public function testNewCartItemShouldCreateANewCart()
 	{
 		$a = $this->getRealIcebergInstance();
-		$cart = $a->make('cart');
-		$cart1 = $a->make('cart');
-		$cart->create();
-		$cart1->create();
+		$cart = $a->create('cart');
+		$cart1 = $a->create('cart');
 		$this->assertNotSame($cart1->id, $cart->id);
 	}
 
@@ -338,7 +304,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testgetAdressesShouldReturnAdresses()
 	{
 		$a = $this->getRealIcebergInstance();
-		$address = $a->make("address");
+		$address = $a->get_list("adress");
 		$adresses = $address->get_list();
 		$this->assertTrue($adresses->meta->total_count >= 0);
 	}
@@ -346,18 +312,15 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testgetCountryShouldReturnTheCountry()
 	{
 		$a = $this->getRealIcebergInstance();
-		$country = $a->make("country");
-		$country->get(array("code" => "FR"));
+		$country = $a->get("country");
 		$this->assertEquals($country->code, 'FR');
 	}
 
 	public function testcreateAddressesShouldReturnACreatedAddress()
 	{
 		$a = $this->getRealIcebergInstance();
-		$country = $a->make("country");
-		$country->get();
-		$addr = $a->make("address");
-		$addr->create(array(
+		$country = $a->get("country");
+		$addr = $a->create("address", array(
 			"address" => "Address line 1",
 			"address2" => "Address line 2",
 			"city" => "St remy de provence",
@@ -377,22 +340,20 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		));
 		$this->assertArrayHasKey("id", (array) $addr);
 		// We check that this address is well linked to the user
-		$adresses = $addr->get_list();
-		$this->assertNotEquals($adresses->meta->total_count, 0);
+		$addresses = $a->get_list("address");
+		$this->assertTrue(is_array($addresses));
 	}
 
 	public function testGetAddressShouldReturnAddress()
 	{
 		$a = $this->getRealIcebergInstance();
-		$country = $a->make("country");
-		$cur_country = $country->get(array("code" => "FR"));
-		$addr = $a->make("address");
-		$addr->create(array(
+		$country = $a->get("country");
+		$addr = $a->create("address", array(
 			"address" => "Address line 1",
 			"address2" => "Address line 2",
 			"city" => "St remy de provence",
 			"company" => "Sebfie",
-			"country" => "/v1/country/" . $cur_country->id . "/",
+			"country" => "/v1/country/" . $country->id . "/",
 			"default_billing" => true,
 			"default_shipping" => true,
 			"digicode" => null,
@@ -406,7 +367,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			"zipcode" => "13210"
 		));
 		// We check that this address is well linked to the user
-		$new_address = $a->make("address", $addr->id);
+		$new_address = $a->get("address", $addr->id);
 		$this->assertEquals($new_address->id, $addr->id);
 	}
 
@@ -418,11 +379,10 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 								"sandbox" => true
 								));
 		$description = "random description ".rand(0, 1000);
-		$merchant = $b->make("merchant", 15);
-		$merchant->getCurrent();
+		$merchant = $b->get("merchant", 15);
 		$merchant->description = $description;
 		$merchant->save();
-		$merchant_check = $b->make("merchant", 15);
+		$merchant_check = $b->get("merchant", 15);
 		$this->assertEquals($merchant, $merchant_check);
 	}
 
