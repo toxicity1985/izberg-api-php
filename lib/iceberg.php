@@ -370,7 +370,7 @@ class Iceberg
 	*/
 	public function getUser()
 	{
-		return $this->make("User")->getCurrent();
+		return $this->get("user");
 	}
 
 	/**
@@ -747,16 +747,23 @@ class Iceberg
 	* @returns object
 	*
 	**/
-	public function get($resource, $id = null, $params = null, $accept_type = "Accept: application/json")
+	public function get($resource, $id = null, $params = null, $accept_type = "Accept: application/json", $endpoint = null)
 	{
 		if (strtolower($resource) == "cart" && !$id)
 			$id = "mine";
+		if (strtolower($resource) == "user" && !$id)
+			$id = "me";
 		if (strtolower($resource) == "country" && !$params)
 			$params = array("code" => "FR");
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".$resource;
 		$object = new $resource();
-		$response = $this->Call($object->getName()."/".$id."/", 'GET', $params, $accept_type);
+		if (!$endpoint)
+			$endpoint =  $object->getName();
+		if ($id)
+			$response = $this->Call($endpoint."/".$id."/", 'GET', $params, $accept_type);
+		else
+			$response = $this->Call($endpoint."/", 'GET', $params, $accept_type);
 		$object->hydrate($response);
 		return $object;
 	}

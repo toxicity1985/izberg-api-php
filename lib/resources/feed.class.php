@@ -11,7 +11,7 @@ class Feed extends Resource
 	 *     every: integer
 	 *     name: string
 	 */
-	public function getName($name)
+	public function getName()
 	{
 		return "merchant_catalog_feed";
 	}

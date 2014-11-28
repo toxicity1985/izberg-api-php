@@ -4,41 +4,33 @@ require_once("resource.class.php");
 
 class User extends Resource
 {
-	public function __construct()
-	{
-		parent::__construct();
-		$this->getCurrent();
-	}
-
-	public function getCurrent()
-	{
-		if (!$this->id)
-			$object = parent::$Iceberg->get("me");
-		return $this;
-	}
-
 	public function addresses()
 	{
-		return $this->get("address", array("user" => $this->$id));
+		return $this->get("address", null, array("user" => $this->id));
 	}
 
 	public function applications()
 	{
-		return $this->get("application", array("contact_user" => $this->$id));
+		return $this->get("application", null, array("contact_user" => $this->id));
 	}
 
 	public function reviews()
 	{
-		return $this->get("review", array("user" => $this->$id));
+		return $this->get("review", null, array("user" => $this->id));
 	}
 
 	public function profile()
 	{
-		return $this->get($this->id."/profile/");
+		return $this->get('profile', $this->id."/profile/", null, null, $this->getName());
 	}
 
 	public function inbox()
 	{
-		return $this->get($this->id."/inbox/");
+		return $this->get_list("inbox", $this->id."/inbox/", null, null, $this->getName());
 	}
+}
+
+class Inbox extends Resource
+{
+	
 }
