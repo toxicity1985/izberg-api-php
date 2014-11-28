@@ -167,7 +167,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(Iceberg::DEFAULT_CURRENCY, $a->getCurrency());
 		$this->assertEquals(Iceberg::DEFAULT_SHIPPING_COUNTRY, $a->getShippingCountry());
 	}
-
 	public function testSandboxParamIsWellUsedForUrlToRequest()
 	{
 		$a = new Iceberg(array("sandbox" => true, "appNamespace" => "lolote"));
@@ -283,7 +282,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$a->removeCartItem($firstItem->id);
 		$items = $a->getCartItems();
 		$this->assertEquals($items->meta->total_count, 0);
-		*/
+		 */
 		return ;
 	}
 

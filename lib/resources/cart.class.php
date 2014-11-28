@@ -20,7 +20,7 @@ class Cart extends Resource
 		foreach ($list->objects as $object)
 		{
 			$obj = new CartItem();
-			$obj->hydrate(&$object);
+			$obj->hydrate($object);
 			$object_list[] = $obj;
 		}
 		$this->items = array_merge($this->items, $object_list);

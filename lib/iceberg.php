@@ -757,10 +757,7 @@ class Iceberg
 			$resource = "Ice\\".$resource;
 		$object = new $resource();
 		$response = $this->Call($object->getName()."/".$id."/", 'GET', $params, $accept_type);
-		if (isset($response->objects))
-			$object->hydrate($response->objects[0]);
-		else
-			$object->hydrate($response);
+		$object->hydrate($response);
 		return $object;
 	}
 
