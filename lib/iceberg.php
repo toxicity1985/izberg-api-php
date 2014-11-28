@@ -585,7 +585,11 @@ class Iceberg
 	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
 	{
 		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
+		{
+			if(getDebug())
+				$params['debug'] = true;
 			$paramString = json_encode($params);
+		}
 		else if (isset($params) && is_array($params)) {
 			$paramString = '?' . http_build_query($params);
 		} else {
@@ -804,9 +808,8 @@ class Iceberg
 		if (isset($params['debug']))
 			$params["debug"] = true;
 		$object = new $resource();
-		$object = $obj->getName();
 		$response = $this->Call($name."/", 'POST', $params, $accept_type);
-		$object->hydrate($response->objects[0]);
+		$object->hydrate($response);
 		return $object;
 	}
 
@@ -835,6 +838,6 @@ class Iceberg
 	**/
 	public function get_schema($resource, $params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->get($resource, "schema", $params, $accept_type);
+		return $this->Call($resource."/schema", 'GET', $params, $accept_type);
 	}
 }

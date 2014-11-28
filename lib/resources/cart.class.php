@@ -11,10 +11,8 @@ class Cart extends Resource
 	*
 	* @return Object Array
 	*/
-	public function getItems()
+	public function getItems($params = null, $accept_type = "Content-Type: Application/json")
 	{
-		if (!$this->resource_uri)
-			$this->getCurrent();
 		$list= self::$Iceberg->Call("cart/".$this->id."/items", 'GET', $params, $accept_type);
 		$object_list = array();
 		foreach ($list->objects as $object)

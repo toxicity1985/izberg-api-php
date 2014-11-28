@@ -79,6 +79,8 @@ abstract class Resource
 	**/
 	public function hydrate($obj)
 	{
+		if (!$obj)
+			return ;
 		if (isset($obj->objects))
 			$this->hydrate($obj->objects[0]);
 		else
