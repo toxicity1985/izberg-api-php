@@ -202,15 +202,13 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testGetFullProductImportShouldReturnAllProducts()
 	{
-		$a = $this->getRealIcebergInstance();
-		// My little poesy
-		$merchant = $a->get("merchant", 14);
+		$b = $this->getIceberg(array(
+								"username" => getenv("USERNAME1"),
+								"accessToken" => getenv("TOKEN1"),
+								"sandbox" => true
+								));
+		$merchant = $b->get("merchant", 15);
 		$result = $merchant->get_catalog();
-		$this->assertTrue(is_a($result, "SimpleXMLElement"));
-		// It return false if we specify an unexisting merchant id
-		$merchant2 = $a->get("merchant", 511);
-		//$result = $merchant2->get_catalog();
-		$this->assertFalse($result);
 	}
 
 	public function testGetProductSchemaShouldReturnProductSchema()
@@ -259,7 +257,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	{
 		$a = $this->getRealIcebergInstance();
 		$a->setDebug(true);
-		$cart = $a->get('cart');
+		$cart = $a->create('cart');
 		$this->assertTrue($cart->debug);
 	}
 

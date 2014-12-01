@@ -95,8 +95,7 @@ abstract class Resource
 	*
 	**/
 	public function delete($params = null)
-	{
-		if (!$this->id)
+	{ if (!$this->id)
 			throw new Exception(__METHOD__." needs a valid ID");
 		$name = $this->getName();
 		return self::$Iceberg->Call( $name . "/" . $this->id . "/", 'DELETE', $params, $accept_type);
@@ -112,17 +111,22 @@ abstract class Resource
 	{
 		if (!$this->resource_uri)
 			return ;
+		$data = $this;
+		$data = json_encode($data);
+		$data = (array)json_decode($data, true);
 		if (!$this->id)
 		{
-			$response = self::$Iceberg->Call($this->getName()."/", 'POST', json_encode($this));
-			$this->hydrate($response->objects[0]);
+			$response = self::$Iceberg->Call($this->getName()."/", 'POST', $data);
+			$this->hydrate($response);
 			return ;
 		}
-		$data = (array)$this;
 		if (strncmp("http", $data["resource_uri"], 4) == 0)
-			$data["resource_uri"] = substr($data["resource_uri"], strlen(self::$Iceberg->getApiUrl()));
+			$addr = substr($data["resource_uri"], strlen(self::$Iceberg->getApiUrl()));
 		else if ($data["resource_uri"][0] == '/')
-			$data["resource_uri"] = substr($data["resource_uri"], 1);
-		self::$Iceberg->Call($data["resource_uri"], 'PUT', $data);
+			$addr = substr($data["resource_uri"], 1);
+		foreach ($data as $key=>$value)
+			if (!$value || is_array($value))
+				unset($data[$key]);
+		return self::$Iceberg->Call($addr, 'PUT', $data, "Content-Type: application/json");
 	}
 }

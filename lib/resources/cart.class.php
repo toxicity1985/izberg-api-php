@@ -23,6 +23,8 @@ class Cart extends Resource
 			$obj->hydrate($object);
 			$object_list[] = $obj;
 		}
+		if (!isset($this->items))
+			$this->items = array();
 		$this->items = array_merge($this->items, $object_list);
 		return $object_list;
 	}

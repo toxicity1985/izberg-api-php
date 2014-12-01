@@ -586,8 +586,6 @@ class Iceberg
 	{
 		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
 		{
-			if($this->getDebug())
-				$params['debug'] = true;
 			$paramString = json_encode($params);
 		}
 		else if (isset($params) && is_array($params)) {
@@ -641,7 +639,6 @@ class Iceberg
 			throw new Exception("Error: Call() - cURL error: " . curl_error($ch));
 		}
 		curl_close($ch);
-
 		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
 	}
 
@@ -805,10 +802,10 @@ class Iceberg
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".$resource;
-		if (isset($params['debug']))
-			$params["debug"] = true;
+		if ($this->getDebug())
+			$params['debug'] = 'true';
 		$object = new $resource();
-		$response = $this->Call($resource."/", 'POST', $params, $accept_type);
+		$response = $this->Call($object->getName()."/", 'POST', $params, $accept_type);
 		$object->hydrate($response);
 		return $object;
 	}
