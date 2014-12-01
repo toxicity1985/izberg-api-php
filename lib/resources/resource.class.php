@@ -85,7 +85,16 @@ abstract class Resource
 			$this->hydrate($obj->objects[0]);
 		else
 			foreach ($obj as $key=>$value)
-				$this->$key = $value;
+			{
+				if ((is_array($value) || is_object($value)) && class_exists($key))
+				{
+					$new_obj = new $key();
+					$new_obj->hydrate($value);
+					$this->$key = $new_obj;
+				}
+				else
+					$this->$key = $value;
+			}
 	}
 
 	/**
