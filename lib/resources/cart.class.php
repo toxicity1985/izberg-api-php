@@ -34,7 +34,7 @@ class Cart extends Resource
 	*
 	* @return Array
 	*/
-	public function addItem($params = null, $accept_type = 'Accept: application/json')
+	public function addItem($params = null, $accept_type = 'Content-Type: application/json')
 	{
 		// Params:
 		//   offer_id: Integer
@@ -46,6 +46,7 @@ class Cart extends Resource
 		$object = new CartItem();
 		$object->hydrate($response);
 		$this->items[] = $object;
+		return $object;
 	}
 
 	/**

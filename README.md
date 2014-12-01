@@ -95,7 +95,24 @@ This is useful when you want to link your api calls to a user, you will need it 
 
 Basically, all ressources are handled the same way, using the 5 same generic methods
 
+ * You have access to the following resources directly through the main **Iceberg** object:
+     * Address
+     * Brand
+     * Cart
+     * Category
+     * Country
+     * Feed
+     * Hook
+     * Merchant
+     * Order
+     * OrderItem
+     * MerchantOrder
+     * Payment
+     * User
+     * Review
+     * Message
 
+###Instanciating resources
 
 
 ####Get List
@@ -187,9 +204,13 @@ The following example will update an existing merchant
 $my_merchant = $Iceberg->update("merchant", 15, array("description" => "An updated merchant"));
 ```
 
+###Resources specific methods
+
+Each object returned by the handling methods can use both the save and delete functions
+
 ####Save
 
-Each object returned by the handling functions can use both the save and delete functions
+Save the current object
 
 ```php
 
@@ -203,7 +224,7 @@ $merchant->save();
 
 ####Delete
 
-The delete() method is used to delete an element from a specific ressource
+Deletes an element from a specific ressource
 
 ```php
 
@@ -248,30 +269,31 @@ Now that we have set the User informations, we can add the offer to the cart.
 	$id_offer = "MY OFFER ID";
 	$quantity = "MY OFFER QUANTITY";
 
-	$my_cart = IcebergInstance->newCart();
-	$IcebergInstance->addCartItem(array(
+	$my_cart = IcebergInstance->get('cart');
+	$my_cart->addItem(array(
 		'offer_id' => $id_offer,
 		'quantity' => (int)$quantity,
 		));
 
 ```
 
-You have to use addCartItem() for each different offer you want to add to your cart.
+You have to use Cart::addItem() for each different offer you want to add to your cart.
 
 We need the country_id in in order to set the customer's address (Default value is "FR").
 
 ```php
-	$country = $IcebergInstance->getCountry(array("code" => "FR"));
+	$country = $IcebergInstance->get('country');
 ```
 Now we can set the Shipping and Billing addresses.
 
 ```php
 
-	$address = $IcebergInstance->createAddresses(array(
+	$address = $IcebergInstance->create('address', array(
         "address" => "ADDRESS LINE 1",
         "address2" => "ADDRESS LINE 2",
         "city" => "CITY NAME"
-        "company" => "OPTIONNAL COMPANY NAME",          "country" => "/v1/country/" . $country->id . "/",
+        "company" => "OPTIONNAL COMPANY NAME",          
+        "country" => "/v1/country/" . $country->id . "/",
         "default_billing" => true,
         "default_shipping" => true,
         "digicode" => null,
@@ -286,8 +308,8 @@ Now we can set the Shipping and Billing addresses.
         "zipcode" => "ZIPCODE"
         ));
 
-	$IcebergInstance->setBillingAddress($address->id);
-        $IcebergInstance->setShippingAddress($address->id);
+	$my_cart->setBillingAddress($address->id);
+    $my_cart->setShippingAddress($address->id);
 
 
 ```
@@ -295,73 +317,8 @@ Now that both addresses are set, we can place the order.
 
 ```php
 
-        $order = $IcebergInstance->createOrder();
-        $order->authorizeOrder();
-
-?>
-
-```
-
-###Complete Order
-
-Here is an arbitrary exemple of a complete order process.
-
-
-We get the first from the list and the first of his products to process the order.
-
-```php
-
-	$valid_array = array(
-		'appNamespace' => 'YOUR_APP_NAMESPACE',
-		'accessToken'  => 'YOUR_ACCESSTOKEN',
-		'username'     => 'YOUR_USERNAME',
-		'apiKey'       => 'YOUR_APP_KEY',
-		'apiSecret'    => 'YOUR_APP_SECRET'
-		)
-
-	$a= new Iceberg($valid_array);
-	$merchants = $a->get_list('Merchant');
-	$my_merchant = $merchants[0];
-
-	$product_catalog = $my_merchant->getCatalog();
-	$product = $products->product;
-	$best_offer_id = (string) $product->best_offer->id;
-
-```
-Now that we have an offer ID, the process is the same as above
-
-```php
-
-$my_cart = a->get("Cart"); //When you d'ont specify any cart id, it automatically gets your own cart.
-$my_cart->addItem(array(
-			'offer_id' => $best_offer_id,
-			'quantity' => 1
-			));
-$country = $a->get("country");
-$address = $a->create("adress", array(
-			"address" => "ADDRESS LINE 1",
-			"address2" => "ADDRESS LINE 2",
-			"city" => "CITY NAME"
-			"company" => "OPTIONNAL COMPANY NAME",
-			"country" => "/v1/country/" . $country->id . "/",
-			"default_billing" => true,
-			"default_shipping" => true,
-			"digicode" => null,
-			"first_name" => "FIRST NAME",
-			"floor" => null,
-			"last_name" => "LAST NAME",
-			"name" => "ADDRESS NAME",
-			"phone" => "PHONE NUMBER",
-			"state" => "OPTIONNAL STATE NAME",
-			//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
-			"status" => 10,
-			"zipcode" => "ZIPCODE"
-			));
-
-	$my_cart->setBillingAddress($address->id);
-	$my_cart->setShippingAddress($address->id);
-	$order = $my_cart->createOrder();
-	$order->updateStatus('authorizeOrder');
+        $order = $my_cart->createOrder();
+        $order->updateStatus('authorizeOrder');
 
 ?>
 
