@@ -586,7 +586,7 @@ class Iceberg
 	{
 		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
 		{
-			if(getDebug())
+			if($this->getDebug())
 				$params['debug'] = true;
 			$paramString = json_encode($params);
 		}
