@@ -808,7 +808,7 @@ class Iceberg
 		if (isset($params['debug']))
 			$params["debug"] = true;
 		$object = new $resource();
-		$response = $this->Call($name."/", 'POST', $params, $accept_type);
+		$response = $this->Call($resource."/", 'POST', $params, $accept_type);
 		$object->hydrate($response);
 		return $object;
 	}
