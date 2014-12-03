@@ -816,14 +816,16 @@ class Iceberg
 	* @return Object
 	*
 	**/
-	public function update($resource = null, $id = null, $params = null, $accept_type = "Accept: application/json")
+	public function update($resource = null, $id = null, $params = null, $accept_type = "Content-Type: application/json")
 	{
 		if (!$id || !$resource)
 			throw new Exception(__METHOD__." needs a valid ID and a valid Resource Name");
+		if (strncmp("Ice\\", $resource, 4) != 0)
+			$resource = "Ice\\".$resource;
 		$obj = new $resource();
 		$name = $obj->getName();
 		$response = $this->Call($name . "/" . $id . "/", 'PUT', $params, $accept_type);
-		$obj->hydrate($response->objects[0]);
+		$obj->hydrate($response);
 		return $obj;
 	}
 

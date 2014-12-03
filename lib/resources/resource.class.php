@@ -5,6 +5,11 @@ abstract class Resource
 	protected static	$Iceberg = null;
 	protected			$_name;
 
+	public function __toString()
+	{
+		return json_encode($this);
+	}
+
 	private function setName($name = null)
 	{
 		/*

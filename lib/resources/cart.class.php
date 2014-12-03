@@ -73,11 +73,11 @@ class Cart extends Resource
 	*
 	* @return StdObject
 	*/
-	public function setShippingAddress($id, $params = null)
+	public function setShippingAddress($id)
 	{
-		$params["shipping_address"] = "/v1/address/$id/";
-		$this->shipping_address = "/v1/address/$id/";
-		return parent::$Iceberg->update($this->getName(), $this->id, $params);
+		$params["shipping_address"] = "/v1/address/".$id."/";
+		$this->shipping_address = "/v1/address/".$id."/";
+		return parent::$Iceberg->update('Cart', $this->id, $params);
 	}
 
 
@@ -86,18 +86,19 @@ class Cart extends Resource
 	*
 	* @return StdObject
 	*/
-	public function setBillingAddress($id, $params = null)
+	public function setBillingAddress($id)
 	{
-		$params["billing_address"] = "/v1/address/$id/";
-		$this->billing_address = "/v1/address/$id/";
-		return parent::$Iceberg->update($this->getName(), $this->id, $params);
+		$params["billing_address"] = "/v1/address/".$id."/";
+		$this->billing_address = "/v1/address/".$id."/";
+		
+		return parent::$Iceberg->update('Cart', $this->id, $params);
 	}
 
-	public function createOrder($params = null, $accept_type = 'Accept: application/json')
+	public function createOrder($params = null, $accept_type = 'Content-Type: application/json')
 	{
 		$object = new Order();
 		$response = parent::$Iceberg->Call("cart/" . $this->id . "/createOrder/", 'POST', $params, $accept_type);
-		$object->hydrate($object);
+		$object->hydrate($response);
 		return $object;
 	}
 

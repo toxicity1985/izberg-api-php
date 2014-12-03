@@ -382,40 +382,37 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	}
 
 	// MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
-/*
+
 	public function testFullOrderProcess()
 	{
 		ini_set("memory_limit","1024M");
 		$a = $this->getRealIcebergInstance();
 	// We get the first merchant
-		$merchants = $a->getMerchants();
-		$merchant = $merchants->objects[0];
-		$products = $a->getFullProductImport($merchant->id);
+		$merchants = $a->get_list('merchant');
+		$merchant = $merchants[0];
+		$products = $merchant->get_catalog();
 		$product = $products->product;
 		$best_offer_id = (string) $product->best_offer->id;
 		$i = 0;
 		while ((int)$product->best_offer->variations->variation[$i]->stock === 0)
 		{
-			echo"\nCURRENT VAR : " . $product->best_offer->variations->variation[$i]->id;
 			$i++;
 		}
 		$best_variation = (string) $product->best_offer->variations->variation[$i]->id;
-		echo "\nVARIATION STOCK" . $product->best_offer->variations->variation[$i]->stock;
-		echo "\nBEST OFFER VARIATION :" . $best_variation;
 		$a->setUser(array(
 			"email" => "support@lolote.fr",
 			"first_name" => "lolote",
 			"last_name" => "lolita"
 			));
 	// We create a new cart
-		$a->newCart();
-		$a->addCartItem(array(
+		$my_cart = $a->get('Cart');
+		$my_cart->addItem(array(
 			"offer_id" => $best_offer_id,
 			"variation_id" => $best_variation,
 			"quantity" => 1
 			));
-		$country = $a->getCountry(array("code" => "FR"));
-		$address = $a->createAddresses(array(
+		$country = $a->get('country');
+		$address = $a->create('address', array(
 			"address" => "Address line 1",
 			"address2" => "Address line 2",
 			"city" => "St remy de provence",
@@ -433,13 +430,11 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			"status" => 10,
 			"zipcode" => "13210"
 			));
-		$a->setBillingAddress($address->id);
-		$a->setShippingAddress($address->id);
-		$order = $a->createOrder(array(
-			//"payment_info_id" => 10
-			));
+		$my_cart->setBillingAddress($address->id);
+		$my_cart->setShippingAddress($address->id);
+		$order = $my_cart->createOrder();
 	// Place the order
-		$a->authorizeOrder();
+		$order->updateStatus('authorizeOrder');
+		$this->assertEquals("60", $order->status);
 	}
- */
 }
