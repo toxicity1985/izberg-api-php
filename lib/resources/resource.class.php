@@ -112,7 +112,7 @@ abstract class Resource
 	{ if (!$this->id)
 			throw new Exception(__METHOD__." needs a valid ID");
 		$name = $this->getName();
-		return self::$Iceberg->Call( $name . "/" . $this->id . "/", 'DELETE', $params, $accept_type);
+		return self::$Iceberg->Call( $name . "/" . $this->id . "/", 'DELETE', $params, 'Content-Type: application/json');
 	}
 
 	/**

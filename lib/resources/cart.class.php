@@ -90,7 +90,6 @@ class Cart extends Resource
 	{
 		$params["billing_address"] = "/v1/address/".$id."/";
 		$this->billing_address = "/v1/address/".$id."/";
-		
 		return parent::$Iceberg->update('Cart', $this->id, $params);
 	}
 

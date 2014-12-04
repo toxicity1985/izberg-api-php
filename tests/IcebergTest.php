@@ -263,24 +263,26 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testAddCartItemShouldAddItem()
 	{
-		/*
-		$a = $this->getRealIcebergInstance();
-		$a->newCart();
-		$a->addCartItem(array(
-			"offer_id" => 149,
-			"variation_id" => 283,
-			"quantity" => 2
+		$a = $this->getIceberg(array(
+				"username" => getenv("USERNAME1"),
+				"accessToken" => getenv("TOKEN1"),
+				"sandbox" => true
+				));
+
+		$my_cart = $a->get('Cart');
+		$my_cart->addItem(array(
+			"offer_id" => 27254,
+			"variation_id" => 60873,
+			"quantity" => 1
 		));
-		$cart = $a->getCart();
-		$items = $a->getCartItems();
-		$this->assertEquals($items->meta->total_count, 1);
+		$cart = $a->get('Cart');
+		$items = $cart->getItems();
+		$this->assertEquals(count($items), 1);
 		// We remove the item
-		$firstItem = $items->objects[0];
-		$a->removeCartItem($firstItem->id);
-		$items = $a->getCartItems();
-		$this->assertEquals($items->meta->total_count, 0);
-		 */
-		return ;
+		$firstItem = $items[0];
+		$firstItem->delete();
+		$items = $cart->getItems();
+		$this->assertEquals(count($items), 0);
 	}
 
 	public function testNewCartItemShouldCreateANewCart()
