@@ -6,11 +6,11 @@ require_once("merchant.class.php");
 class Feed extends Resource
 {
 	/*
-	 * @Params :
-	 *     period: "weeks" | "days" | "hours" | "minutes"
-	 *     every: integer
-	 *     name: string
-	 */
+	* @Params :
+	*     period: "weeks" | "days" | "hours" | "minutes"
+	*     every: integer
+	*     name: string
+	*/
 	public function getName()
 	{
 		return "merchant_catalog_feed";

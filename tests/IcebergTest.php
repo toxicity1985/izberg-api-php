@@ -388,7 +388,12 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testFullOrderProcess()
 	{
 		ini_set("memory_limit","1024M");
-		$a = $this->getRealIcebergInstance();
+		//$a = $this->getRealIcebergInstance();
+		$a = $this->getIceberg(array(
+								"username" => getenv("USERNAME1"),
+								"accessToken" => getenv("TOKEN1"),
+								"sandbox" => true
+								));
 	// We get the first merchant
 		$merchants = $a->get_list('merchant');
 		$merchant = $merchants[0];
@@ -401,11 +406,11 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			$i++;
 		}
 		$best_variation = (string) $product->best_offer->variations->variation[$i]->id;
-		$a->setUser(array(
+		/*$a->setUser(array(
 			"email" => "support@lolote.fr",
 			"first_name" => "lolote",
 			"last_name" => "lolita"
-			));
+		));*/
 	// We create a new cart
 		$my_cart = $a->get('Cart');
 		$my_cart->addItem(array(
@@ -438,5 +443,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	// Place the order
 		$order->updateStatus('authorizeOrder');
 		$this->assertEquals("60", $order->status);
+		echo "Your order id is $order->id";
 	}
 }

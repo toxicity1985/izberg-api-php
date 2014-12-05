@@ -32,6 +32,19 @@ abstract class Resource
 		$this->_name = $final_str;
 	}
 
+	public function parseUri($uri)
+	{
+		if (strncmp("http", $uri, 4) == 0)
+			$uri = substr($uri, strlen(self::$Iceberg->getApiUrl()));
+		$uri = explode('/', $uri);
+		$uri = $uri[0];
+		$tabname = explode('_', $uri);
+		foreach ($tabname as &$value)
+			$value = ucfirst($value);
+		$uri = implode('', $tabname);
+		return "Ice\\".$uri;
+	}
+
 	public function getName()
 	{
 		return ($this->_name);
@@ -91,11 +104,30 @@ abstract class Resource
 		else
 			foreach ($obj as $key=>$value)
 			{
-				if ((is_array($value) || is_object($value)) && class_exists($key))
+				if (is_object($value))
 				{
-					$new_obj = new $key();
-					$new_obj->hydrate($value);
-					$this->$key = $new_obj;
+					$classname = $this->parseUri($key);
+					if (!class_exists($classname))
+						continue ;
+					else
+					{
+						$new_obj = new $classname();
+						$new_obj->hydrate($value);
+						$this->$key = $new_obj;
+					}
+				}
+				else if (is_array($value) && isset($value[0]->resource_uri))
+				{
+					$classname = $this->parseUri($value[0]->resource_uri);
+					if (!class_exists($classname))
+						continue ;
+					$list = array();
+					foreach ($value as $val) {
+						$new_obj = new $classname();
+						$new_obj->hydrate($val);
+						$list[] = $new_obj;
+					}
+					$this->$key = $list;
 				}
 				else
 					$this->$key = $value;
