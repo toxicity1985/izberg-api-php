@@ -6,18 +6,18 @@ class Product extends Resource
 {
 	public function reviews($id = null)
 	{
-		if ($id === null && $this->_id)
-			$id = $this->_id; 
-		return $this->get("review", $params = array("product"=>$id));
+		if ($id === null && $this->id)
+			$id = $this->id; 
+		return parent::$Iceberg->get("review", $params = array("product"=>$id));
 	}
 }
 
 class ProductOffer extends Resource
 {
-	public function __construct($id = null)
+	public function __construct()
 	{
 		$this->setName("productoffer");
-		parent::construct($id);
+		parent::construct();
 	}
 }
 

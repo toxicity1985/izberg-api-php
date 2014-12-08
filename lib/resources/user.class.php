@@ -4,41 +4,33 @@ require_once("resource.class.php");
 
 class User extends Resource
 {
-	public function __construct($id = null)
-	{
-		parent::__construct($id);
-		$this->getCurrent();
-	}
-
-    public function getCurrent()
-    {
-        if (!$this->_current)
-            $this->_current = $this->get("me");
-        return $this->_current;
-    }
-
 	public function addresses()
 	{
-		return $this->get("address", array("user" => $this->_current->$id));
+		return $this->get("address", null, array("user" => $this->id));
 	}
 
 	public function applications()
 	{
-		return $this->get("application", array("contact_user" => $this->_current->$id));
+		return $this->get("application", null, array("contact_user" => $this->id));
 	}
 
 	public function reviews()
 	{
-		return $this->get("review", array("user" => $this->_current->$id));
+		return $this->get("review", null, array("user" => $this->id));
 	}
 
 	public function profile()
 	{
-		return $this->get($this->_current."/profile/");
+		return $this->get('profile', $this->id."/profile/", null, null, $this->getName());
 	}
 
 	public function inbox()
 	{
-		return $this->get($this->_current."/inbox/");
+		return $this->get_list("inbox", $this->id."/inbox/", null, null, $this->getName());
 	}
+}
+
+class Inbox extends Resource
+{
+	
 }

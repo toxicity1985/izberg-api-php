@@ -1,10 +1,10 @@
 #Iceberg-API-PHP
 
-[![Build Status](https://travis-ci.org/Modizy/iceberg-api-php.svg?branch=master)](https://travis-ci.org/Modizy/iceberg-api-php)
+[![Build Status](https://travis-ci.org/Modizy/iceberg-api-php.svg?branch=rebuild2)](https://travis-ci.org/Modizy/iceberg-api-php)
 
 ## About
 
-Wrapper PHP around the Iceberg API
+PHP Wrapper around the Iceberg API
 
 ## Get started
 
@@ -15,7 +15,7 @@ Wrapper PHP around the Iceberg API
 
 ### Initialize the class
 
-You can use your access token or our Single Sign On system :
+You can use your access token or our Single Sign On system to identify:
 
 #### With Access token :
 
@@ -93,49 +93,70 @@ This is useful when you want to link your api calls to a user, you will need it 
 
 ##Ressources
 
-Basically, all ressources are handled the same way, using the following methods :
+Basically, all ressources are handled the same way, using the 5 same generic methods
+
+ * You have access to the following resources directly through the main **Iceberg** object:
+     * Address
+     * Brand
+     * Cart
+     * Category
+     * Country
+     * Feed
+     * Hook
+     * Merchant
+     * Order
+     * OrderItem
+     * MerchantOrder
+     * Payment
+     * User
+     * Review
+     * Message
+
+###Instanciating resources
+
 
 ####Get List
 
-The get_list() method will return all the ressource's elements
-
+The get_list() method will return an array containing all the instanciated objects from the called resource.
 
 ```php
 
-public function get_list($name, $params = null, $accept_type = "Accept: application/json")
+public function get_list($resource, $params = null, $accept_type = "Accept: application/json")
 ```
-The first parameter is the ressource's name, the second one are the eventual parameters, the last one is the accept type, for most of the action, you will only need the $name parameter
+
+The first parameter is the ressource's name, the second one are the eventual parameters, the last one is the accept type, for most of the action, you will only need the $resource parameter
 
 For exemple, the following will return the list of all the merchants on your marketplace.
 
 ```php
 
-$Iceberg->get_list("merchant");
+$merchant_list = $Iceberg->get_list("merchant");
+
 ```
 
-####Get Object
+####Get
 
-The get_object() method works like get_list(), but it returns only one object, you have to specify the object's id
+The get() method works like get_list(), but it returns only one object, you have to specify the object's id
 
 ```php
 
-public function get_object($name, $id = null, $params = null, $accept_type = "Accept: application/json")
+public function get($resource, $id, $params = null, $accept_type = "Accept: application/json")
 ```
 
 For exemple, the following will return the cart object of id '963'
 
 ```php
 
-$Iceberg->get_object("cart", 963);
+$my_cart = $Iceberg->get_object("cart", 963);
 ```
 
-####Create Object
+####Create
 
-The create_object() method will create a new element of the specified ressource
+The create() method will create a new element of the specified ressource
 
 ```php
 
-public function create_object($name, $params = null, $accept_type = "Accept: application/json")
+public function create($resource, $params = null, $accept_type = "Accept: application/json")
 ```
 
 $name is the ressource's name and $params are the object you want to create ($params can be either an object or an array)
@@ -144,33 +165,34 @@ The following example will create a new address
 
 ```php
 
-$Iceberg->create_object("address", array(
-							"address" => "ADDRESS LINE 1",
-       						"address2" => "ADDRESS LINE 2",
-        					"city" => "CITY NAME",
-     		 			 	"company" => "OPTIONNAL COMPANY",          "country" => "COUNTRY_ID",
-     					    "default_billing" => true,
-    					    "default_shipping" => true,
-     					    "digicode" => null,
-        					"first_name" => "FIRST NAME",
-        					"floor" => null,
-        					"last_name" => "LAST NAME",
-        					"name" => "ADDRESS NAME",
-      						"phone" => "PHONE NUMBER",
-        					"state" => "OPTIONNAL STATE NAME",
-        					"status" => 10,
-        					"zipcode" => "ZIPCODE"
-							)
-				);
+$my_adress = $Iceberg->create("address", array(
+						"address" => "ADDRESS LINE 1",
+						"address2" => "ADDRESS LINE 2",
+						"city" => "CITY NAME",
+						"company" => "OPTIONNAL COMPANY",
+						"country" => "COUNTRY_ID",
+						"default_billing" => true,
+						"default_shipping" => true,
+						"digicode" => null,
+						"first_name" => "FIRST NAME",
+						"floor" => null,
+						"last_name" => "LAST NAME",
+						"name" => "ADDRESS NAME",
+						"phone" => "PHONE NUMBER",
+						"state" => "OPTIONNAL STATE NAME",
+						"status" => 10,
+						"zipcode" => "ZIPCODE"
+			)
+		);
 ```
 
-####Update Object
+####Update
 
-The update_object() method will update one element from the specified ressource
+The update() method will update one element from a specified ressource
 
 ```php
 
-public function update_object($name, $id, $params = null, $accept_type = "Accept: application/json")
+public function update($resource, $id, $params = null, $accept_type = "Accept: application/json")
 ```
 
 $name is the ressource's name, $id is the object's id and $params are the fields you want to update.
@@ -179,45 +201,35 @@ The following example will update an existing merchant
 
 ```php
 
-$Iceberg->update_object("merchant", 15, array("description" => "An updated merchant"));
+$my_merchant = $Iceberg->update("merchant", 15, array("description" => "An updated merchant"));
 ```
 
-####Save Object
+###Resources specific methods
 
-The save_object() method is an easiest way of updating an object.
+Each object returned by the handling methods can use both the save and delete functions
+
+####Save
+
+Save the current object
 
 ```php
 
-	public function save_object($data)
-```
-The only argument is the object you want to update, save_object will automatically update it.
-
-The following code gets the merchant of id 15, changes his description, and update it using save_object()
-```php
-
-$merchant = $Iceberg->get_object("merchant", 15);
+$merchant = $Iceberg->get("merchant", 15);
 
 $merchant->description = "An Updated Merchant";
 
-$Iceberg->save_object($merchant);
+$merchant->save();
 
 ```
 
-####Delete Object
+####Delete
 
-The delete_object() method is used to delete an element from a specific ressource
-
-```php
-
-	public function delete_object($name, $id)
-```
-$name is the ressource's name and $id is the element's id
-
-The following code deletes the cart of id 963
+Deletes an element from a specific ressource
 
 ```php
 
-	$Iceberg->delete_object("cart", 963);
+	$my_cart = $iceberg->get("cart", 963)
+	$my_cart->delete();
 ```
 
 ## Order Process
@@ -233,20 +245,20 @@ Creating an order on Iceberg is really easy, the only thing you need is the Item
 	require_once "iceberg.php";
 
 	$valid_array = array(
-  		'appNamespace' => 'YOUR_APP_NAMESPACE',
-  		'accessToken'  => 'YOUR_ACCESSTOKEN',
-  		'username'     => 'YOUR_USERNAME',
-  		'apiKey'       => 'YOUR_APP_KEY',
-  		'apiSecret'    => 'YOUR_APP_SECRET'
-	  )
+			'appNamespace' => 'YOUR_APP_NAMESPACE',
+			'accessToken'  => 'YOUR_ACCESSTOKEN',
+			'username'     => 'YOUR_USERNAME',
+			'apiKey'       => 'YOUR_APP_KEY',
+			'apiSecret'    => 'YOUR_APP_SECRET'
+			)
 
 	$IcebergInstance = new Iceberg($valid_array);
 
-    $IcebergInstance->setUser(array(
-    	"email" => "EMAIL_ADDRESS",
-        "first_name" => "FIRST_NAME",
-        "last_name" => "LAST_NAME"
-        ));
+	$IcebergInstance->setUser(array(
+				"email" => "EMAIL_ADDRESS",
+				"first_name" => "FIRST_NAME",
+				"last_name" => "LAST_NAME"
+				));
 
 ```
 
@@ -257,116 +269,30 @@ Now that we have set the User informations, we can add the offer to the cart.
 	$id_offer = "MY OFFER ID";
 	$quantity = "MY OFFER QUANTITY";
 
-	$my_cart = IcebergInstance->newCart();
-	$IcebergInstance->addCartItem(array(
+	$my_cart = IcebergInstance->get('cart');
+	$my_cart->addItem(array(
 		'offer_id' => $id_offer,
 		'quantity' => (int)$quantity,
 		));
 
 ```
 
-You have to use addCartItem() for each different offer you want to add to your cart.
+You have to use Cart::addItem() for each different offer you want to add to your cart.
 
 We need the country_id in in order to set the customer's address (Default value is "FR").
 
 ```php
-	$country = $IcebergInstance->getCountry(array("code" => "FR"));
+	$country = $IcebergInstance->get('country');
 ```
 Now we can set the Shipping and Billing addresses.
 
 ```php
 
-	$address = $IcebergInstance->createAddresses(array(
+	$address = $IcebergInstance->create('address', array(
         "address" => "ADDRESS LINE 1",
         "address2" => "ADDRESS LINE 2",
         "city" => "CITY NAME"
-        "company" => "OPTIONNAL COMPANY NAME",          "country" => "/v1/country/" . $country->id . "/",
-        "default_billing" => true,
-        "default_shipping" => true,
-        "digicode" => null,
-        "first_name" => "FIRST NAME",
-        "floor" => null,
-        "last_name" => "LAST NAME",
-        "name" => "ADDRESS NAME",
-        "phone" => "PHONE NUMBER",
-        "state" => "OPTIONNAL STATE NAME",
-		//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
-        "status" => 10,
-        "zipcode" => "ZIPCODE"
-        ));
-
- 		$IcebergInstance->setBillingAddress($address->id);
-        $IcebergInstance->setShippingAddress($address->id);
-
-
-```
-Now that both addresses are set, we can place the order.
-
-```php
-
-        $order = $IcebergInstance->createOrder();
-        $order->authorizeOrder();
-
-?>
-
-```
-
-###Complete Order
-
-Here is an arbitrary exemple of a complete order process.
-
-
-We get the first merchant with getMerchants()
-
-```php
-
-<?php
-	
-	require_once "iceberg.php";
-
-	$valid_array = array(
-		'appNamespace' => 'YOUR_APP_NAMESPACE',
-    	'accessToken'  => 'YOUR_ACCESSTOKEN',
-    	'username'     => 'YOUR_USERNAME',
-    	'apiKey'       => 'YOUR_APP_KEY',
-    	'apiSecret'    => 'YOUR_APP_SECRET'
-		)
-
-	$IcebergInstance = new Iceberg($valid_array);
-	$merchants = $IcebergInstance->getMerchants();
-	$my_merchant = $merchants->object[0];
-
-```
-And we get his products using getFullProductImport(), then we get the best offer's id from the first product.
-
-```php
-
-	$products = $IcebergInstance->getFullProductImport($merchant->id);
-	$product = $products->product;
-	$best_offer_id = (string) $product->best_offer->id;
-
-```
-Now that we have an offer ID, the process is the same as above
-
-```php
-
-    $IcebergInstance->setUser(array(
-        "email" => "EMAIL_ADDRESS",
-        "first_name" => "FIRST_NAME",
-        "last_name" => "LAST_NAME"
-        ));
-
-	$my_cart = IcebergInstance->newCart();
-	$IcebergInstance->addCartItem(array(
-		'offer_id' => $best_offer_id,
-		'quantity' => 1
-		));
-    $country = $IcebergInstance->getCountry(array("code" => "FR"));
-    $address = $IcebergInstance->createAddresses(array(
-		"address" => "ADDRESS LINE 1",
-		"address2" => "ADDRESS LINE 2",
-        "city" => "CITY NAME"
-        "company" => "OPTIONNAL COMPANY NAME",
+        "company" => "OPTIONNAL COMPANY NAME",          
         "country" => "/v1/country/" . $country->id . "/",
         "default_billing" => true,
         "default_shipping" => true,
@@ -380,13 +306,19 @@ Now that we have an offer ID, the process is the same as above
 		//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
         "status" => 10,
         "zipcode" => "ZIPCODE"
-     	));
+        ));
 
-	$IcebergInstance->setBillingAddress($address->id);
-    $IcebergInstance->setShippingAddress($address->id);
-    
-	$order = $IcebergInstance->createOrder();    
-	$order->authorizeOrder();
+	$my_cart->setBillingAddress($address->id);
+    $my_cart->setShippingAddress($address->id);
+
+
+```
+Now that both addresses are set, we can place the order.
+
+```php
+
+        $order = $my_cart->createOrder();
+        $order->updateStatus('authorizeOrder');
 
 ?>
 

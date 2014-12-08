@@ -1,33 +1,40 @@
 <?php namespace Ice;
 
 require_once("resource.class.php");
+require_once("order.class.php");
 
 class Cart extends Resource
 {
 
-    public function getCurrent()
+    /**
+    * get current cart items
+    *
+    * @return Object Array
+    */
+    public function getItems($params = null, $accept_type = "Accept: application/json")
     {
-        if (!$this->_current)
-            $_current = $this->get("mine");
-        return $this->_current;
+        $list = self::$Iceberg->Call("cart/".$this->id."/items", 'GET', $params, $accept_type);
+        $object_list = array();
+        if (!isset($list->objects))
+            return null;
+        foreach ($list->objects as $object)
+        {
+            $obj = new CartItem();
+            $obj->hydrate($object);
+            $object_list[] = $obj;
+        }
+        if (!isset($this->items))
+            $this->items = array();
+        $this->items = array_merge($this->items, $object_list);
+        return $object_list;
     }
 
     /**
-     * get current cart items
-     *
-     * @return Array
-     */
-    public function getItems()
-    {
-        return $this->get($this->getCurrent()->id . "/items");
-    }
-
-    /**
-     * add an item to a cart
-     *
-     * @return Array
-     */
-    public function addItem($params = null, $accept_type = 'Accept: application/json')
+    * add an item to a cart
+    *
+    * @return Array
+    */
+    public function addItem($params = null, $accept_type = 'Content-Type: application/json')
     {
         // Params:
         //   offer_id: Integer
@@ -35,14 +42,18 @@ class Cart extends Resource
         //   quantity: Integer
         //   gift: Boolean
         //   bundled: Boolean
-        return $this->create($params, "cart/" . $this->getCurrent()->id . "/items", $accept_type);
+        $response = self::$Iceberg->Call("cart/".$this->id."/items/", 'POST', $params, $accept_type);
+        $object = new CartItem();
+        $object->hydrate($response);
+        $this->items[] = $object;
+        return $object;
     }
 
     /**
-     * update an item to a cart
-     *
-     * @return Array
-     */
+    * update an item to a cart
+    *
+    * @return Array
+    */
     public function updateItem($id, $params = null, $accept_type = 'Accept: application/json')
     {
         // Params:
@@ -51,77 +62,56 @@ class Cart extends Resource
         //   quantity: Integer
         //   gift: Boolean
         //   bundled: Boolean
-        return $this->update($id, $params, "cart_item", $accept_type);
+        $object = new CartItem();
+        $response = parent::$Iceberg->Call($object->getName()."/".$id."/", "PUT", $params, $accept_type);
+        $object->hydrate($response);
+        return $object;
     }
 
     /**
-     * delete an item to a cart
-     *
-     * @return Array
-     */
-    public function deleteItem($id, $accept_type = 'Accept: application/json')
+    * Set cart shipping address
+    *
+    * @return StdObject
+    */
+    public function setShippingAddress($id)
     {
-        return $this->delete($id, "cart_item", $accept_type);
-    }
-    
-    /**
-     * Set cart shipping address
-     *
-     * @return StdObject
-     */
-    public function setShippingAddress($id, $params = null)
-    {
-        $this->getCurrent();
-        $params["shipping_address"] = "/v1/address/$id/";
-        return $this->update($this->_current->id, $params);
+        $params["shipping_address"] = "/v1/address/".$id."/";
+        $this->shipping_address = "/v1/address/".$id."/";
+        return parent::$Iceberg->update('Cart', $this->id, $params);
     }
 
 
     /**
-     * Set cart Billing address
-     *
-     * @return StdObject
-     */
-    public function setBillingAddress($id, $params = null)
+    * Set cart Billing address
+    *
+    * @return StdObject
+    */
+    public function setBillingAddress($id)
     {
-        $this->getCurrent();
-        $params["billing_address"] = "/v1/address/$id/";
-        return $this->update($this->_current->id, $params);
+        $params["billing_address"] = "/v1/address/".$id."/";
+        $this->billing_address = "/v1/address/".$id."/";
+        return parent::$Iceberg->update('Cart', $this->id, $params);
     }
 
-    public function createOrder($params = null, $accept_type = 'Accept: application/json')
+    public function createOrder($params = null, $accept_type = 'Content-Type: application/json')
     {
-        return parent::$Iceberg->Call("cart/" . $this->_current->id . "/createOrder/", 'POST', $params, $accept_type);
+        $object = new Order();
+        $response = parent::$Iceberg->Call("cart/" . $this->id . "/createOrder/", 'POST', $params, $accept_type);
+        $object->hydrate($response);
+        return $object;
     }
 
-	public function addVariation($product_variation_id, $product_offer_id)
-	{
-        $params = array(
-            'variation_id'=> $product_variation_id,
-            'offer_id'=> $product_offer_id,
-            'quantity'=> 1
-		);
-		return parent::$Iceberg->Call($this->getName()."/items/", "POST", $params);
-	}
-
-	public function create($params = null,$name = null, $accept_type = "Content-Type: application/json")
-	{
-		if (parent::$Iceberg->getDebug())
-			$params["debug"] = true;
-		return parent::create($params, $name, $accept_type);
-	}
-
-	public function addOffer($product_offer_id)
-	{
-		/*
-        **	Add an offer to the Cart
-	 	*/
+    public function addOffer($product_offer_id,$quantity = 1)
+    {
+        /*
+        **  Add an offer to the Cart
+        */
         $params = array(
             'offer_id'=> $product_offer_id,
-            'quantity'=> 1
-		);
-		return parent::$Iceberg->Call($this->getName()."/items/", "POST", $params);
-	}
+            'quantity'=> $quantity
+        );
+        return parent::$Iceberg->Call($this->getName()."/items/", "POST", $params);
+    }
 
 }
 

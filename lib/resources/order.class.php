@@ -15,16 +15,16 @@ class Order extends Resource
 	**/
 	public function updateStatus($status, $id_order = null)
 	{
-		if (!$id_order && !$this->_id)
+		if (!$id_order && !$this->id)
 			throw new Exception("No order_id and no URI");
 		if ($status != "updateOrderPayment" && $status != "authorizeOrder" && $status != "cancel")
 			throw new Exception("Wrong Status : authorizeOrder | updateOrderPayment");
-		$id = $id_order ? $id_order : $this->_id;
-		return	(parent::$Iceberg->Call($this->_name.'/'.$id.'/'.$status.'/', 'POST'));
+		$id = $id_order ? $id_order : $this->id;
+		$response = parent::$Iceberg->Call($this->getName().'/'.$id.'/'.$status.'/', 'POST');
+		$this->hydrate($response);
+		return $this;
 	}
-
 }
-
 
 class MerchantOrder extends Resource
 {
@@ -36,8 +36,11 @@ class MerchantOrder extends Resource
 	* @returns object
 	*
 	**/
-	public function updateStatus($status, $id_order)
+	public function updateStatus($status, $id_order = null)
 	{
+		if (!$id_order && !$this->id)
+			throw new Exception("No order_id and no URI");
+		$id_order = $id_order ? $id_order : $this->id;
 		return	(parent::$Iceberg->Call($this->getName().'/'.$id_order.'/'.$status.'/', 'POST'));
 	}
 }
@@ -54,11 +57,11 @@ class OrderItem extends Resource
 	**/
 	public function updateStatus($status, $id_order = null)
 	{
-		if (!$id_order && !$this->_id)
+		if (!$id_order && !$this->id)
 			throw new Exception("No order_id and no URI");
 		if ($status != "confirm" && $status != "send" && $status != "cancel")
 			throw new Exception("Wrong Status : send | confirm | cancel");
-		$id = $id_order ? $id_order : $this->_id;
+		$id = $id_order ? $id_order : $this->id;
 		return	(parent::$Iceberg->Call($this->_name.'/'.$id.'/'.$status.'/', 'POST'));
 	}
 }
