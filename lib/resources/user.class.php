@@ -34,10 +34,6 @@ class Inbox extends Resource
 {
 }
 
-class Review extends Resource
-{
-}
-
 class profile extends Resource
 {
 }
