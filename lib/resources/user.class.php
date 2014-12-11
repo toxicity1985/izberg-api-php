@@ -4,33 +4,40 @@ require_once("resource.class.php");
 
 class User extends Resource
 {
-	public function addresses()
+	public function getAddresses()
 	{
-		return $this->get("address", null, array("user" => $this->id));
+		return parent::$Iceberg->get_list("address", null, array("user" => $this->id), "Content-Type:Application/json");
 	}
 
-	public function applications()
+	public function getApplications()
 	{
-		return $this->get("application", null, array("contact_user" => $this->id));
+		return parent::$Iceberg->get_list("application", null, array("contact_user" => $this->id), "Content-Type:Application/json");
 	}
 
-	public function reviews()
+	public function getReviews()
 	{
-		return $this->get("review", null, array("user" => $this->id));
+		return parent::$Iceberg->get_list("review", null, array("user" => $this->id), "Content-Type:Application/json");
+
+	}
+	public function getProfile()
+	{
+		return parent::$Iceberg->get("profile", $this->id."/profile/", null, null, $this->getName());
 	}
 
-	public function profile()
+	public function getInbox()
 	{
-		return $this->get('profile', $this->id."/profile/", null, null, $this->getName());
-	}
-
-	public function inbox()
-	{
-		return $this->get_list("inbox", $this->id."/inbox/", null, null, $this->getName());
+		return parent::$Iceberg->get_list("inbox", $this->id."/inbox/", null, null, $this->getName());
 	}
 }
 
 class Inbox extends Resource
 {
-	
+}
+
+class Review extends Resource
+{
+}
+
+class profile extends Resource
+{
 }
