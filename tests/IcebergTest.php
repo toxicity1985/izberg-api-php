@@ -270,6 +270,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 				));
 
 		$my_cart = $a->get('Cart');
+		$number_items = count($my_cart->getItems());
 		$my_cart->addItem(array(
 			"offer_id" => 27254,
 			"variation_id" => 60873,
@@ -277,12 +278,12 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		));
 		$cart = $a->get('Cart');
 		$items = $cart->getItems();
-		$this->assertEquals(count($items), 1);
+		$this->assertEquals(count($items), $number_items + 1);
 		// We remove the item
 		$firstItem = $items[0];
 		$firstItem->delete();
 		$items = $cart->getItems();
-		$this->assertEquals(count($items), 0);
+		$this->assertEquals(count($items), $number_items);
 	}
 
 	public function testNewCartItemShouldCreateANewCart()
