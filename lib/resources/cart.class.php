@@ -13,7 +13,7 @@ class Cart extends Resource
     */
     public function getItems($params = null, $accept_type = "Accept: application/json")
     {
-        $list = self::$Iceberg->Call("cart/".$this->id."/items", 'GET', $params, $accept_type);
+        $list = self::$Iceberg->Call("cart/".$this->id."/items/", 'GET', $params, $accept_type);
         $object_list = array();
         if (!isset($list->objects))
             return null;
