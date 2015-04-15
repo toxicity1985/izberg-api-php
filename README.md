@@ -64,7 +64,7 @@ To use our sandbox environment, just pass the param `sandbox` in options when yo
 
     $iceberg = new Iceberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
-      'sandbox'      => 'true'
+      'sandbox'      => true,
     ));
 
 ?>
