@@ -625,8 +625,8 @@ class Iceberg
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+		curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+		curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
 		if ('POST' === $method)
 		{
@@ -683,8 +683,8 @@ class Iceberg
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+		curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+		curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 		// curl_setopt($ch,CURLOPT_USERAGENT,"ELB-HealthChecker/1.0");
 
 		$jsonData = $this->curlExec($ch);
