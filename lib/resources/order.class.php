@@ -1,5 +1,6 @@
-<?php namespace Ice;
-
+<?php
+namespace Ice;
+use Exception;
 require_once("resource.class.php");
 
 class Order extends Resource

@@ -291,7 +291,7 @@ Now we can set the Shipping and Billing addresses.
         "address" => "ADDRESS LINE 1",
         "address2" => "ADDRESS LINE 2",
         "city" => "CITY NAME"
-        "company" => "OPTIONNAL COMPANY NAME",          
+        "company" => "OPTIONNAL COMPANY NAME",
         "country" => "/v1/country/" . $country->id . "/",
         "default_billing" => true,
         "default_shipping" => true,
@@ -329,7 +329,7 @@ Now that both addresses are set, we can place the order.
 
 - Install php unit : http://phpunit.de/getting-started.html
 - cd /to/the/iceberg/php/library/folder
-- run 'phpunit tests/IcebergTest.php'
+- run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests/IcebergTest.php'
 
 
 

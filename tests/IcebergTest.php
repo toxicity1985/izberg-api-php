@@ -32,11 +32,9 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function getRealIcebergInstanceWithToken()
 	{
 		$a = $this->getIceberg(array(
-			"appNamespace" => "lolote",
-			"username" => "sebfie",
-			"accessToken" => "156d219e38f84953c159a857738119bc0c35de96",
-			"apiSecret" => "6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0",
-			"sandbox"=>true
+				"username" => getenv("USERNAME1"),
+				"accessToken" => getenv("TOKEN1"),
+				"sandbox" => true
 		));
 		return $a;
 	}
@@ -192,11 +190,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testGetFullProductImportShouldReturnAllProducts()
 	{
-		$b = $this->getIceberg(array(
-								"username" => getenv("USERNAME1"),
-								"accessToken" => getenv("TOKEN1"),
-								"sandbox" => true
-								));
+		$b = $this->getRealIcebergInstance();
 		$merchant = $b->get("merchant", 15);
 		$result = $merchant->get_catalog();
 	}
@@ -204,13 +198,13 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testGetProductSchemaShouldReturnProductSchema()
 	{
 		$a = $this->getRealIcebergInstance();
-		$product = $a->get_schema("Product");
+		$product = $a->get_schema("product");
 	}
 
 	public function testGetCategoriesShouldReturnCategories()
 	{
 		$a = $this->getRealIcebergInstance();
-		$Categories = $a->get_list("Category");
+		$Categories = $a->get_list("category");
 		$this->assertTrue(is_array($Categories));
 	}
 
@@ -253,11 +247,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testAddCartItemShouldAddItem()
 	{
-		$a = $this->getIceberg(array(
-				"username" => getenv("USERNAME1"),
-				"accessToken" => getenv("TOKEN1"),
-				"sandbox" => true
-				));
+		$a = $this->getRealIcebergInstance();
 
 		$my_cart = $a->get('Cart');
 		$number_items = count($my_cart->getItems());
@@ -308,8 +298,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			"city" => "St remy de provence",
 			"company" => "Sebfie",
 			"country" => "/v1/country/" . $country->id . "/",
-			"default_billing" => true,
-			"default_shipping" => true,
+			// "default_billing" => true,
+			// "default_shipping" => true,
 			"digicode" => null,
 			"first_name" => "sebastien",
 			"floor" => null,
@@ -329,6 +319,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testGetAddressShouldReturnAddress()
 	{
 		$a = $this->getRealIcebergInstance();
+
 		$country = $a->get("country");
 		$addr = $a->create("address", array(
 			"address" => "Address line 1",
@@ -336,8 +327,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			"city" => "St remy de provence",
 			"company" => "Sebfie",
 			"country" => "/v1/country/" . $country->id . "/",
-			"default_billing" => true,
-			"default_shipping" => true,
+			// "default_billing" => true,
+			// "default_shipping" => true,
 			"digicode" => null,
 			"first_name" => "sebastien",
 			"floor" => null,
@@ -355,17 +346,13 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testSaveObject()
 	{
-		$b = $this->getIceberg(array(
-								"username" => getenv("USERNAME1"),
-								"accessToken" => getenv("TOKEN1"),
-								"sandbox" => true
-								));
-		$description = "random description ".rand(0, 1000);
-		$merchant = $b->get("merchant", 15);
-		$merchant->description = $description;
+		$a = $this->getRealIcebergInstance();
+		$name = "random description ".rand(0, 1000);
+		$merchant = $a->get("address", 2628);
+		$merchant->name = $name;
 		$merchant->save();
-		$merchant_check = $b->get("merchant", 15);
-		$this->assertEquals($merchant->description, $merchant_check->description);
+		$merchant_check = $a->get("address", 2628);
+		$this->assertEquals($merchant->name, $merchant_check->name);
 	}
 
 	// MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
@@ -373,13 +360,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testFullOrderProcess()
 	{
 		ini_set("memory_limit","1024M");
-		//$a = $this->getRealIcebergInstance();
-		$a = $this->getIceberg(array(
-								"username" => getenv("USERNAME1"),
-								"accessToken" => getenv("TOKEN1"),
-								"sandbox" => true
-								));
-	// We get the first merchant
+		$a = $this->getRealIcebergInstance();
+		// We get the first merchant
 		$merchants = $a->get_list('merchant');
 		$merchant = $merchants[0];
 		$products = $merchant->get_catalog();
@@ -391,12 +373,6 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			$i++;
 		}
 		$best_variation = (string) $product->best_offer->variations->variation[$i]->id;
-		/*$a->setUser(array(
-			"email" => "support@lolote.fr",
-			"first_name" => "lolote",
-			"last_name" => "lolita"
-		));*/
-	// We create a new cart
 		$my_cart = $a->get('Cart');
 		$my_cart->addItem(array(
 			"offer_id" => $best_offer_id,
@@ -410,8 +386,8 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 			"city" => "St remy de provence",
 			"company" => "Sebfie",
 			"country" => "/v1/country/" . $country->id . "/",
-			"default_billing" => true,
-			"default_shipping" => true,
+			// "default_billing" => true,
+			// "default_shipping" => true,
 			"digicode" => null,
 			"first_name" => "sebastien",
 			"floor" => null,
@@ -425,7 +401,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$my_cart->setBillingAddress($address->id);
 		$my_cart->setShippingAddress($address->id);
 		$order = $my_cart->createOrder();
-	// Place the order
+	  // Place the order
 		$order->updateStatus('authorizeOrder');
 		$this->assertEquals("60", $order->status);
 		echo "Your order id is $order->id";
