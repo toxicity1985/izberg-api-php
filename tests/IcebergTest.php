@@ -347,12 +347,13 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testSaveObject()
 	{
 		$a = $this->getRealIcebergInstance();
-		$name = "random description ".rand(0, 1000);
-		$merchant = $a->get("address", 2628);
-		$merchant->name = $name;
-		$merchant->save();
-		$merchant_check = $a->get("address", 2628);
-		$this->assertEquals($merchant->name, $merchant_check->name);
+		$name = "random description ".uniqid();
+		$addresses = $a->get_list('address');
+		$address = $addresses[0];
+		$address->name = $name;
+		$address->save();
+		$address_check = $a->get("address", $address->id);
+		$this->assertEquals($address->name, $address_check->name);
 	}
 
 	// MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
