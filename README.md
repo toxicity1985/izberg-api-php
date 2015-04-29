@@ -146,7 +146,7 @@ For exemple, the following will return the cart object of id '963'
 
 ```php
 
-$my_cart = $Iceberg->get_object("cart", 963);
+$my_cart = $Iceberg->get("cart", 963);
 ```
 
 ####Create
