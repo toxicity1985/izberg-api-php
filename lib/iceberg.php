@@ -477,6 +477,7 @@ class Iceberg
 
 		if (true === is_array($config)) {
 			self::$_api_url = (isset($config['sandbox']) && $config['sandbox'] === true) ? self::SANDBOX_API_URL : self::PRODUCTION_API_URL;
+			self::$_api_url = (isset($config['apiUrl']))? $config['apiUrl']: self::$_api_url;
 
 			if (isset($config['accessToken'])) {
 				$this->setAccessToken($config['accessToken']);
@@ -565,15 +566,40 @@ class Iceberg
 	**/
 	public function log($message, $level="error", $path = null)
 	{
-		date_default_timezone_set("Europe/berlin");
+		date_default_timezone_set("Europe/Paris");
 		if (false === self::LOGS)
 			return ;
 		if (false === is_dir($path))
-			$path = null;
+			$path = __DIR__."/../log/";
 		else if (substr($path, -1) != '/')
 			$path .= '/';
-		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ")." : ".$message."\n", FILE_APPEND);
+
+		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ").$message."\n", FILE_APPEND);
 	}
+
+	/**
+	 * Get the inline user token
+	 * @return String
+	 */
+	public function getInlineUserToken()
+	{
+		if ($this->useSso()) {
+			if (strtolower($this->_single_sign_on_response->username) == 'anonymous'){
+				$api_key = $this->_single_sign_on_response->api_key;
+				if (!is_null($this->getApiKey()))
+					$api_key = $this->getApiKey();
+				$h = $this->_single_sign_on_response->username . ":" . $this->getAppNamespace() .":".$api_key;
+			}
+			else
+				$h = $this->_single_sign_on_response->username . ":" .$this->_single_sign_on_response->api_key;
+			$headers = 'IcebergAccessToken '. $h;
+		} else {
+			$headers = 'IcebergAccessToken '. $this->getUserName() . ":" . $this->getAccessToken();
+		}
+
+		return $headers;
+	}
+
 	/**
 	* The call operator
 	*
@@ -583,7 +609,7 @@ class Iceberg
 	* @param string [optional] $method     Request type GET|POST
 	* @return mixed
 	*/
-	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
+	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json', $staff = false)
 	{
 		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
 		{
@@ -597,9 +623,20 @@ class Iceberg
 
 		$apiCall = self::$_api_url . $path . (('GET' === $method) ? $paramString : null);
 
-		if ($this->useSso()) {
-			if (strtolower($this->_single_sign_on_response->username) == 'anonymous')
-				$h = $this->_single_sign_on_response->username . ":" . $this->getAppNamespace() .":".$this->_single_sign_on_response->api_key;
+		if (true === $staff){
+
+			$headers = array(
+				$accept_type,
+				'Authorization: IcebergAccessToken '. ICEBERG_USERNAME . ":" . ICEBERG_ACCESS_TOKEN,
+			);
+		}		
+		elseif ($this->useSso()) {
+			if (strtolower($this->_single_sign_on_response->username) == 'anonymous'){
+				$api_key = $this->_single_sign_on_response->api_key;
+				if (!is_null($this->getApiKey()))
+					$api_key = $this->getApiKey();
+				$h = $this->_single_sign_on_response->username . ":" . $this->getAppNamespace() .":".$api_key;
+			}
 			else
 				$h = $this->_single_sign_on_response->username . ":" .$this->_single_sign_on_response->api_key;
 			$headers = array(
@@ -641,6 +678,12 @@ class Iceberg
 		}
 
 		$data = $this->curlExec($ch);
+
+		$this->log($method." | ".$apiCall, "call");
+		if (!is_null($paramString))
+			$this->log("PARAMS | ".ltrim(ltrim($paramString, '&'), '?'), "call", __DIR__."/log");
+		$this->log("DATE | ".$data, "call");
+
 		if (false === $data) {
 			throw new Exception("Error: Call() - cURL error: " . curl_error($ch));
 		}
@@ -771,6 +814,7 @@ class Iceberg
 			$response = $this->Call($endpoint."/".$id."/", 'GET', $params, $accept_type);
 		else
 			$response = $this->Call($endpoint."/", 'GET', $params, $accept_type);
+		
 		$object->hydrate($response);
 		return $object;
 	}

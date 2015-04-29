@@ -6,3 +6,4 @@ composer.lock
 apt142
 autoload.php
 composer
+*.txt
