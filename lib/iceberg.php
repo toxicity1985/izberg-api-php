@@ -14,7 +14,7 @@
 
 require_once __DIR__."/../HtmlToText/HtmlToText.php";
 require_once __DIR__."/resources/loader.php";
-
+require_once __DIR__."/exceptions.php";
 
 class Iceberg
 {
@@ -741,7 +741,30 @@ class Iceberg
 		$jsonResponse = json_decode($jsonData);
 		// We display the error only if the HTTP code is different of 200..300
 		if (preg_match("/2\d{2}/", $httpcode)  == 0) {
-			throw new Exception("Error: from Iceberg API - error: " . print_r($jsonResponse,true));
+			$message = "Error: from Iceberg API - error: " . print_r($jsonResponse,true);
+			switch ($httpcode){
+				case '400':
+					throw new BadRequestException($message);
+					break;
+				case '401':
+					throw new UnauthorizedException($message);
+					break;
+				case '403':
+					throw new ForbiddenException($message);
+					break;
+				case '404':
+					throw new NotFoundException($message);
+					break;
+				case '405':
+					throw new MethodNotAllowedException($message);
+					break;
+				case '500':
+					throw new InternalErrorException($message);
+					break;
+				default:
+					throw new Exception($message);
+					break;
+			}
 		}
 		return $jsonResponse;
 	}
