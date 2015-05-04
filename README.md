@@ -104,7 +104,9 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Hook
      * Merchant
      * Order
-     * OrderItem
+     * Order
+
+
      * MerchantOrder
      * Payment
      * User
@@ -227,8 +229,12 @@ Deletes an element from a specific ressource
 
 ```php
 
-	$my_cart = $iceberg->get("cart", 963)
-	$my_cart->delete();
+	$my_cart = $iceberg->get("cart", 963);
+
+	$my_cart_items = $my_cart->getItems();
+
+	$my_cart_items[0]->delete();
+
 ```
 
 ## Order Process
