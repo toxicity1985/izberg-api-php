@@ -293,7 +293,7 @@ class Iceberg
 		$this->setTimestamp(time());
 		$to_compose = array($email, $first_name, $last_name, $this->getTimestamp());
 		if (is_null($this->getApiSecret())) {
-			throw new exception("To use SSO you have to set the api_secret");
+			throw new GenericException("To use SSO you have to set the api_secret");
 		}
 		$message_auth = hash_hmac('sha1', implode(";", $to_compose), $this->getApiSecret());
 		return $message_auth;
@@ -498,7 +498,7 @@ class Iceberg
 			Ice\Resource::setIceberg($this);
 
 		} else {
-			throw new Exception("Error: __construct() - Configuration data is missing.");
+			throw new GenericException("Error: __construct() - Configuration data is missing.");
 		}
 	}
 
@@ -531,7 +531,7 @@ class Iceberg
 		if (self::$_singleton) {
 			return self::$_singleton;
 		} else {
-			throw new Exception("You should create a first validated Iceberg instance");
+			throw new GenericException("You should create a first validated Iceberg instance");
 		}
 	}
 
@@ -685,7 +685,7 @@ class Iceberg
 		$this->log("DATE | ".$data, "call");
 
 		if (false === $data) {
-			throw new Exception("Error: Call() - cURL error: " . curl_error($ch));
+			throw new GenericException("Error: Call() - cURL error: " . curl_error($ch));
 		}
 		curl_close($ch);
 		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
@@ -734,7 +734,7 @@ class Iceberg
 		$httpcode = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);
 
 		if (false === $jsonData) {
-			throw new Exception("Error: _getSingleSignOnResponse() - cURL error: " . curl_error($ch));
+			throw new GenericException("Error: _getSingleSignOnResponse() - cURL error: " . curl_error($ch));
 		}
 		curl_close($ch);
 
@@ -762,7 +762,7 @@ class Iceberg
 					throw new InternalErrorException($message);
 					break;
 				default:
-					throw new Exception($message);
+					throw new GenericException($message);
 					break;
 			}
 		}
@@ -793,7 +793,7 @@ class Iceberg
 		{
 			$result = $this->Call('user/me/');
 		}
-		catch (Exception $e)
+		catch (GenericException $e)
 		{
 			$result = false;
 		}
@@ -892,7 +892,7 @@ class Iceberg
 	public function update($resource = null, $id = null, $params = null, $accept_type = "Content-Type: application/json")
 	{
 		if (!$id || !$resource)
-			throw new Exception(__METHOD__." needs a valid ID and a valid Resource Name");
+			throw new GenericException(__METHOD__." needs a valid ID and a valid Resource Name");
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".$resource;
 		$obj = new $resource();

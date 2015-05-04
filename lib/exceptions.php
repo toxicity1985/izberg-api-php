@@ -1,10 +1,28 @@
 <?php
+
+/**
+ * GenericException Representation of generic exception
+ */
+class GenericException extends Exception
+{
+  /**
+   * Constructor
+   *
+   * @param message[optional]
+   * @param code[optional]
+   * @param previous[optional]
+   */
+  public function __construct ($message = null, $code = null, $previous = null)
+  {
+    parent::__construct($message, $code, $previous);
+  }
+}
+
 /**
 * Parent class for all of the HTTP related exceptions.
 * All HTTP status/error related exceptions should extend this class so
 * catch blocks can be specifically typed.
 *
-* @package       Cake.Error
 */
 if (!class_exists('HttpException')) {
   class HttpException extends RuntimeException {
@@ -34,8 +52,6 @@ class BadRequestException extends HttpException {
 
 /**
 * Represents an HTTP 40error.
-*
-* @package       Cake.Error
 */
 class UnauthorizedException extends HttpException {
 
@@ -56,8 +72,6 @@ class UnauthorizedException extends HttpException {
 
 /**
 * Represents an HTTP 403 error.
-*
-* @package       Cake.Error
 */
 class ForbiddenException extends HttpException {
 
@@ -78,8 +92,6 @@ class ForbiddenException extends HttpException {
 
 /**
 * Represents an HTTP 404 error.
-*
-* @package       Cake.Error
 */
 class NotFoundException extends HttpException {
 
@@ -100,8 +112,6 @@ class NotFoundException extends HttpException {
 
 /**
  * Represents an HTTP 405 error.
- *
- * @package       Cake.Error
  */
 class MethodNotAllowedException extends HttpException {
 
@@ -122,8 +132,6 @@ class MethodNotAllowedException extends HttpException {
 
 /**
  * Represents an HTTP 500 error.
- *
- * @package       Cake.Error
  */
 class InternalErrorException extends HttpException {
 
