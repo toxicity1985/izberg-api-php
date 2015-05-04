@@ -36,17 +36,17 @@ class Cart extends Resource
     */
     public function addItem($params = null, $accept_type = 'Content-Type: application/json')
     {
-        // Params:
-        //   offer_id: Integer
-        //   variation_id: Integer
-        //   quantity: Integer
-        //   gift: Boolean
-        //   bundled: Boolean
-        $response = self::$Iceberg->Call("cart/".$this->id."/items/", 'POST', $params, $accept_type);
-        $object = new CartItem();
-        $object->hydrate($response);
-        $this->items[] = $object;
-        return $object;
+         // Params:
+         //   offer_id: Integer
+         //   variation_id: Integer
+         //   quantity: Integer
+         //   gift: Boolean
+         //   bundled: Boolean
+         $response = self::$Iceberg->Call("cart/".($this->id ? $this->id : "none")."/items/", 'POST', $params, $accept_type);
+         $object = new CartItem();
+         $object->hydrate($response);
+         $this->items[] = $object;
+         return $object;
     }
 
     /**
