@@ -329,7 +329,31 @@ Now that both addresses are set, we can place the order.
 
 ```
 
+## Webhook
 
+####Create
+
+```php
+
+    $params = array(
+        'url' => "http://create.com",
+        'event' => 'merchant_order_confirmed',
+    );
+    $hook = $iceberg->create("webhook", $params);
+
+```
+
+####Get and Update
+
+```php
+
+	$webhook_id = 1046;
+	$hook = $iceberg->get("webhook", $webhook_id);
+
+    $hook->url = "http://update.com";
+    $hook = $hook->save();
+
+```
 
 ### Run tests
 
