@@ -24,12 +24,12 @@ class Iceberg
 	/**
 	* The API production URL
 	*/
-	const PRODUCTION_API_URL = 'https://api.iceberg.technology/v1/';
+	const PRODUCTION_API_URL = 'https://api.iceberg-marketplace.com/';
 
 	/**
 	* The API sandbox URL
 	*/
-	const SANDBOX_API_URL = 'http://api.sandbox.iceberg.technology/v1/';
+	const SANDBOX_API_URL = 'https://api.sandbox.iceberg-marketplace.com/';
 
 	/**
 	* The Single Sign On URL
@@ -688,7 +688,6 @@ class Iceberg
 
 		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
 		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
-		// curl_setopt($ch,CURLOPT_USERAGENT,"ELB-HealthChecker/1.0");
 
 		$jsonData = $this->curlExec($ch);
 		$httpcode = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);
