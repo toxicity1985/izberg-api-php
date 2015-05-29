@@ -24,12 +24,12 @@ class Iceberg
 	/**
 	* The API production URL
 	*/
-	const PRODUCTION_API_URL = 'https://api.iceberg-marketplace.com/';
+	const PRODUCTION_API_URL = 'https://api.iceberg.technology/';
 
 	/**
 	* The API sandbox URL
 	*/
-	const SANDBOX_API_URL = 'https://api.sandbox.iceberg-marketplace.com/';
+	const SANDBOX_API_URL = 'https://api.sandbox.iceberg.technology/';
 
 	/**
 	* The Single Sign On URL
