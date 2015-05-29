@@ -101,7 +101,7 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Category
      * Country
      * Feed
-     * Hook
+     * Webhook
      * Merchant
      * Order
      * OrderItem

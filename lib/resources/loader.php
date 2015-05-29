@@ -5,7 +5,7 @@ require_once "cart.class.php";
 require_once "category.class.php";
 require_once "country.class.php";
 require_once "feed.class.php";
-require_once "hook.class.php";
+require_once "webhook.class.php";
 require_once "merchant.class.php";
 require_once "message.class.php";
 require_once "order.class.php";
