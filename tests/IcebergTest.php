@@ -171,7 +171,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testShouldThrowErrorIfNotGoodResponseCode()
 	{
-		$this->setExpectedException('Exception', "Error: from Iceberg API - error: [error: 'mymessage']");
+		$this->setExpectedException('GenericException', "Error: from Iceberg API - error: [error: 'mymessage']");
 		$a = $this->mockErrorSingleSignOnResponse();
 	}
 

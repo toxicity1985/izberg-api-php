@@ -104,7 +104,9 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Webhook
      * Merchant
      * Order
-     * OrderItem
+     * Order
+
+
      * MerchantOrder
      * Payment
      * User
@@ -146,7 +148,7 @@ For exemple, the following will return the cart object of id '963'
 
 ```php
 
-$my_cart = $Iceberg->get_object("cart", 963);
+$my_cart = $Iceberg->get("cart", 963);
 ```
 
 ####Create
@@ -229,6 +231,7 @@ Deletes an element from a specific ressource
 
 	$address = $iceberg->get("address", 963)
 	$address->delete();
+  
 ```
 
 ## Order Process
@@ -323,7 +326,31 @@ Now that both addresses are set, we can place the order.
 
 ```
 
+## Webhook
 
+####Create
+
+```php
+
+    $params = array(
+        'url' => "http://create.com",
+        'event' => 'merchant_order_confirmed',
+    );
+    $hook = $iceberg->create("webhook", $params);
+
+```
+
+####Get and Update
+
+```php
+
+	$webhook_id = 1046;
+	$hook = $iceberg->get("webhook", $webhook_id);
+
+    $hook->url = "http://update.com";
+    $hook = $hook->save();
+
+```
 
 ### Run tests
 

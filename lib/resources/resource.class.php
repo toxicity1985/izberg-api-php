@@ -103,12 +103,15 @@ abstract class Resource
             $this->hydrate($obj->objects[0]);
         else
             foreach ($obj as $key=>$value)
-            {
+            { 
                 if (is_object($value))
                 {
                     $classname = $this->parseUri($key);
-                    if (!class_exists($classname, false))
-                        continue ;
+                    if (!class_exists($classname) && isset($value->resource_uri))
+                        $classname = $this->parseUri($value->resource_uri);
+
+                    if (!class_exists($classname))
+                        continue ;                    
                     else
                     {
                         $new_obj = new $classname();
@@ -119,7 +122,7 @@ abstract class Resource
                 else if (is_array($value) && isset($value[0]->resource_uri))
                 {
                     $classname = $this->parseUri($value[0]->resource_uri);
-                    if (!class_exists($classname, false))
+                    if (!class_exists($classname))
                         continue ;
                     $list = array();
                     foreach ($value as $val) {
