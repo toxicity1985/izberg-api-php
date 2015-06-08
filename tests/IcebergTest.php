@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 require_once "lib/iceberg.php";
 
 class IcebergTest extends PHPUnit_Framework_TestCase
@@ -89,43 +90,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function getRealAnswer()
 	{
-		return array(
-			"absolute_url" => "/user/sebfie/",
-			"age" => "",
-			"api_key" => "e0da0c1a729176449446a3cd606fd46e7a9a0c8a",
-			"birth_date" => "" ,
-			"city" => "",
-			"country" => "",
-			"created" => "",
-			"dislikes_count" => "0",
-			"display_name" => "sébastien fieloux",
-			"email" => "sebastien.fieloux@gmail.com",
-			"first_name" => "sébastien",
-			"from_list" => "",
-			"gender" => "F",
-			"gid" => "u:73061",
-			"groups" => array(),
-			"id" => 73061,
-			"is_application_staff" => 1,
-			"is_staff" => "",
-			"is_superuser" => "",
-			"language" => "fr",
-			"last_name" => "fieloux",
-			"resource_uri" => "http://api.modizy.com/v1/user/73061/",
-			"shopping_preference" => array(
-				"country" => "",
-				"currency" => "EUR",
-				"feed_content" => "{}",
-				"from_list" => "",
-				"id" => "11674",
-				"resource_uri" => "http://api.modizy.com/v1/user_shopping_prefs/11674/",
-				"user" => "73061",
-			),
-			"timestamp" => "2014-06-11T16:18:57",
-			"total_spent" => "0.00",
-			"type" => "user",
-			"username" => "sebfie"
-		);
+		return json_decode(file_get_contents(dirname(__FILE__) ."/mocks/user/sso/response.json"));
 	}
 
 	public function getErrorAnswer()
@@ -166,12 +131,12 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testConstructorGetIcebergApiKey()
 	{
 		$a = $this->mockSuccessSingleSignOnResponse();
-		$this->assertEquals("e0da0c1a729176449446a3cd606fd46e7a9a0c8a", $a->getIcebergApiKey());
+		$this->assertEquals("16b4f0955d476d9e823fad070a6b77daac09fb76", $a->getIcebergApiKey());
 	}
 
 	public function testShouldThrowErrorIfNotGoodResponseCode()
 	{
-		$this->setExpectedException('Exception', "Error: from Iceberg API - error: [error: 'mymessage']");
+		$this->setExpectedException('GenericException', "Error: from Iceberg API - error: [error: 'mymessage']");
 		$a = $this->mockErrorSingleSignOnResponse();
 	}
 

@@ -103,12 +103,15 @@ abstract class Resource
             $this->hydrate($obj->objects[0]);
         else
             foreach ($obj as $key=>$value)
-            {
+            { 
                 if (is_object($value))
                 {
                     $classname = $this->parseUri($key);
-                    if (!class_exists($classname, false))
-                        continue ;
+                    if (!class_exists($classname) && isset($value->resource_uri))
+                        $classname = $this->parseUri($value->resource_uri);
+
+                    if (!class_exists($classname))
+                        continue ;                    
                     else
                     {
                         $new_obj = new $classname();
@@ -119,7 +122,7 @@ abstract class Resource
                 else if (is_array($value) && isset($value[0]->resource_uri))
                 {
                     $classname = $this->parseUri($value[0]->resource_uri);
-                    if (!class_exists($classname, false))
+                    if (!class_exists($classname))
                         continue ;
                     $list = array();
                     foreach ($value as $val) {
@@ -166,13 +169,12 @@ abstract class Resource
             $this->hydrate($response);
             return ;
         }
-        if (strncmp("http", $data["resource_uri"], 4) == 0)
-            $addr = substr($data["resource_uri"], strlen(self::$Iceberg->getApiUrl()));
-        else if ($data["resource_uri"][0] == '/')
-            $addr = substr($data["resource_uri"], 1);
+        $url_params = parse_url($data["resource_uri"]);
+        $addr = str_replace("/v1", "",$url_params["path"]);
         foreach ($data as $key=>$value)
             if (!$value || is_array($value))
                 unset($data[$key]);
+
         return self::$Iceberg->Call($addr, 'PUT', $data, "Content-Type: application/json");
     }
 }
