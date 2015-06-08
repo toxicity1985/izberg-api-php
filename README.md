@@ -1,6 +1,6 @@
 #Iceberg-API-PHP
 
-[![Build Status](https://travis-ci.org/Modizy/iceberg-api-php.svg?branch=master)](https://travis-ci.org/Modizy/iceberg-api-php)
+[![Build Status](https://travis-ci.org/Iceberg-Marketplace/iceberg-api-php.svg?branch=master)](https://travis-ci.org/Iceberg-Marketplace/iceberg-api-php)
 ## About
 
 PHP Wrapper around the Iceberg API
