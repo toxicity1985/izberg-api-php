@@ -42,7 +42,7 @@ class Cart extends Resource
         //   quantity: Integer
         //   gift: Boolean
         //   bundled: Boolean
-        $response = self::$Iceberg->Call("cart/".$this->id."/items/", 'POST', $params, $accept_type);
+        $response = self::$Iceberg->Call("cart/".($this->id ? $this->id : "none")."/items/", 'POST', $params, $accept_type);
         $object = new CartItem();
         $object->hydrate($response);
         $this->items[] = $object;

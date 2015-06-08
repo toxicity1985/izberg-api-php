@@ -29,7 +29,7 @@ class Iceberg
 	/**
 	* The API sandbox URL
 	*/
-	const SANDBOX_API_URL = 'http://api.sandbox.iceberg.technology/v1/';
+	const SANDBOX_API_URL = 'https://api.sandbox.iceberg.technology/v1/';
 
 	/**
 	* The Single Sign On URL
@@ -116,12 +116,13 @@ class Iceberg
 	*/
 	private $_timestamp;
 
+
 	/**
-	* Boolean to know if we have to use sso
-	*
-	* @var string
-	*/
-	private $_use_sso;
+   * Anonymous
+   *
+   * @var boolean
+   */
+  private $_anonymous;
 
 	/**
 	* The user first name
@@ -384,6 +385,15 @@ class Iceberg
 		$this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
 		$this->current_user = $this->getUser();
 		$this->setIcebergApiKey($this->_single_sign_on_response->api_key);
+		$this->setAccessToken($this->_single_sign_on_response->access_token);
+		$this->setUsername($this->_single_sign_on_response->username);
+		if ($this->_single_sign_on_response->username != "Anonymous") {
+			$this->_anonymous = false;
+		} else {
+			$this->_anonymous = true;
+		}
+
+		return $this->_single_sign_on_response;
 	}
 
 	/**
@@ -472,7 +482,6 @@ class Iceberg
 	*/
 	public function __construct($config)
 	{
-		$this->_use_sso = false;
 		$this->_debug = false;
 
 		if (true === is_array($config)) {
@@ -482,6 +491,8 @@ class Iceberg
 				$this->setAccessToken($config['accessToken']);
 				$this->setUsername($config['username']);
 			}
+
+			$this->_anonymous = (isset($config["anonymous"]) && $config["anonymous"] == true) ? true : false;
 
 			if (isset($config['apiKey']))
 				$this->setApiKey($config['apiKey']);
@@ -504,20 +515,22 @@ class Iceberg
 	public function sso($config)
 	{
 		// if you want to access user data
-		$this->setApiKey($config['apiKey']);
-		$this->setApiSecret($config['apiSecret']);
-		if (isset($config['appNamespace'])) $this->setAppNamespace($config['appNamespace']);
-		$this->setEmail($config['email']);
-		$this->setFirstName($config['firstName']);
-		$this->setLastName($config['lastName']);
+		if (isset($config['apiKey']))
+      $this->setApiKey($config['apiKey']);
+    if (isset($config['apiSecret']))
+      $this->setApiSecret($config['apiSecret']);
+    if (isset($config['appNamespace'])) $this->setAppNamespace($config['appNamespace']);
+    $this->setEmail( isset($config['email']) ? $config['email'] : "");
+    $this->setFirstName( isset($config['firstName']) ? $config['firstName'] : "");
+    $this->setLastName( isset($config['lastName']) ? $config['lastName'] : "");
 
 		// We get the iceberg api key using the Single Sign On API
-		$this->setUser(array(
-			"email" => $config['email'],
-			"first_name" => $config['firstName'],
-			"last_name" => $config['lastName'],
-		));
-		return $this;
+    return $this->setUser(array(
+      "email" => isset($config['email']) ? $config['email'] : "",
+      "first_name" => isset($config['firstName']) ? $config['firstName'] : "",
+      "last_name" => isset($config['lastName']) ? $config['lastName'] : "",
+      "from_session_id" => isset($config['from_session_id']) ? $config['from_session_id'] : null,
+    ));
 	}
 
 	/**
@@ -546,15 +559,6 @@ class Iceberg
 		self::$_singleton = $iceberg;
 	}
 
-	/**
-	* Function to know if we use accessToken or SSO
-	*
-	* @return Boolean
-	*/
-	public function useSso()
-	{
-		return $this->_use_sso;
-	}
 
 	/**
 	* The Log Function
@@ -583,7 +587,7 @@ class Iceberg
 	* @param string [optional] $method     Request type GET|POST
 	* @return mixed
 	*/
-	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json')
+	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json', $content_type = 'Content-Type: application/json; charset=UTF-8')
 	{
 		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
 		{
@@ -597,21 +601,16 @@ class Iceberg
 
 		$apiCall = self::$_api_url . $path . (('GET' === $method) ? $paramString : null);
 
-		if ($this->useSso()) {
-			if (strtolower($this->_single_sign_on_response->username) == 'anonymous')
-				$h = $this->_single_sign_on_response->username . ":" . $this->getAppNamespace() .":".$this->_single_sign_on_response->api_key;
-			else
-				$h = $this->_single_sign_on_response->username . ":" .$this->_single_sign_on_response->api_key;
-			$headers = array(
-				$accept_type,
-				'Authorization: IcebergAccessToken '. $h
-			);
-		} else {
-			$headers = array(
-				$accept_type,
-				'Authorization: IcebergAccessToken '. $this->getUserName() . ":" . $this->getAccessToken()
-			);
-		}
+		if (!$this->_anonymous) {
+       $h = 'Authorization: IcebergAccessToken '. $this->getUsername() . ":" . $this->getAccessToken();
+    } else {
+      $h = 'Authorization: IcebergAccessToken anonymous:'. $this->getAppNamespace() . ":" . $this->getAccessToken();
+    }
+    $headers = array(
+      $content_type,
+      $accept_type,
+      $h
+    );
 
 		$ch = curl_init();
 
@@ -644,6 +643,11 @@ class Iceberg
 		if (false === $data) {
 			throw new Exception("Error: Call() - cURL error: " . curl_error($ch));
 		}
+		$http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($http_code >= 400) {
+      // We raise only on http code > 400
+      throw new exception ("We got an response with code " . $http_code . " and response " . $data . " from url: " .$apiCall );
+    }
 		curl_close($ch);
 		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
 	}
@@ -655,7 +659,6 @@ class Iceberg
 	*/
 	protected function _getSingleSignOnResponse($params = null)
 	{
-		$this->_use_sso = true;
 
 		if(is_null($params)) {
 			$params = array(
@@ -685,7 +688,6 @@ class Iceberg
 
 		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
 		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
-		// curl_setopt($ch,CURLOPT_USERAGENT,"ELB-HealthChecker/1.0");
 
 		$jsonData = $this->curlExec($ch);
 		$httpcode = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);
@@ -693,6 +695,11 @@ class Iceberg
 		if (false === $jsonData) {
 			throw new Exception("Error: _getSingleSignOnResponse() - cURL error: " . curl_error($ch));
 		}
+		$http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    if ($http_code >= 400) {
+      // We raise only on http code > 400
+      throw new exception ("We got an response with code " . $http_code . " and response " . $data . " from url: " .$apiCall );
+    }
 		curl_close($ch);
 
 		$jsonResponse = json_decode($jsonData);

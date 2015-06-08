@@ -1,6 +1,6 @@
 #Iceberg-API-PHP
 
-[![Build Status](https://travis-ci.org/Modizy/iceberg-api-php.svg?branch=master)](https://travis-ci.org/Modizy/iceberg-api-php)
+[![Build Status](https://travis-ci.org/Iceberg-Marketplace/iceberg-api-php.svg?branch=master)](https://travis-ci.org/Iceberg-Marketplace/iceberg-api-php)
 ## About
 
 PHP Wrapper around the Iceberg API
@@ -101,7 +101,7 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Category
      * Country
      * Feed
-     * Hook
+     * Webhook
      * Merchant
      * Order
      * OrderItem
@@ -227,8 +227,8 @@ Deletes an element from a specific ressource
 
 ```php
 
-	$my_cart = $iceberg->get("cart", 963)
-	$my_cart->delete();
+	$address = $iceberg->get("address", 963)
+	$address->delete();
 ```
 
 ## Order Process
@@ -330,6 +330,3 @@ Now that both addresses are set, we can place the order.
 - Install php unit : http://phpunit.de/getting-started.html
 - cd /to/the/iceberg/php/library/folder
 - run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests/IcebergTest.php'
-
-
-

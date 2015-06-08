@@ -158,7 +158,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testSandboxParamIsWellUsedForUrlToRequest()
 	{
 		$a = new Iceberg(array("sandbox" => true, "appNamespace" => "lolote"));
-		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "http://api.sandbox.iceberg.technology/v1/");
+		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.sandbox.iceberg.technology/v1/");
 		$a = new Iceberg(array("appNamespace" => "lolote"));
 		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.iceberg.technology/v1/");
 	}
@@ -347,63 +347,64 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testSaveObject()
 	{
 		$a = $this->getRealIcebergInstance();
-		$name = "random description ".rand(0, 1000);
-		$merchant = $a->get("address", 2628);
-		$merchant->name = $name;
-		$merchant->save();
-		$merchant_check = $a->get("address", 2628);
-		$this->assertEquals($merchant->name, $merchant_check->name);
+		$name = "random description ".uniqid();
+		$addresses = $a->get_list('address');
+		$address = $addresses[0];
+		$address->name = $name;
+		$address->save();
+		$address_check = $a->get("address", $address->id);
+		$this->assertEquals($address->name, $address_check->name);
 	}
 
 	// MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
 
-	public function testFullOrderProcess()
-	{
-		ini_set("memory_limit","1024M");
-		$a = $this->getRealIcebergInstance();
-		// We get the first merchant
-		$merchants = $a->get_list('merchant');
-		$merchant = $merchants[0];
-		$products = $merchant->get_catalog();
-		$product = $products->product;
-		$best_offer_id = (string) $product->best_offer->id;
-		$i = 0;
-		while ((int)$product->best_offer->variations->variation[$i]->stock === 0)
-		{
-			$i++;
-		}
-		$best_variation = (string) $product->best_offer->variations->variation[$i]->id;
-		$my_cart = $a->get('Cart');
-		$my_cart->addItem(array(
-			"offer_id" => $best_offer_id,
-			"variation_id" => $best_variation,
-			"quantity" => 1
-			));
-		$country = $a->get('country');
-		$address = $a->create('address', array(
-			"address" => "Address line 1",
-			"address2" => "Address line 2",
-			"city" => "St remy de provence",
-			"company" => "Sebfie",
-			"country" => "/v1/country/" . $country->id . "/",
-			// "default_billing" => true,
-			// "default_shipping" => true,
-			"digicode" => null,
-			"first_name" => "sebastien",
-			"floor" => null,
-			"last_name" => "fieloux",
-			"name" => "House",
-			"phone" => "0698674532",
-			"state" => null,
-			"status" => 10,
-			"zipcode" => "13210"
-			));
-		$my_cart->setBillingAddress($address->id);
-		$my_cart->setShippingAddress($address->id);
-		$order = $my_cart->createOrder();
-	  // Place the order
-		$order->updateStatus('authorizeOrder');
-		$this->assertEquals("60", $order->status);
-		echo "Your order id is $order->id";
-	}
+	// public function testFullOrderProcess()
+	// {
+	// 	ini_set("memory_limit","1024M");
+	// 	$a = $this->getRealIcebergInstance();
+	// 	// We get the first merchant
+	// 	$merchants = $a->get_list('merchant');
+	// 	$merchant = $merchants[0];
+	// 	$products = $merchant->get_catalog();
+	// 	$product = $products->product;
+	// 	$best_offer_id = (string) $product->best_offer->id;
+	// 	$i = 0;
+	// 	while ((int)$product->best_offer->variations->variation[$i]->stock === 0)
+	// 	{
+	// 		$i++;
+	// 	}
+	// 	$best_variation = (string) $product->best_offer->variations->variation[$i]->id;
+	// 	$my_cart = $a->get('Cart');
+	// 	$my_cart->addItem(array(
+	// 		"offer_id" => $best_offer_id,
+	// 		"variation_id" => $best_variation,
+	// 		"quantity" => 1
+	// 		));
+	// 	$country = $a->get('country');
+	// 	$address = $a->create('address', array(
+	// 		"address" => "Address line 1",
+	// 		"address2" => "Address line 2",
+	// 		"city" => "St remy de provence",
+	// 		"company" => "Sebfie",
+	// 		"country" => "/v1/country/" . $country->id . "/",
+	// 		// "default_billing" => true,
+	// 		// "default_shipping" => true,
+	// 		"digicode" => null,
+	// 		"first_name" => "sebastien",
+	// 		"floor" => null,
+	// 		"last_name" => "fieloux",
+	// 		"name" => "House",
+	// 		"phone" => "0698674532",
+	// 		"state" => null,
+	// 		"status" => 10,
+	// 		"zipcode" => "13210"
+	// 		));
+	// 	$my_cart->setBillingAddress($address->id);
+	// 	$my_cart->setShippingAddress($address->id);
+	// 	$order = $my_cart->createOrder();
+	//   // Place the order
+	// 	$order->updateStatus('authorizeOrder');
+	// 	$this->assertEquals("60", $order->status);
+	// 	echo "Your order id is $order->id";
+	// }
 }
