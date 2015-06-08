@@ -834,7 +834,7 @@ class Iceberg
 			$response = $this->Call($endpoint."/".$id."/", 'GET', $params, $accept_type);
 		else
 			$response = $this->Call($endpoint."/", 'GET', $params, $accept_type);
-		
+
 		$object->hydrate($response);
 		return $object;
 	}

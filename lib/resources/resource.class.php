@@ -169,13 +169,12 @@ abstract class Resource
             $this->hydrate($response);
             return ;
         }
-        if (strncmp("http", $data["resource_uri"], 4) == 0)
-            $addr = substr($data["resource_uri"], strlen(self::$Iceberg->getApiUrl()));
-        else if ($data["resource_uri"][0] == '/')
-            $addr = substr($data["resource_uri"], 1);
+        $url_params = parse_url($data["resource_uri"]);
+        $addr = str_replace("/v1", "",$url_params["path"]);
         foreach ($data as $key=>$value)
             if (!$value || is_array($value))
                 unset($data[$key]);
+
         return self::$Iceberg->Call($addr, 'PUT', $data, "Content-Type: application/json");
     }
 }
