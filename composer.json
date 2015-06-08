@@ -1,0 +1,5 @@
+{
+    "require-dev": {
+        "php-vcr/php-vcr": "^1.2"
+    }
+}
