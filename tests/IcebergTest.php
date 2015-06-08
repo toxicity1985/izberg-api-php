@@ -158,7 +158,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	public function testSandboxParamIsWellUsedForUrlToRequest()
 	{
 		$a = new Iceberg(array("sandbox" => true, "appNamespace" => "lolote"));
-		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "http://api.sandbox.iceberg.technology/v1/");
+		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.sandbox.iceberg.technology/v1/");
 		$a = new Iceberg(array("appNamespace" => "lolote"));
 		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.iceberg.technology/v1/");
 	}
