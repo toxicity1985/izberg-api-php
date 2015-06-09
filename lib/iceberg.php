@@ -681,8 +681,11 @@ class Iceberg
       // We raise only on http code > 400
       throw new exception ("We got an response with code " . $http_code . " and response " . $data . " from url: " .$apiCall );
     }
+
+		list($header, $body) = explode("\r\n\r\n", $data, 2);
+
 		curl_close($ch);
-		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
+		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($body) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($body) : $body);
 	}
 
 	/**
@@ -834,7 +837,6 @@ class Iceberg
 			$response = $this->Call($endpoint."/".$id."/", 'GET', $params, $accept_type);
 		else
 			$response = $this->Call($endpoint."/", 'GET', $params, $accept_type);
-
 		$object->hydrate($response);
 		return $object;
 	}
