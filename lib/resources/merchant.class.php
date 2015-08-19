@@ -4,11 +4,23 @@ require_once("resource.class.php");
 
 class Merchant extends Resource
 {
+	public function get_list($params, $accept_type) {
+		return self::$Iceberg->Call("application/" . self::$Iceberg->getAppNamespace() . "/merchants/", 'GET', $params, $accept_type);
+	}
+
 	public function get_catalog($merchant_id = null, $params = null, $accept_type = 'Accept: application/xml')
 	{
 		if (!$merchant_id)
 			$merchant_id = $this->id;
-		return self::$Iceberg->Call("merchant/".$merchant_id."/download_export", 'GET', $params, $accept_type);
+		$channel = $this->get_channel($merchant_id);
+		return self::$Iceberg->Call("product_channel/" . $channel->id . "/viewer/?format=xml", 'GET', $params, $accept_type);
+	}
+
+	public function get_channel($merchant_id = null, $params = null)
+	{
+		if (!$merchant_id)
+			$merchant_id = $this->id;
+		return self::$Iceberg->Call("merchant/".$merchant_id."/active_products_channel/", 'GET', $params);
 	}
 
 	public function getCurrent()
@@ -34,7 +46,7 @@ class Merchant extends Resource
 
 	public function getCatalog($params = null, $accept_type = 'Accept: application/xml')
 	{
-		return parent::$Iceberg->Call("merchant/$this->id/download_export/", "GET", $params , $accept_type);
+		return $this->get_catalog($this->id, $params , $accept_type);
 	}
 }
 
