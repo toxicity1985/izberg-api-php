@@ -14,11 +14,21 @@ class HttpUtil
      */
     public static function parseHeaders(array $headers)
     {
+        $headerGroups = array();
         $headerList = array();
 
+        // Collect matching headers into groups
         foreach ($headers as $line) {
             list ($key, $value) = explode(': ', $line);
-            $headerList[$key] = $value;
+            if (!isset($headerGroups[$key])) {
+                $headerGroups[$key] = array();
+            }
+            $headerGroups[$key][] = $value;
+        }
+        
+        // Collapse groups
+        foreach ($headerGroups as $key => $values) {
+            $headerList[$key] = implode(', ', $values);
         }
 
         return $headerList;
@@ -51,6 +61,8 @@ class HttpUtil
      */
     public static function parseResponse($response)
     {
+        $response = str_replace("HTTP/1.1 100 Continue\r\n\r\n", '', $response);
+            
         list($rawHeader, $rawBody) = explode("\r\n\r\n", $response, 2);
 
         // Parse headers and status.
@@ -98,5 +110,18 @@ class HttpUtil
         return 'HTTP/' . $response->getHttpVersion()
              . ' ' . $response->getStatusCode()
              . ' ' . $response->getStatusMessage();
+    }
+
+    /**
+     * Returns a HTTP status line with headers from specified response.
+     *
+     * @param Response $response
+     * @return string HTTP status line.
+     */
+    public static function formatAsStatusWithHeadersString(Response $response)
+    {
+        $headers = self::formatHeadersForCurl($response->getHeaders());
+        array_unshift($headers, self::formatAsStatusString($response));
+        return join("\r\n", $headers) . "\r\n\r\n";
     }
 }

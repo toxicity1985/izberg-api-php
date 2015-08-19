@@ -68,9 +68,7 @@ class CurlHelper
         $body = $response->getBody();
 
         if (!empty($curlOptions[CURLOPT_HEADER])) {
-            $headers = HttpUtil::formatHeadersForCurl($response->getHeaders());
-            array_unshift($headers, HttpUtil::formatAsStatusString($response));
-            $body = join("\r\n", $headers) . "\r\n\r\n" . $body;
+            $body = HttpUtil::formatAsStatusWithHeadersString($response) . $body;
         }
 
         if (isset($curlOptions[CURLOPT_WRITEFUNCTION])) {
@@ -101,7 +99,7 @@ class CurlHelper
             case 0: // 0 == array of all curl options
                 $info = array();
                 foreach (self::$curlInfoList as $option => $key) {
-                   $info[$key] = $response->getCurlInfo($key);
+                    $info[$key] = $response->getCurlInfo($key);
                 }
                 break;
             case CURLINFO_HTTP_CODE:
@@ -109,6 +107,9 @@ class CurlHelper
                 break;
             case CURLINFO_SIZE_DOWNLOAD:
                 $info = $response->getHeader('Content-Length');
+                break;
+            case CURLINFO_HEADER_SIZE:
+                $info =  mb_strlen(HttpUtil::formatAsStatusWithHeadersString($response), 'ISO-8859-1');
                 break;
             default:
                 $info = $response->getCurlInfo($option);
@@ -174,24 +175,39 @@ class CurlHelper
             case CURLOPT_HEADER:
             case CURLOPT_WRITEFUNCTION:
             case CURLOPT_HEADERFUNCTION:
+            case CURLOPT_UPLOAD:
                 // Ignore header, file and writer functions.
                 // These options are stored and will be handled later in handleOutput().
-                break;
-            case CURLOPT_READFUNCTION:
-                // Guzzle provides a callback to let curl read the body string.
-                // To get the body, this callback is called manually.
-                if (is_null($value)) {
-                    $request->setCurlOption($option, $value);
-                    break;
-                }
-                $bodySize = $request->getCurlOption(CURLOPT_INFILESIZE);
-                Assertion::notEmpty($bodySize, "To set a CURLOPT_READFUNCTION, CURLOPT_INFILESIZE must be set.");
-                $body = call_user_func_array($value, array($curlHandle, fopen('php://memory', 'r'), $bodySize));
-                $request->setBody($body);
                 break;
             default:
                 $request->setCurlOption($option, $value);
                 break;
         }
+    }
+    
+    /**
+     * Makes sure we've properly handled the POST body, such as ensuring that
+     * CURLOPT_INFILESIZE is set if CURLOPT_READFUNCTION is set.
+     *
+     * @param Request  $request Request to set cURL option to.
+     * @param resource $curlHandle cURL handle associated with the request.
+     */
+    public static function validateCurlPOSTBody(Request $request, $curlHandle = null)
+    {
+        $readFunction = $request->getCurlOption(CURLOPT_READFUNCTION);
+        if (is_null($readFunction)) {
+            return;
+        }
+        
+        // Guzzle 4 sometimes sets the post body in CURLOPT_POSTFIELDS even if
+        // they have already set CURLOPT_READFUNCTION.
+        if ($request->getBody()){
+            return;
+        }
+        
+        $bodySize = $request->getCurlOption(CURLOPT_INFILESIZE);
+        Assertion::notEmpty($bodySize, "To set a CURLOPT_READFUNCTION, CURLOPT_INFILESIZE must be set.");
+        $body = call_user_func_array($readFunction, array($curlHandle, fopen('php://memory', 'r'), $bodySize));
+        $request->setBody($body);
     }
 }
