@@ -8,98 +8,60 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 	// ======================================
 	// TESTS FUNCTIONS
 	// ======================================
+	/**
+   * @before
+   */
+  public function startRecording()
+  {
+    \VCR\VCR::turnOn();
+    \VCR\VCR::configure()->setStorage('json');
 
+  }
 
-	public function getDefaultOptions()
-	{
-		return array(
-			"appNamespace" => "app_of_test",
-			"apiKey" => "123234_api_key",
-			"apiSecret" => "123234_api_secret",
-			"email" => "myemail@example.com",
-			"firstName" => "myfirstName",
-			"lastName" => "myLastName"
-		);
-	}
+	/**
+   * @after
+   */
+  public function stopRecording()
+  {
+		// To stop recording requests, eject the cassette
+		\VCR\VCR::eject();
 
-
-	public function getRealIcebergInstance()
-	{
-		$a = $this->getRealIcebergInstanceWithToken();
-		return $a;
-	}
-
-
-	public function getRealIcebergInstanceWithToken()
-	{
-		$a = $this->getIceberg(array(
-				"username" => getenv("USERNAME1"),
-				"accessToken" => getenv("TOKEN1"),
-				"sandbox" => true
-		));
-		return $a;
-	}
+		// Turn off VCR to stop intercepting requests
+		\VCR\VCR::turnOff();
+  }
 
 	public function getIceberg($options = array())
 	{
 		if (empty($options)) {
-			$options = $this->getDefaultOptions();
+			$options = array(
+					"appNamespace" => "lolote",
+					"username" => getenv("USERNAME1"),
+					"accessToken" => getenv("TOKEN1"),
+					"sandbox" => true
+			);
 		}
-		$a = new Iceberg($options);
-		return $a;
+		$mock = $this->getMock('Iceberg', array('setTimestamp', 'getTimestamp'), array($options));
+
+		$mock->expects($this->any())
+	    ->method('setTimestamp')
+	    ->will($this->returnValue(true));
+
+		$mock->expects($this->any())
+	    ->method('getTimestamp')
+	    ->will($this->returnValue(1439912480));
+
+		return $mock;
 	}
 
-	public function mockSuccessSingleSignOnResponse($options = array())
+	public function sso(&$a)
 	{
-		return $this->mockIceberg($options, true);
-	}
-
-	public function mockErrorSingleSignOnResponse($options = array())
-	{
-		return $this->mockIceberg($options, false);
-	}
-
-	public function mockIceberg($options= array(), $success = true)
-	{
-		if (empty($options)) {
-			$options = $this->getDefaultOptions();
-		}
-		$methods = ($success) ? array('_getSingleSignOnResponse') : array('curlGetInfo', 'curlExec');
-		$stub = $this->getMockBuilder('Iceberg')
-			->setMethods($methods)
-			->disableOriginalConstructor()
-			->getMock();
-		$array = $success ? $this->getRealAnswer() : $this->getErrorAnswer();
-		$response = (object) $array;
-		if ($success) {
-			$stub->expects($this->any())
-				->method('_getSingleSignOnResponse')
-				->will($this->returnValue($response));
-		} else {
-			$stub->expects($this->any())
-				->method('curlGetInfo')
-				->will($this->returnValue(300));
-			$stub->expects($this->any())
-				->method('curlExec')
-				->will($this->returnValue(json_encode("[error: 'mymessage']")));
-		}
-		$stub->__construct($options);
-		$stub->sso($options);
-		return $stub;
-	}
-
-	public function getRealAnswer()
-	{
-		return json_decode(file_get_contents(dirname(__FILE__) ."/mocks/user/sso/response.json"));
-	}
-
-	public function getErrorAnswer()
-	{
-		return array(
-			"error" => array(
-				"msg" => "An error happened"
-			)
-		);
+		$a->sso(array(
+      "email"     => "myemail@yahoo.fr",
+			"apiKey"    => "d43fce48-836c-43d3-9ddb-7da2e70af9f1",
+			"apiSecret" => "6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0",
+      "firstName" => "my_firstname",
+      "lastName"  => "my_lastname"
+    ));
 	}
 
 
@@ -109,17 +71,21 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testConstructorUseParams()
 	{
-		$a = $this->mockSuccessSingleSignOnResponse();
-		// // Assert
-		$this->assertEquals("app_of_test", $a->getAppNamespace());
-		$this->assertEquals("123234_api_key", $a->getApiKey());
-		$this->assertEquals("123234_api_secret", $a->getApiSecret());
-		$this->assertEquals("myemail@example.com", $a->getEmail());
-		$this->assertEquals("myfirstName", $a->getFirstName());
-		$this->assertEquals("myLastName", $a->getLastName());
+		\VCR\VCR::insertCassette('testConstructorUseParams');
+
+		$a = $this->getIceberg();
+		$this->sso($a);
+		// Assertions
+		$this->assertEquals("lolote", $a->getAppNamespace());
+		$this->assertEquals("d43fce48-836c-43d3-9ddb-7da2e70af9f1", $a->getApiKey());
+		$this->assertEquals("6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0", $a->getApiSecret());
+		$this->assertEquals("myemail@yahoo.fr", $a->getEmail());
+		$this->assertEquals("my_firstname", $a->getFirstName());
+		$this->assertEquals("my_lastname", $a->getLastName());
 		$this->assertEquals(Iceberg::DEFAULT_CURRENCY, $a->getCurrency());
 		$this->assertEquals(Iceberg::DEFAULT_SHIPPING_COUNTRY, $a->getShippingCountry());
 	}
+
 	public function testSandboxParamIsWellUsedForUrlToRequest()
 	{
 		$a = new Iceberg(array("sandbox" => true, "appNamespace" => "lolote"));
@@ -128,75 +94,106 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.iceberg.technology/v1/");
 	}
 
-	public function testConstructorGetIcebergApiKey()
-	{
-		$a = $this->mockSuccessSingleSignOnResponse();
-		$this->assertEquals("16b4f0955d476d9e823fad070a6b77daac09fb76", $a->getIcebergApiKey());
-	}
 
 	public function testShouldThrowErrorIfNotGoodResponseCode()
 	{
-		$this->setExpectedException('GenericException', "Error: from Iceberg API - error: [error: 'mymessage']");
-		$a = $this->mockErrorSingleSignOnResponse();
+		\VCR\VCR::insertCassette('testShouldThrowErrorIfNotGoodResponseCode');
+
+		$this->setExpectedException('Exception', "Error: from Iceberg API - error: {\"errors\": [\"message_auth is invalid\"]}");
+		$a = $this->getIceberg();
+		$a->sso(array(
+      "email"     => "myemail@yahoo.fr",
+			"apiKey"    => "d43fce48-836c-43d3-9ddb-7da2e70af9f1",
+			"apiSecret" => "6cb0c550-9686",
+      "firstName" => "my_firstname",
+      "lastName"  => "my_lastname"
+    ));
 	}
 
 	public function testGetInstanceShoudlReturnTheCreatedInstance()
 	{
-		$a = $this->mockSuccessSingleSignOnResponse();
+		\VCR\VCR::insertCassette('testGetInstanceShoudlReturnTheCreatedInstance');
+
+		$a = $this->getIceberg();
+		$this->sso($a);
+
 		$this->assertEquals($a, Iceberg::getInstance());
 	}
 
+
 	public function testGetProductShouldReturnProducts()
 	{
-		$a = $this->getRealIcebergInstance();
+		\VCR\VCR::insertCassette('testGetProductShouldReturnProducts');
+
+		$a = $this->getIceberg();
 		$products = $a->get_list("product");
 		$this->assertTrue(is_array($products));
+    $this->assertNotEmpty($products);
 	}
 
 	public function testGetFullProductImportShouldReturnAllProducts()
 	{
-		$b = $this->getRealIcebergInstance();
-		$merchant = $b->get("merchant", 15);
+		\VCR\VCR::insertCassette('testGetFullProductImportShouldReturnAllProducts');
+
+		$a = $this->getIceberg();
+		$merchant = $a->get("Merchant", 15);
 		$result = $merchant->get_catalog();
+    $this->assertInstanceOf('SimpleXMLElement', $result);
 	}
 
 	public function testGetProductSchemaShouldReturnProductSchema()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testGetProductSchemaShouldReturnProductSchema');
+
+		$a = $this->getIceberg();
 		$product = $a->get_schema("product");
+    $this->assertNotNull($product->allowed_detail_http_methods);
 	}
 
 	public function testGetCategoriesShouldReturnCategories()
 	{
-		$a = $this->getRealIcebergInstance();
-		$Categories = $a->get_list("category");
-		$this->assertTrue(is_array($Categories));
+    \VCR\VCR::insertCassette('testGetCategoriesShouldReturnCategories');
+
+		$a = $this->getIceberg();
+		$categories = $a->get_list("category");
+		$this->assertTrue(is_array($categories));
+		$this->assertNotEmpty($categories);
 	}
 
 	public function testGetMerchantsShouldReturnMerchants()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testGetMerchantsShouldReturnMerchants');
+
+		$a = $this->getIceberg();
 		$merchants = $a->get_list("merchant");
 		$this->assertTrue(is_array($merchants));
+    $this->assertNotEmpty($merchants);
 	}
 
 	public function testGetMerchantsSchemaShouldReturnMerchantsSchema()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testGetMerchantsSchemaShouldReturnMerchantsSchema');
+
+		$a = $this->getIceberg();
 		$merchantSchema = $a->get_schema("merchant");
-		$this->assertTrue(is_a($merchantSchema, "stdClass"));
+    $this->assertInstanceOf('stdClass', $merchantSchema);
+    $this->assertNotNull($merchantSchema->allowed_detail_http_methods);
 	}
 
 	public function testgetCartShouldReturnACart()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testgetCartShouldReturnACart');
+
+		$a = $this->getIceberg();
 		$cart = $a->get("cart");
 		$this->assertArrayHasKey("id", (array)$cart);
 	}
 
 	public function testgetCartItemsShouldReturnCartItems()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testgetCartItemsShouldReturnCartItems');
+
+		$a = $this->getIceberg();
 		$cart = $a->get("cart");
 		$items = $cart->getItems();
 		$this->assertTrue(is_array($cart->items));
@@ -204,7 +201,9 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testinDebugModeCartShouldReturnDebugEqualToTrue()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testinDebugModeCartShouldReturnDebugEqualToTrue');
+
+		$a = $this->getIceberg();
 		$a->setDebug(true);
 		$cart = $a->create('cart');
 		$this->assertTrue($cart->debug);
@@ -212,50 +211,71 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testAddCartItemShouldAddItem()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testAddCartItemShouldAddItem');
+
+		$a = $this->getIceberg();
 
 		$my_cart = $a->get('Cart');
 		$number_items = count($my_cart->getItems());
+    $this->assertTrue($number_items==0);
 		$my_cart->addItem(array(
 			"offer_id" => 27254,
 			"variation_id" => 60873,
 			"quantity" => 1
 		));
+    \VCR\VCR::eject();
+
+    \VCR\VCR::insertCassette('testAddCartItemShouldAddItem2');
 		$cart = $a->get('Cart');
 		$items = $cart->getItems();
 		$this->assertEquals(count($items), $number_items + 1);
 		// We remove the item
+    // TODO Uncomment this once the bug is fixed in staging
 		$firstItem = $items[0];
 		$firstItem->delete();
+    \VCR\VCR::eject();
+
+    \VCR\VCR::insertCassette('testAddCartItemShouldAddItem3');
 		$items = $cart->getItems();
 		$this->assertEquals(count($items), $number_items);
 	}
 
 	public function testNewCartItemShouldCreateANewCart()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testNewCartItemShouldCreateANewCart1');
+		$a = $this->getIceberg();
 		$cart = $a->create('cart');
+    \VCR\VCR::eject();
+
+    \VCR\VCR::insertCassette('testNewCartItemShouldCreateANewCart2');
 		$cart1 = $a->create('cart');
 		$this->assertNotSame($cart1->id, $cart->id);
+    \VCR\VCR::eject();
 	}
 
 	public function testgetAdressesShouldReturnAdresses()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testgetAdressesShouldReturnAdresses');
+
+		$a = $this->getIceberg();
 		$addresses = $a->get_list("address");
 		$this->assertTrue(is_array($addresses));
 	}
 
 	public function testgetCountryShouldReturnTheCountry()
 	{
-		$a = $this->getRealIcebergInstance();
+		\VCR\VCR::insertCassette('testgetCountryShouldReturnTheCountry');
+
+		$a = $this->getIceberg();
 		$country = $a->get("country");
 		$this->assertEquals($country->code, 'FR');
 	}
 
 	public function testcreateAddressesShouldReturnACreatedAddress()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testcreateAddressesShouldReturnACreatedAddress');
+
+		$a = $this->getIceberg();
 		$country = $a->get("country");
 		$addr = $a->create("address", array(
 			"address" => "Address line 1",
@@ -283,8 +303,9 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testGetAddressShouldReturnAddress()
 	{
-		$a = $this->getRealIcebergInstance();
+    \VCR\VCR::insertCassette('testGetAddressShouldReturnAddress');
 
+		$a = $this->getIceberg();
 		$country = $a->get("country");
 		$addr = $a->create("address", array(
 			"address" => "Address line 1",
@@ -311,8 +332,10 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	public function testSaveObject()
 	{
-		$a = $this->getRealIcebergInstance();
-		$name = "random description ".uniqid();
+    \VCR\VCR::insertCassette('testSaveObject');
+
+		$a = $this->getIceberg();
+		$name = "random description 12345";
 		$addresses = $a->get_list('address');
 		$address = $addresses[0];
 		$address->name = $name;
@@ -323,53 +346,54 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 
 	// MAIN FUNCTION TO TEST THE FULL ORDER PROCESS
 
-	// public function testFullOrderProcess()
-	// {
-	// 	ini_set("memory_limit","1024M");
-	// 	$a = $this->getRealIcebergInstance();
-	// 	// We get the first merchant
-	// 	$merchants = $a->get_list('merchant');
-	// 	$merchant = $merchants[0];
-	// 	$products = $merchant->get_catalog();
-	// 	$product = $products->product;
-	// 	$best_offer_id = (string) $product->best_offer->id;
-	// 	$i = 0;
-	// 	while ((int)$product->best_offer->variations->variation[$i]->stock === 0)
-	// 	{
-	// 		$i++;
-	// 	}
-	// 	$best_variation = (string) $product->best_offer->variations->variation[$i]->id;
-	// 	$my_cart = $a->get('Cart');
-	// 	$my_cart->addItem(array(
-	// 		"offer_id" => $best_offer_id,
-	// 		"variation_id" => $best_variation,
-	// 		"quantity" => 1
-	// 		));
-	// 	$country = $a->get('country');
-	// 	$address = $a->create('address', array(
-	// 		"address" => "Address line 1",
-	// 		"address2" => "Address line 2",
-	// 		"city" => "St remy de provence",
-	// 		"company" => "Sebfie",
-	// 		"country" => "/v1/country/" . $country->id . "/",
-	// 		// "default_billing" => true,
-	// 		// "default_shipping" => true,
-	// 		"digicode" => null,
-	// 		"first_name" => "sebastien",
-	// 		"floor" => null,
-	// 		"last_name" => "fieloux",
-	// 		"name" => "House",
-	// 		"phone" => "0698674532",
-	// 		"state" => null,
-	// 		"status" => 10,
-	// 		"zipcode" => "13210"
-	// 		));
-	// 	$my_cart->setBillingAddress($address->id);
-	// 	$my_cart->setShippingAddress($address->id);
-	// 	$order = $my_cart->createOrder();
-	//   // Place the order
-	// 	$order->updateStatus('authorizeOrder');
-	// 	$this->assertEquals("60", $order->status);
-	// 	echo "Your order id is $order->id";
-	// }
+	public function testFullOrderProcess()
+	{
+		\VCR\VCR::insertCassette('testFullOrderProcess');
+
+    ini_set("memory_limit","1024M");
+		$a = $this->getIceberg();
+		// We get the first merchant
+		$merchants = $a->get_list('merchant');
+		$merchant = $merchants[0];
+		$products = $merchant->get_catalog();
+		$product = $products->product;
+		$best_offer_id = (string) $product->best_offer->id;
+		$i = 0;
+		while ((int)$product->best_offer->variations->variation[$i]->stock === 0)
+		{
+			$i++;
+		}
+		$best_variation = (string) $product->best_offer->variations->variation[$i]->id;
+		$my_cart = $a->get('Cart');
+		$my_cart->addItem(array(
+			"offer_id" => $best_offer_id,
+			"variation_id" => $best_variation,
+			"quantity" => 1
+			));
+		$country = $a->get('country');
+		$address = $a->create('address', array(
+			"address" => "Address line 1",
+			"address2" => "Address line 2",
+			"city" => "St remy de provence",
+			"company" => "Sebfie",
+			"country" => "/v1/country/" . $country->id . "/",
+			// "default_billing" => true,
+			// "default_shipping" => true,
+			"digicode" => null,
+			"first_name" => "sebastien",
+			"floor" => null,
+			"last_name" => "fieloux",
+			"name" => "House",
+			"phone" => "0698674532",
+			"state" => null,
+			"status" => 10,
+			"zipcode" => "13210"
+			));
+		$my_cart->setBillingAddress($address->id);
+		$my_cart->setShippingAddress($address->id);
+		$order = $my_cart->createOrder();
+	  // Place the order
+		$order->updateStatus('authorizeOrder');
+		$this->assertEquals("60", $order->status);
+	}
 }
