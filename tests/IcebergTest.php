@@ -355,7 +355,7 @@ class IcebergTest extends PHPUnit_Framework_TestCase
 		// We get the first merchant
 		$merchants = $a->get_list('merchant');
 		$merchant = $merchants[0];
-		$products = $merchant->get_catalog();
+		$products = $merchant->getCatalog();
 		$product = $products->product;
 		$best_offer_id = (string) $product->best_offer->id;
 		$i = 0;
