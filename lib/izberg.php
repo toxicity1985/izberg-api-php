@@ -859,7 +859,7 @@ class Izberg
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".ucfirst($resource);
 
-		$list = $this->get_list_response($resource, $params = null, $accept_type = "Accept: application/json");
+		$list = $this->get_list_response($resource, $params, $accept_type);
 		$object_list = array();
 		foreach ($list->objects as $object)
 		{
@@ -878,7 +878,7 @@ class Izberg
 	**/
 	public function get_list_meta($resource, $params = null, $accept_type = "Accept: application/json")
 	{
-		$result = $this->get_list_response($resource, $params = null, $accept_type = "Accept: application/json");
+		$result = $this->get_list_response($resource, $params, $accept_type);
 		return $result->meta;
 	}
 

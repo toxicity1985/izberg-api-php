@@ -107,9 +107,9 @@ abstract class Resource
                 if (is_object($value))
                 {
                     $classname = $this->parseUri($key);
-                    if (!class_exists($classname) && isset($value->resource_uri))
+                    if (!class_exists($classname, false) && isset($value->resource_uri))
                         $classname = $this->parseUri($value->resource_uri);
-                    if (!class_exists($classname))
+                    if (!class_exists($classname, false))
                         continue ;
                     else
                     {
@@ -121,7 +121,7 @@ abstract class Resource
                 else if (is_array($value) && isset($value[0]->resource_uri))
                 {
                     $classname = $this->parseUri($value[0]->resource_uri);
-                    if (!class_exists($classname))
+                    if (!class_exists($classname, false))
                         continue ;
                     $list = array();
                     foreach ($value as $val) {
