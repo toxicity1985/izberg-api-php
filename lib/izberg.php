@@ -572,10 +572,13 @@ class Izberg
 		date_default_timezone_set("Europe/Paris");
 		if (false === self::LOGS)
 			return ;
-		if (false === is_dir($path))
+
+		if (false === is_dir($path)) {
 			$path = __DIR__."/../log/";
-		else if (substr($path, -1) != '/')
+			if (!is_dir($path)) mkdir($path);
+		} else if (substr($path, -1) != '/')
 			$path .= '/';
+
 		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ").$message."\n", FILE_APPEND);
 	}
 
@@ -635,8 +638,8 @@ class Izberg
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-		curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
 		if ('POST' === $method)
 		{
@@ -708,8 +711,8 @@ class Izberg
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-		curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
 		$jsonData = $this->curlExec($ch);
 		// list($headers, $jsonData) = explode("\r\n\r\n", $jsonData, 2);
