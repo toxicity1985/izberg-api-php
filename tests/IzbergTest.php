@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set("display_errors", 1);
-require_once "lib/iceberg.php";
+require_once "lib/izberg.php";
 
 class IzbergTest extends PHPUnit_Framework_TestCase
 {
@@ -30,7 +30,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 		\VCR\VCR::turnOff();
   }
 
-	public function getIceberg($options = array())
+	public function getIzberg($options = array())
 	{
 		if (empty($options)) {
 			$options = array(
@@ -40,7 +40,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 					"sandbox" => true
 			);
 		}
-		$mock = $this->getMock('Iceberg', array('setTimestamp', 'getTimestamp'), array($options));
+		$mock = $this->getMock('Izberg', array('setTimestamp', 'getTimestamp'), array($options));
 
 		$mock->expects($this->any())
 	    ->method('setTimestamp')
@@ -73,7 +73,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
 		\VCR\VCR::insertCassette('testConstructorUseParams');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$this->sso($a);
 		// Assertions
 		$this->assertEquals("lolote", $a->getAppNamespace());
@@ -82,15 +82,15 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals("myemail@yahoo.fr", $a->getEmail());
 		$this->assertEquals("my_firstname", $a->getFirstName());
 		$this->assertEquals("my_lastname", $a->getLastName());
-		$this->assertEquals(Iceberg::DEFAULT_CURRENCY, $a->getCurrency());
-		$this->assertEquals(Iceberg::DEFAULT_SHIPPING_COUNTRY, $a->getShippingCountry());
+		$this->assertEquals(Izberg::DEFAULT_CURRENCY, $a->getCurrency());
+		$this->assertEquals(Izberg::DEFAULT_SHIPPING_COUNTRY, $a->getShippingCountry());
 	}
 
 	public function testSandboxParamIsWellUsedForUrlToRequest()
 	{
-		$a = new Iceberg(array("sandbox" => true, "appNamespace" => "lolote"));
+		$a = new Izberg(array("sandbox" => true, "appNamespace" => "lolote"));
 		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.sandbox.iceberg.technology/v1/");
-		$a = new Iceberg(array("appNamespace" => "lolote"));
+		$a = new Izberg(array("appNamespace" => "lolote"));
 		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.iceberg.technology/v1/");
 	}
 
@@ -99,8 +99,8 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
 		\VCR\VCR::insertCassette('testShouldThrowErrorIfNotGoodResponseCode');
 
-		$this->setExpectedException('Exception', "Error: from Iceberg API - error: {\"errors\": [\"message_auth is invalid\"]}");
-		$a = $this->getIceberg();
+		$this->setExpectedException('Exception', "Error: from Izberg API - error: {\"errors\": [\"message_auth is invalid\"]}");
+		$a = $this->getIzberg();
 		$a->sso(array(
       "email"     => "myemail@yahoo.fr",
 			"apiKey"    => "d43fce48-836c-43d3-9ddb-7da2e70af9f1",
@@ -114,10 +114,10 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
 		\VCR\VCR::insertCassette('testGetInstanceShoudlReturnTheCreatedInstance');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$this->sso($a);
 
-		$this->assertEquals($a, Iceberg::getInstance());
+		$this->assertEquals($a, Izberg::getInstance());
 	}
 
 
@@ -125,7 +125,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
 		\VCR\VCR::insertCassette('testGetProductShouldReturnProducts');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$products = $a->get_list("product");
 		$this->assertTrue(is_array($products));
     $this->assertNotEmpty($products);
@@ -135,7 +135,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
 		\VCR\VCR::insertCassette('testGetFullProductImportShouldReturnAllProducts');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$merchant = $a->get("Merchant", 15);
 		$result = $merchant->get_catalog();
     $this->assertInstanceOf('SimpleXMLElement', $result);
@@ -145,7 +145,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testGetProductSchemaShouldReturnProductSchema');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$product = $a->get_schema("product");
     $this->assertNotNull($product->allowed_detail_http_methods);
 	}
@@ -154,7 +154,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testGetCategoriesShouldReturnCategories');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$categories = $a->get_list("category");
 		$this->assertTrue(is_array($categories));
 		$this->assertNotEmpty($categories);
@@ -164,7 +164,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testGetMerchantsShouldReturnMerchants');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$merchants = $a->get_list("merchant");
 		$this->assertTrue(is_array($merchants));
     $this->assertNotEmpty($merchants);
@@ -174,7 +174,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testGetMerchantsSchemaShouldReturnMerchantsSchema');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$merchantSchema = $a->get_schema("merchant");
     $this->assertInstanceOf('stdClass', $merchantSchema);
     $this->assertNotNull($merchantSchema->allowed_detail_http_methods);
@@ -184,7 +184,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testgetCartShouldReturnACart');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$cart = $a->get("cart");
 		$this->assertArrayHasKey("id", (array)$cart);
 	}
@@ -193,7 +193,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testgetCartItemsShouldReturnCartItems');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$cart = $a->get("cart");
 		$items = $cart->getItems();
 		$this->assertTrue(is_array($cart->items));
@@ -203,7 +203,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testinDebugModeCartShouldReturnDebugEqualToTrue');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$a->setDebug(true);
 		$cart = $a->create('cart');
 		$this->assertTrue($cart->debug);
@@ -213,7 +213,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testAddCartItemShouldAddItem');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 
 		$my_cart = $a->get('Cart');
 		$number_items = count($my_cart->getItems());
@@ -243,7 +243,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	public function testNewCartItemShouldCreateANewCart()
 	{
     \VCR\VCR::insertCassette('testNewCartItemShouldCreateANewCart1');
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$cart = $a->create('cart');
     \VCR\VCR::eject();
 
@@ -257,7 +257,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testgetAdressesShouldReturnAdresses');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$addresses = $a->get_list("address");
 		$this->assertTrue(is_array($addresses));
 	}
@@ -266,7 +266,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
 		\VCR\VCR::insertCassette('testgetCountryShouldReturnTheCountry');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$country = $a->get("country");
 		$this->assertEquals($country->code, 'FR');
 	}
@@ -275,7 +275,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testcreateAddressesShouldReturnACreatedAddress');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$country = $a->get("country");
 		$addr = $a->create("address", array(
 			"address" => "Address line 1",
@@ -305,7 +305,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testGetAddressShouldReturnAddress');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$country = $a->get("country");
 		$addr = $a->create("address", array(
 			"address" => "Address line 1",
@@ -334,7 +334,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
     \VCR\VCR::insertCassette('testSaveObject');
 
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		$name = "random description 12345";
 		$addresses = $a->get_list('address');
 		$address = $addresses[0];
@@ -351,7 +351,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 		\VCR\VCR::insertCassette('testFullOrderProcess');
 
     ini_set("memory_limit","1024M");
-		$a = $this->getIceberg();
+		$a = $this->getIzberg();
 		// We get the first merchant
 		$merchants = $a->get_list('merchant');
 		$merchant = $merchants[0];
