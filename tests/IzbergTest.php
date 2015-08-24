@@ -40,7 +40,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 					"sandbox" => true
 			);
 		}
-		$mock = $this->getMock('Izberg', array('setTimestamp', 'getTimestamp'), array($options));
+		$mock = $this->getMock('Izberg', array('setTimestamp', 'getTimestamp', 'log'), array($options));
 
 		$mock->expects($this->any())
 	    ->method('setTimestamp')
@@ -86,6 +86,18 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(Izberg::DEFAULT_SHIPPING_COUNTRY, $a->getShippingCountry());
 	}
 
+	public function testWeUseApiUrlInParams()
+	{
+	   $a = new Izberg(array(
+         "appNamespace" => "lolote",
+         "username" => getenv("USERNAME1"),
+         "accessToken" => getenv("TOKEN1"),
+         "sandbox" => true,
+         'apiUrl' => "http://www.myurl.com"
+     ));
+     $this->assertEquals($a->getApiUrl(), "http://www.myurl.com");
+	}
+
 	public function testSandboxParamIsWellUsedForUrlToRequest()
 	{
 		$a = new Izberg(array("sandbox" => true, "appNamespace" => "lolote"));
@@ -99,7 +111,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 	{
 		\VCR\VCR::insertCassette('testShouldThrowErrorIfNotGoodResponseCode');
 
-		$this->setExpectedException('Exception', "Error: from Izberg API - error: {\"errors\": [\"message_auth is invalid\"]}");
+		$this->setExpectedException('BadRequestException');
 		$a = $this->getIzberg();
 		$a->sso(array(
       "email"     => "myemail@yahoo.fr",
@@ -126,6 +138,11 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 		\VCR\VCR::insertCassette('testGetProductShouldReturnProducts');
 
 		$a = $this->getIzberg();
+
+    // Check we log request
+    $a->expects($this->exactly(2))
+	    ->method('log');
+
 		$products = $a->get_list("product");
 		$this->assertTrue(is_array($products));
     $this->assertNotEmpty($products);

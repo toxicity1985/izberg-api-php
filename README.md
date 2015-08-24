@@ -104,9 +104,9 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Webhook
      * Merchant
      * Order
-     * Order
-
-
+     * OrderItem
+     * Webhook
+     
      * MerchantOrder
      * Payment
      * User

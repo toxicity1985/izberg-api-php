@@ -1,5 +1,4 @@
 <?php
-
 /**
  * GenericException Representation of generic exception
  */
@@ -17,7 +16,6 @@ class GenericException extends Exception
     parent::__construct($message, $code, $previous);
   }
 }
-
 /**
 * Parent class for all of the HTTP related exceptions.
 * All HTTP status/error related exceptions should extend this class so
@@ -28,13 +26,11 @@ if (!class_exists('HttpException')) {
   class HttpException extends RuntimeException {
   }
 }
-
 /**
 * Represents an HTTP 400 error.
 *
 */
 class BadRequestException extends HttpException {
-
 /**
 * Constructor
 *
@@ -47,14 +43,11 @@ class BadRequestException extends HttpException {
       }
       parent::__construct($message, $code);
   }
-
 }
-
 /**
 * Represents an HTTP 40error.
 */
 class UnauthorizedException extends HttpException {
-
 /**
 * Constructor
 *
@@ -67,14 +60,11 @@ class UnauthorizedException extends HttpException {
       }
       parent::__construct($message, $code);
   }
-
 }
-
 /**
 * Represents an HTTP 403 error.
 */
 class ForbiddenException extends HttpException {
-
 /**
 * Constructor
 *
@@ -87,14 +77,11 @@ class ForbiddenException extends HttpException {
       }
       parent::__construct($message, $code);
   }
-
 }
-
 /**
 * Represents an HTTP 404 error.
 */
 class NotFoundException extends HttpException {
-
 /**
  * Constructor
  *
@@ -107,14 +94,11 @@ class NotFoundException extends HttpException {
         }
         parent::__construct($message, $code);
     }
-
 }
-
 /**
  * Represents an HTTP 405 error.
  */
 class MethodNotAllowedException extends HttpException {
-
 /**
  * Constructor
  *
@@ -127,14 +111,11 @@ class MethodNotAllowedException extends HttpException {
         }
         parent::__construct($message, $code);
     }
-
 }
-
 /**
  * Represents an HTTP 500 error.
  */
 class InternalErrorException extends HttpException {
-
 /**
  * Constructor
  *
@@ -147,5 +128,4 @@ class InternalErrorException extends HttpException {
         }
         parent::__construct($message, $code);
     }
-
 }

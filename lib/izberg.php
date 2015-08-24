@@ -14,7 +14,7 @@
 
 require_once __DIR__."/../HtmlToText/HtmlToText.php";
 require_once __DIR__."/resources/loader.php";
-
+require_once __DIR__."/exceptions.php";
 
 class Izberg
 {
@@ -294,7 +294,7 @@ class Izberg
 		$this->setTimestamp(time());
 		$to_compose = array($email, $first_name, $last_name, $this->getTimestamp());
 		if (is_null($this->getApiSecret())) {
-			throw new exception("To use SSO you have to set the api_secret");
+			throw new GenericException("To use SSO you have to set the api_secret");
 		}
 		$message_auth = hash_hmac('sha1', implode(";", $to_compose), $this->getApiSecret());
 		return $message_auth;
@@ -485,6 +485,7 @@ class Izberg
 		$this->_debug = false;
 		if (true === is_array($config)) {
 			self::$_api_url = (isset($config['sandbox']) && $config['sandbox'] === true) ? self::SANDBOX_API_URL : self::PRODUCTION_API_URL;
+			self::$_api_url = (isset($config['apiUrl']))? $config['apiUrl']: self::$_api_url;
 
 			if (isset($config['accessToken'])) {
 				$this->setAccessToken($config['accessToken']);
@@ -507,7 +508,7 @@ class Izberg
 			Ice\Resource::setIzberg($this);
 
 		} else {
-			throw new Exception("Error: __construct() - Configuration data is missing.");
+			throw new GenericException("Error: __construct() - Configuration data is missing.");
 		}
 	}
 
@@ -542,7 +543,7 @@ class Izberg
 		if (self::$_singleton) {
 			return self::$_singleton;
 		} else {
-			throw new Exception("You should create a first validated Izberg instance");
+			throw new GenericException("You should create a first validated Izberg instance");
 		}
 	}
 
@@ -568,15 +569,30 @@ class Izberg
 	**/
 	public function log($message, $level="error", $path = null)
 	{
-		date_default_timezone_set("Europe/berlin");
+		date_default_timezone_set("Europe/Paris");
 		if (false === self::LOGS)
 			return ;
 		if (false === is_dir($path))
-			$path = null;
+			$path = __DIR__."/../log/";
 		else if (substr($path, -1) != '/')
 			$path .= '/';
-		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ")." : ".$message."\n", FILE_APPEND);
+		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ").$message."\n", FILE_APPEND);
 	}
+
+	/**
+	 * Get the inline user token
+	 * @return String
+	 */
+	public function getInlineUserToken()
+	{
+		if (!$this->_anonymous) {
+			 $h = 'IcebergAccessToken '. $this->getUsername() . ":" . $this->getAccessToken();
+		} else {
+			$h = 'IcebergAccessToken anonymous:'. $this->getAppNamespace() . ":" . $this->getAccessToken();
+		}
+		return "Authorization: " . $h;
+	}
+
 	/**
 	* The call operator
 	*
@@ -600,15 +616,10 @@ class Izberg
 
 		$apiCall = self::$_api_url . $path . (('GET' === $method) ? $paramString : null);
 
-		if (!$this->_anonymous) {
-       $h = 'Authorization: IzbergAccessToken '. $this->getUsername() . ":" . $this->getAccessToken();
-    } else {
-      $h = 'Authorization: IzbergAccessToken anonymous:'. $this->getAppNamespace() . ":" . $this->getAccessToken();
-    }
     $headers = array(
       $content_type,
       $accept_type,
-      $h
+      $this->getInlineUserToken()
     );
 
 		$ch = curl_init();
@@ -643,14 +654,20 @@ class Izberg
 		}
 
 		$data = $this->curlExec($ch);
+		// We log request
+		$this->log($method." | ".$apiCall, "call");
+		if (!is_null($paramString)) {
+			$this->log("PARAMS | ".ltrim(ltrim($paramString, '&'), '?'), "call", __DIR__."/log");
+		}
+		$this->log("DATE | ".$data, "call");
 
 		if (false === $data) {
-			throw new Exception("Error: Call() - cURL error: " . curl_error($ch));
+			throw new GenericException("Error: Call() - cURL error: " . curl_error($ch));
 		}
 		$http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     if ($http_code >= 400) {
       // We raise only on http code > 400
-      throw new exception ("We got an response with code " . $http_code . " and response " . $data . " from url: " .$apiCall );
+      throw new GenericException ("We got an response with code " . $http_code . " and response " . $data . " from url: " .$apiCall );
     }
 		curl_close($ch);
 		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
@@ -700,7 +717,7 @@ class Izberg
 		$httpcode = $this->curlGetInfo($ch, CURLINFO_HTTP_CODE);
 
 		if (false === $jsonData) {
-			throw new Exception("Error: _getSingleSignOnResponse() - cURL error: " . curl_error($ch));
+			throw new GenericException("Error: _getSingleSignOnResponse() - cURL error: " . curl_error($ch));
 		}
 		$http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
@@ -708,7 +725,30 @@ class Izberg
 		$jsonResponse = json_decode($jsonData);
 		// We display the error only if the HTTP code is different of 200..300
 		if (preg_match("/2\d{2}/", $httpcode)  == 0) {
-			throw new Exception("Error: from Izberg API - error: " . $jsonData);
+			$message = "Error: from Iceberg API - error: " . print_r($jsonResponse,true);
+			switch ($httpcode){
+				case '400':
+					throw new BadRequestException($message);
+					break;
+				case '401':
+					throw new UnauthorizedException($message);
+					break;
+				case '403':
+					throw new ForbiddenException($message);
+					break;
+				case '404':
+					throw new NotFoundException($message);
+					break;
+				case '405':
+					throw new MethodNotAllowedException($message);
+					break;
+				case '500':
+					throw new InternalErrorException($message);
+					break;
+				default:
+					throw new GenericException($message);
+					break;
+			}
 		}
 		return $jsonResponse;
 	}
@@ -737,7 +777,7 @@ class Izberg
 		{
 			$result = $this->Call('user/me/');
 		}
-		catch (Exception $e)
+		catch (GenericException $e)
 		{
 			$result = false;
 		}
