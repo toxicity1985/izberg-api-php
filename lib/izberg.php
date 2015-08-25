@@ -845,9 +845,9 @@ class Izberg
 		if (!$endpoint)
 			$endpoint =  $object->getName();
 		if ($id)
-			$response = $this->Call($endpoint."/".$id."/", 'GET', $params, $accept_type);
+			$response = $this->Call($object->getPrefix() . $endpoint."/".$id."/", 'GET', $params, $accept_type);
 		else
-			$response = $this->Call($endpoint."/", 'GET', $params, $accept_type);
+			$response = $this->Call($object->getPrefix() . $endpoint."/", 'GET', $params, $accept_type);
 		$object->hydrate($response);
 		return $object;
 	}
@@ -863,12 +863,12 @@ class Izberg
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".ucfirst($resource);
-		$handler = new $resource();
+		$object = new $resource();
 		// If we override the get_list method
 		if (method_exists($resource, "get_list")) {
-			return $handler->get_list($params, $accept_type);
+			return $object->get_list($params, $accept_type);
 		} else {
-			return $this->Call($handler->getName()."/", 'GET', $params, $accept_type);
+			return $this->Call($object->getPrefix() . $object->getName()."/", 'GET', $params, $accept_type);
 		}
 	}
 
@@ -919,7 +919,7 @@ class Izberg
 		if ($this->getDebug())
 			$params['debug'] = 'true';
 		$object = new $resource();
-		$response = $this->Call($object->getName()."/", 'POST', $params, $accept_type);
+		$response = $this->Call($object->getPrefix() . $object->getName()."/", 'POST', $params, $accept_type);
 		$object->hydrate($response);
 		return $object;
 	}
@@ -936,12 +936,13 @@ class Izberg
 			throw new Exception(__METHOD__." needs a valid ID and a valid Resource Name");
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".$resource;
-		$obj = new $resource();
-		$name = $obj->getName();
-		$response = $this->Call($name . "/" . $id . "/", 'PUT', $params, $accept_type);
-		$obj->hydrate($response);
-		return $obj;
+		$object = new $resource();
+		$name = $object->getName();
+		$response = $this->Call($object->getPrefix() . $name . "/" . $id . "/", 'PUT', $params, $accept_type);
+		$object->hydrate($response);
+		return $object;
 	}
+	
 
 	/**
 	* Get Schema
@@ -951,6 +952,9 @@ class Izberg
 	**/
 	public function get_schema($resource, $params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->Call($resource."/schema/", 'GET', $params, $accept_type);
+		if (strncmp("Ice\\", $resource, 4) != 0)
+			$resource = "Ice\\".$resource;
+		$object = new $resource();
+		return $this->Call($object->getPrefix() . $object->getName() ."/schema/", 'GET', $params, $accept_type);
 	}
 }

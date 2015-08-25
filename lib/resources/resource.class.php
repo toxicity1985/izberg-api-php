@@ -50,6 +50,11 @@ abstract class Resource
         return ($this->_name);
     }
 
+    public function getPrefix()
+    {
+      return "";
+    }
+
     public function __construct()
     {
         if (self::$Izberg === null)

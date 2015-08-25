@@ -209,6 +209,38 @@ class IzbergTest extends PHPUnit_Framework_TestCase
     $this->assertNotNull($merchantSchema->allowed_detail_http_methods);
 	}
 
+	public function testGetLocalesConfigShouldReturnLocales()
+	{
+    \VCR\VCR::insertCassette('testGetLocalesConfigShouldReturnLocales');
+
+		$a = $this->getIzberg();
+		$locale = $a->get("localeConfig");
+    $this->assertEquals($locale->languages, []);
+	}
+
+	public function testAddALocale()
+	{
+    \VCR\VCR::insertCassette('testAddALocale');
+
+		$a = $this->getIzberg();
+		$locale = $a->get("localeConfig");
+    $locale->update(array("languages" => ["fr","en"]));
+	}
+
+  public function testDeleteALocale()
+	{
+    \VCR\VCR::insertCassette('testDeleteALocale');
+
+		$a = $this->getIzberg();
+		$locale = $a->get("localeConfig");
+    $locale->update(array("languages" => ["fr","it"]));
+    $this->assertEquals($locale->languages, ["fr","it"]);
+    $locale->delete();
+    $locale = $a->get("localeConfig");
+    $this->assertEquals($locale->languages, []);
+	}
+
+
 	public function testgetCartShouldReturnACart()
 	{
     \VCR\VCR::insertCassette('testgetCartShouldReturnACart');

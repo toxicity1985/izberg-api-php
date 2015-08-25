@@ -15,3 +15,4 @@ require_once "product.class.php";
 require_once "resource.class.php";
 require_once "review.class.php";
 require_once "user.class.php";
+require_once "locale.class.php";
