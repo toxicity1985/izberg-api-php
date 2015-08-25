@@ -284,8 +284,8 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 		\VCR\VCR::insertCassette('testgetCountryShouldReturnTheCountry');
 
 		$a = $this->getIzberg();
-		$country = $a->get("country");
-		$this->assertEquals($country->code, 'FR');
+		$country = $a->get("country", null, array("code" => "IT"));
+		$this->assertEquals($country->code, 'IT');
 	}
 
 	public function testcreateAddressesShouldReturnACreatedAddress()
