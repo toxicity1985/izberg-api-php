@@ -645,6 +645,7 @@ class Izberg
     $headers = array(
       $content_type,
       $accept_type,
+			"Content-Language: " . $this->getLocale(),
       $this->getInlineUserToken()
     );
 
@@ -950,6 +951,6 @@ class Izberg
 	**/
 	public function get_schema($resource, $params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->Call($resource."/schema", 'GET', $params, $accept_type);
+		return $this->Call($resource."/schema/", 'GET', $params, $accept_type);
 	}
 }
