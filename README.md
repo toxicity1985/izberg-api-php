@@ -375,4 +375,4 @@ Now that both addresses are set, we can place the order.
 
 - Install php unit : http://phpunit.de/getting-started.html
 - cd /to/the/izberg/php/library/folder
-- run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests/IzbergTest.php'
+- run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests'
