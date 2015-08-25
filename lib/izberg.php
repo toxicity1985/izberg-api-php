@@ -46,6 +46,11 @@ class Izberg
 	*/
 	const DEFAULT_SHIPPING_COUNTRY = 'FR';
 
+	/**
+	* The Default shipping country
+	*/
+	const DEFAULT_LOCALE = 'fr';
+
 
 	/**
 	* The singleton of Izberg instance
@@ -144,6 +149,13 @@ class Izberg
 	* @var string
 	*/
 	private $_shipping_country;
+
+	/**
+	* The application locale
+	*
+	* @var string
+	*/
+	private $_locale;
 
 	/**
 	* The user currency
@@ -282,6 +294,15 @@ class Izberg
 	*/
 	public function getTimestamp() {
 		return $this->_timestamp;
+	}
+
+	/**
+	* Locale Getter
+	*
+	* @return String
+	*/
+	public function getLocale() {
+		return $this->_locale;
 	}
 
 	/**
@@ -486,6 +507,8 @@ class Izberg
 		if (true === is_array($config)) {
 			self::$_api_url = (isset($config['sandbox']) && $config['sandbox'] === true) ? self::SANDBOX_API_URL : self::PRODUCTION_API_URL;
 			self::$_api_url = (isset($config['apiUrl']))? $config['apiUrl']: self::$_api_url;
+
+			$this->_locale = isset($config["locale"]) ? $config["locale"] : self::DEFAULT_LOCALE;
 
 			if (isset($config['accessToken'])) {
 				$this->setAccessToken($config['accessToken']);

@@ -98,6 +98,18 @@ class IzbergTest extends PHPUnit_Framework_TestCase
      $this->assertEquals($a->getApiUrl(), "http://www.myurl.com");
 	}
 
+	public function testWeUseLocaleInParams()
+	{
+	   $a = new Izberg(array(
+         "appNamespace" => "lolote",
+         "username" => getenv("USERNAME1"),
+         "accessToken" => getenv("TOKEN1"),
+         "sandbox" => true,
+         'locale' => "it"
+     ));
+     $this->assertEquals($a->getLocale(), "it");
+	}
+
 	public function testSandboxParamIsWellUsedForUrlToRequest()
 	{
 		$a = new Izberg(array("sandbox" => true, "appNamespace" => "lolote"));
@@ -286,6 +298,27 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 		$a = $this->getIzberg();
 		$country = $a->get("country", null, array("code" => "IT"));
 		$this->assertEquals($country->code, 'IT');
+	}
+
+	public function testGetrootCategories()
+	{
+		\VCR\VCR::insertCassette('testGetrootCategories');
+
+		$a = $this->getIzberg();
+		$categories = $a->get_list("category");
+    $this->assertTrue(count($categories) > 0);
+    $this->assertEquals($categories[0]->get_category_endpoint(), "category");
+	}
+
+  public function testGetSubcategories()
+	{
+		\VCR\VCR::insertCassette('testGetSubcategories');
+
+		$a = $this->getIzberg();
+    $category = new Ice\Category();
+    $category->id = 1021;
+    $subCategories = $category->get_childs();
+    $this->assertTrue(count($subCategories) > 0);
 	}
 
 	public function testcreateAddressesShouldReturnACreatedAddress()
