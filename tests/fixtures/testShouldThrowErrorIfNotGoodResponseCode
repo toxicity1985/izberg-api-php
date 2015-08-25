@@ -18,10 +18,10 @@
             "Access-Control-Allow-Origin": "*",
             "Content-Language": "fr",
             "Content-Type": "application\/json",
-            "Date": "Wed, 19 Aug 2015 13:30:37 GMT",
+            "Date": "Tue, 25 Aug 2015 12:52:24 GMT",
             "Server": "nginx\/1.6.2",
             "Vary": "Accept-Language, Cookie, Host",
-            "X-Release-Version": "20150819T120846",
+            "X-Release-Version": "20150825T135231",
             "Content-Length": "39",
             "Connection": "keep-alive"
         },

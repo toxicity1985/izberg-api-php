@@ -22,7 +22,7 @@ class GenericException extends Exception
 * catch blocks can be specifically typed.
 *
 */
-if (!class_exists('HttpException')) {
+if (!class_exists('HttpException', false)) {
   class HttpException extends RuntimeException {
   }
 }

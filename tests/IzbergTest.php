@@ -98,6 +98,18 @@ class IzbergTest extends PHPUnit_Framework_TestCase
      $this->assertEquals($a->getApiUrl(), "http://www.myurl.com");
 	}
 
+	public function testWeUseLocaleInParams()
+	{
+	   $a = new Izberg(array(
+         "appNamespace" => "lolote",
+         "username" => getenv("USERNAME1"),
+         "accessToken" => getenv("TOKEN1"),
+         "sandbox" => true,
+         'locale' => "it"
+     ));
+     $this->assertEquals($a->getLocale(), "it");
+	}
+
 	public function testSandboxParamIsWellUsedForUrlToRequest()
 	{
 		$a = new Izberg(array("sandbox" => true, "appNamespace" => "lolote"));
@@ -197,6 +209,38 @@ class IzbergTest extends PHPUnit_Framework_TestCase
     $this->assertNotNull($merchantSchema->allowed_detail_http_methods);
 	}
 
+	public function testGetLocalesConfigShouldReturnLocales()
+	{
+    \VCR\VCR::insertCassette('testGetLocalesConfigShouldReturnLocales');
+
+		$a = $this->getIzberg();
+		$locale = $a->get("localeConfig");
+    $this->assertEquals($locale->languages, []);
+	}
+
+	public function testAddALocale()
+	{
+    \VCR\VCR::insertCassette('testAddALocale');
+
+		$a = $this->getIzberg();
+		$locale = $a->get("localeConfig");
+    $locale->update(array("languages" => ["fr","en"]));
+	}
+
+  public function testDeleteALocale()
+	{
+    \VCR\VCR::insertCassette('testDeleteALocale');
+
+		$a = $this->getIzberg();
+		$locale = $a->get("localeConfig");
+    $locale->update(array("languages" => ["fr","it"]));
+    $this->assertEquals($locale->languages, ["fr","it"]);
+    $locale->delete();
+    $locale = $a->get("localeConfig");
+    $this->assertEquals($locale->languages, []);
+	}
+
+
 	public function testgetCartShouldReturnACart()
 	{
     \VCR\VCR::insertCassette('testgetCartShouldReturnACart');
@@ -284,8 +328,29 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 		\VCR\VCR::insertCassette('testgetCountryShouldReturnTheCountry');
 
 		$a = $this->getIzberg();
-		$country = $a->get("country");
-		$this->assertEquals($country->code, 'FR');
+		$country = $a->get("country", null, array("code" => "IT"));
+		$this->assertEquals($country->code, 'IT');
+	}
+
+	public function testGetrootCategories()
+	{
+		\VCR\VCR::insertCassette('testGetrootCategories');
+
+		$a = $this->getIzberg();
+		$categories = $a->get_list("category");
+    $this->assertTrue(count($categories) > 0);
+    $this->assertEquals($categories[0]->get_category_endpoint(), "category");
+	}
+
+  public function testGetSubcategories()
+	{
+		\VCR\VCR::insertCassette('testGetSubcategories');
+
+		$a = $this->getIzberg();
+    $category = new Ice\Category();
+    $category->id = 1021;
+    $subCategories = $category->get_childs();
+    $this->assertTrue(count($subCategories) > 0);
 	}
 
 	public function testcreateAddressesShouldReturnACreatedAddress()

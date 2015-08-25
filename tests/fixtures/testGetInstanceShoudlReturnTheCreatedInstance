@@ -21,10 +21,10 @@
             "Cache-Control": "no-cache",
             "Content-Language": "fr",
             "Content-Type": "application\/json",
-            "Date": "Wed, 19 Aug 2015 13:30:37 GMT",
+            "Date": "Tue, 25 Aug 2015 12:52:25 GMT",
             "Server": "nginx\/1.6.2",
             "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
-            "X-Release-Version": "20150819T120846",
+            "X-Release-Version": "20150825T135231",
             "Content-Length": "1557",
             "Connection": "keep-alive"
         },
@@ -38,6 +38,7 @@
             "Host": "api.sandbox.iceberg.technology",
             "Content-Type": "application\/json; charset=UTF-8",
             "Accept": "application\/json",
+            "Content-Language": "fr",
             "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
         }
     },
@@ -53,10 +54,10 @@
             "Cache-Control": "no-cache",
             "Content-Language": "fr",
             "Content-Type": "application\/json",
-            "Date": "Wed, 19 Aug 2015 13:30:38 GMT",
+            "Date": "Tue, 25 Aug 2015 12:52:25 GMT",
             "Server": "nginx\/1.6.2",
             "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
-            "X-Release-Version": "20150819T120846",
+            "X-Release-Version": "20150825T135231",
             "Content-Length": "1353",
             "Connection": "keep-alive"
         },

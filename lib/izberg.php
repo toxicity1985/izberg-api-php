@@ -46,6 +46,11 @@ class Izberg
 	*/
 	const DEFAULT_SHIPPING_COUNTRY = 'FR';
 
+	/**
+	* The Default shipping country
+	*/
+	const DEFAULT_LOCALE = 'fr';
+
 
 	/**
 	* The singleton of Izberg instance
@@ -144,6 +149,13 @@ class Izberg
 	* @var string
 	*/
 	private $_shipping_country;
+
+	/**
+	* The application locale
+	*
+	* @var string
+	*/
+	private $_locale;
 
 	/**
 	* The user currency
@@ -282,6 +294,15 @@ class Izberg
 	*/
 	public function getTimestamp() {
 		return $this->_timestamp;
+	}
+
+	/**
+	* Locale Getter
+	*
+	* @return String
+	*/
+	public function getLocale() {
+		return $this->_locale;
 	}
 
 	/**
@@ -487,6 +508,8 @@ class Izberg
 			self::$_api_url = (isset($config['sandbox']) && $config['sandbox'] === true) ? self::SANDBOX_API_URL : self::PRODUCTION_API_URL;
 			self::$_api_url = (isset($config['apiUrl']))? $config['apiUrl']: self::$_api_url;
 
+			$this->_locale = isset($config["locale"]) ? $config["locale"] : self::DEFAULT_LOCALE;
+
 			if (isset($config['accessToken'])) {
 				$this->setAccessToken($config['accessToken']);
 				$this->setUsername($config['username']);
@@ -572,10 +595,13 @@ class Izberg
 		date_default_timezone_set("Europe/Paris");
 		if (false === self::LOGS)
 			return ;
-		if (false === is_dir($path))
+
+		if (false === is_dir($path)) {
 			$path = __DIR__."/../log/";
-		else if (substr($path, -1) != '/')
+			if (!is_dir($path)) mkdir($path);
+		} else if (substr($path, -1) != '/')
 			$path .= '/';
+
 		file_put_contents($path."log-".$level."-".date("m-d").".txt", date("H:i:s | ").$message."\n", FILE_APPEND);
 	}
 
@@ -619,6 +645,7 @@ class Izberg
     $headers = array(
       $content_type,
       $accept_type,
+			"Content-Language: " . $this->getLocale(),
       $this->getInlineUserToken()
     );
 
@@ -635,8 +662,8 @@ class Izberg
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-		curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
 		if ('POST' === $method)
 		{
@@ -708,8 +735,8 @@ class Izberg
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-		curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
+		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
 		$jsonData = $this->curlExec($ch);
 		// list($headers, $jsonData) = explode("\r\n\r\n", $jsonData, 2);
@@ -818,9 +845,9 @@ class Izberg
 		if (!$endpoint)
 			$endpoint =  $object->getName();
 		if ($id)
-			$response = $this->Call($endpoint."/".$id."/", 'GET', $params, $accept_type);
+			$response = $this->Call($object->getPrefix() . $endpoint."/".$id."/", 'GET', $params, $accept_type);
 		else
-			$response = $this->Call($endpoint."/", 'GET', $params, $accept_type);
+			$response = $this->Call($object->getPrefix() . $endpoint."/", 'GET', $params, $accept_type);
 		$object->hydrate($response);
 		return $object;
 	}
@@ -836,12 +863,12 @@ class Izberg
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".ucfirst($resource);
-		$handler = new $resource();
+		$object = new $resource();
 		// If we override the get_list method
 		if (method_exists($resource, "get_list")) {
-			return $handler->get_list($params, $accept_type);
+			return $object->get_list($params, $accept_type);
 		} else {
-			return $this->Call($handler->getName()."/", 'GET', $params, $accept_type);
+			return $this->Call($object->getPrefix() . $object->getName()."/", 'GET', $params, $accept_type);
 		}
 	}
 
@@ -856,7 +883,7 @@ class Izberg
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".ucfirst($resource);
 
-		$list = $this->get_list_response($resource, $params = null, $accept_type = "Accept: application/json");
+		$list = $this->get_list_response($resource, $params, $accept_type);
 		$object_list = array();
 		foreach ($list->objects as $object)
 		{
@@ -875,7 +902,7 @@ class Izberg
 	**/
 	public function get_list_meta($resource, $params = null, $accept_type = "Accept: application/json")
 	{
-		$result = $this->get_list_response($resource, $params = null, $accept_type = "Accept: application/json");
+		$result = $this->get_list_response($resource, $params, $accept_type);
 		return $result->meta;
 	}
 
@@ -892,7 +919,7 @@ class Izberg
 		if ($this->getDebug())
 			$params['debug'] = 'true';
 		$object = new $resource();
-		$response = $this->Call($object->getName()."/", 'POST', $params, $accept_type);
+		$response = $this->Call($object->getPrefix() . $object->getName()."/", 'POST', $params, $accept_type);
 		$object->hydrate($response);
 		return $object;
 	}
@@ -909,12 +936,13 @@ class Izberg
 			throw new Exception(__METHOD__." needs a valid ID and a valid Resource Name");
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".$resource;
-		$obj = new $resource();
-		$name = $obj->getName();
-		$response = $this->Call($name . "/" . $id . "/", 'PUT', $params, $accept_type);
-		$obj->hydrate($response);
-		return $obj;
+		$object = new $resource();
+		$name = $object->getName();
+		$response = $this->Call($object->getPrefix() . $name . "/" . $id . "/", 'PUT', $params, $accept_type);
+		$object->hydrate($response);
+		return $object;
 	}
+	
 
 	/**
 	* Get Schema
@@ -924,6 +952,9 @@ class Izberg
 	**/
 	public function get_schema($resource, $params = null, $accept_type = 'Accept: application/json')
 	{
-		return $this->Call($resource."/schema", 'GET', $params, $accept_type);
+		if (strncmp("Ice\\", $resource, 4) != 0)
+			$resource = "Ice\\".$resource;
+		$object = new $resource();
+		return $this->Call($object->getPrefix() . $object->getName() ."/schema/", 'GET', $params, $accept_type);
 	}
 }

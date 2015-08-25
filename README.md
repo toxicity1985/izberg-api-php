@@ -106,7 +106,7 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Order
      * OrderItem
      * Webhook
-
+     * LocaleConfig
      * MerchantOrder
      * Payment
      * User
@@ -350,6 +350,25 @@ Now that both addresses are set, we can place the order.
     $hook->url = "http://update.com";
     $hook = $hook->save();
 
+```
+
+## Locale
+
+####GET
+
+```php
+
+    $a = $this->getIzberg();
+	$locale = $a->get("localeConfig");
+```
+
+####Update and reset using delete
+
+```php
+
+	$locale->update(array("languages" => ["fr","it"]));
+    $this->assertEquals($locale->languages, ["fr","it"]);
+    $locale->delete();
 ```
 
 ### Run tests
