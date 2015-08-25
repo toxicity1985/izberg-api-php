@@ -215,7 +215,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 
 		$a = $this->getIzberg();
 		$locale = $a->get("localeConfig");
-    $this->assertEquals($locale->languages, []);
+    $this->assertEquals($locale->languages, array());
 	}
 
 	public function testAddALocale()
@@ -224,7 +224,7 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 
 		$a = $this->getIzberg();
 		$locale = $a->get("localeConfig");
-    $locale->update(array("languages" => ["fr","en"]));
+    $locale->update(array("languages" => array("fr","en")));
 	}
 
   public function testDeleteALocale()
@@ -233,11 +233,11 @@ class IzbergTest extends PHPUnit_Framework_TestCase
 
 		$a = $this->getIzberg();
 		$locale = $a->get("localeConfig");
-    $locale->update(array("languages" => ["fr","it"]));
-    $this->assertEquals($locale->languages, ["fr","it"]);
+    $locale->update(array("languages" => array("fr","it")));
+    $this->assertEquals($locale->languages, array("fr","it"));
     $locale->delete();
     $locale = $a->get("localeConfig");
-    $this->assertEquals($locale->languages, []);
+    $this->assertEquals($locale->languages, array());
 	}
 
 
