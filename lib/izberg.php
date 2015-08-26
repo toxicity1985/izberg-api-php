@@ -634,7 +634,7 @@ class Izberg
 		{
 			$paramString = json_encode($params);
 		}
-		else if (isset($params) && is_array($params)) {
+		else if (isset($params) && is_array($params) && !empty($params)) {
 			$paramString = '?' . http_build_query($params);
 		} else {
 			$paramString = null;
@@ -942,7 +942,7 @@ class Izberg
 		$object->hydrate($response);
 		return $object;
 	}
-	
+
 
 	/**
 	* Get Schema

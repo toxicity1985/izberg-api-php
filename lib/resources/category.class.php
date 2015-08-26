@@ -8,7 +8,7 @@ class Category extends Resource
 
   public function get_list($params, $accept_type) {
     if (is_null(self::$resource_endpoint) || empty($params)) {
-      $response = self::$Izberg->Call("application/" . self::$Izberg->getAppNamespace() . "/locales_config/root_categories/", 'GET', array(), $accept_type);
+      $response = self::$Izberg->Call("application/" . self::$Izberg->getAppNamespace() . "/locale_config/root_category/", 'GET', array(), $accept_type);
 
       // We set the endpoint
       self::$resource_endpoint = $response->meta->resource_endpoint;

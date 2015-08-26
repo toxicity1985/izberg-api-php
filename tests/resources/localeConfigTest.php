@@ -51,6 +51,7 @@ class localeConfigTest extends BaseTester
     $locale->update(array("languages" => array("fr","it")));
     $this->assertEquals($locale->languages, array("fr","it"));
     $locale->delete();
+    \VCR\VCR::insertCassette('testDeleteALocaleBis');
     $locale = $a->get("localeConfig");
     $this->assertEquals($locale->languages, array());
   }
