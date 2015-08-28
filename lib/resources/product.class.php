@@ -16,11 +16,14 @@ class ProductOffer extends Resource
 {
 }
 
+class ProductOfferVariation extends Resource
+{
+}
+
 
 class ProductVariation extends Resource
 {
 }
-
 
 class OfferImage extends Resource
 {
