@@ -15,6 +15,7 @@
 require_once __DIR__."/../HtmlToText/HtmlToText.php";
 require_once __DIR__."/resources/loader.php";
 require_once __DIR__."/exceptions.php";
+require_once __DIR__."/helper.php";
 
 class Izberg
 {
@@ -59,6 +60,12 @@ class Izberg
 	*/
 	protected static $_singleton;
 
+	/**
+	* The singleton of Ice\Helper instance
+	*
+	* @var Ice\Helper
+	*/
+	protected static $_helper;
 
 	/**
 	* The API base URL
@@ -505,6 +512,8 @@ class Izberg
 	{
 		$this->_debug = false;
 		if (true === is_array($config)) {
+			$this->helper = new Ice\Helper();
+
 			self::$_api_url = (isset($config['sandbox']) && $config['sandbox'] === true) ? self::SANDBOX_API_URL : self::PRODUCTION_API_URL;
 			self::$_api_url = (isset($config['apiUrl']))? $config['apiUrl']: self::$_api_url;
 
@@ -582,6 +591,14 @@ class Izberg
 		self::$_singleton = $izberg;
 	}
 
+	/**
+	* Get helper instance
+	* @return Ice\Helper
+	*/
+	public function getHelper()
+	{
+		return $this->helper;
+	}
 
 	/**
 	* The Log Function
@@ -859,7 +876,7 @@ class Izberg
 	* @returns object
 	*
 	**/
-	public function get_list_response($resource, $params = null, $accept_type = "Accept: application/json")
+	public function get_list_response($resource, $params = null, $accept_type = "Accept: application/json", $url = null)
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".ucfirst($resource);
@@ -868,7 +885,11 @@ class Izberg
 		if (method_exists($resource, "get_list")) {
 			return $object->get_list($params, $accept_type);
 		} else {
-			return $this->Call($object->getPrefix() . $object->getName()."/", 'GET', $params, $accept_type);
+			// If we specified url
+			if (is_null($url)) {
+				$url = $object->getPrefix() . $object->getName()."/";
+			}
+			return $this->Call($url, 'GET', $params, $accept_type);
 		}
 	}
 
@@ -878,12 +899,12 @@ class Izberg
 	* @returns object
 	*
 	**/
-	public function get_list($resource, $params = null, $accept_type = "Accept: application/json")
+	public function get_list($resource, $params = null, $accept_type = "Accept: application/json", $url = null)
 	{
 		if (strncmp("Ice\\", $resource, 4) != 0)
 			$resource = "Ice\\".ucfirst($resource);
 
-		$list = $this->get_list_response($resource, $params, $accept_type);
+		$list = $this->get_list_response($resource, $params, $accept_type, $url);
 		$object_list = array();
 		foreach ($list->objects as $object)
 		{

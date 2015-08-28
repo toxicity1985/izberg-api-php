@@ -22,10 +22,10 @@
             "Cache-Control": "no-cache",
             "Content-Language": "fr",
             "Content-Type": "application\/json",
-            "Date": "Wed, 26 Aug 2015 09:29:27 GMT",
+            "Date": "Fri, 28 Aug 2015 09:13:27 GMT",
             "Server": "nginx\/1.6.2",
             "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
-            "X-Release-Version": "20150826T111253",
+            "X-Release-Version": "20150826T145558",
             "Content-Length": "936",
             "Connection": "keep-alive"
         },

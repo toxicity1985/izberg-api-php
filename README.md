@@ -98,7 +98,8 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Address
      * Brand
      * Cart
-     * Category
+     * ApplicationCategory (Categories of your application)
+     * Category (Categories created by izberg)
      * Country
      * Feed
      * Webhook

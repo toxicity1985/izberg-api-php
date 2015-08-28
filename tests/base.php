@@ -24,7 +24,6 @@ abstract class BaseTester extends PHPUnit_Framework_TestCase
 		$mock->expects($this->any())
 	    ->method('getTimestamp')
 	    ->will($this->returnValue(1439912480));
-
 		return $mock;
 	}
 
