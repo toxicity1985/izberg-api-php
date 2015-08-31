@@ -84,7 +84,7 @@ abstract class Resource
     **/
     public function log($message, $level="error", $path = null)
     {
-        date_default_timezone_set("Europe/berlin");
+        // date_default_timezone_set("Europe/Paris");
         if (false === Izberg::LOGS)
             return ;
         if (false === is_dir($path))

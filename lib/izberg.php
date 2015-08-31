@@ -609,7 +609,7 @@ class Izberg
 	**/
 	public function log($message, $level="error", $path = null)
 	{
-		date_default_timezone_set("Europe/Paris");
+		// date_default_timezone_set("Europe/Paris");
 		if (false === self::LOGS)
 			return ;
 
