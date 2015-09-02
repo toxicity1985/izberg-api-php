@@ -15,7 +15,7 @@ abstract class BaseTester extends PHPUnit_Framework_TestCase
 					"sandbox" => true
 			);
 		}
-		$mock = $this->getMock('Izberg', array('setTimestamp', 'getTimestamp', 'log'), array($options));
+		$mock = $this->getMock('Izberg\Izberg', array('setTimestamp', 'getTimestamp', 'log'), array($options));
 
 		$mock->expects($this->any())
 	    ->method('setTimestamp')

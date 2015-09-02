@@ -38,13 +38,13 @@ class izbergTest extends BaseTester
 		$this->assertEquals("myemail@yahoo.fr", $a->getEmail());
 		$this->assertEquals("my_firstname", $a->getFirstName());
 		$this->assertEquals("my_lastname", $a->getLastName());
-		$this->assertEquals(Izberg::DEFAULT_CURRENCY, $a->getCurrency());
-		$this->assertEquals(Izberg::DEFAULT_SHIPPING_COUNTRY, $a->getShippingCountry());
+		$this->assertEquals(Izberg\Izberg::DEFAULT_CURRENCY, $a->getCurrency());
+		$this->assertEquals(Izberg\Izberg::DEFAULT_SHIPPING_COUNTRY, $a->getShippingCountry());
 	}
 
 	public function testWeUseApiUrlInParams()
 	{
-	   $a = new Izberg(array(
+	   $a = new Izberg\Izberg(array(
          "appNamespace" => "lolote",
          "username" => getenv("USERNAME1"),
          "accessToken" => getenv("TOKEN1"),
@@ -56,7 +56,7 @@ class izbergTest extends BaseTester
 
 	public function testWeUseLocaleInParams()
 	{
-	   $a = new Izberg(array(
+	   $a = new Izberg\Izberg(array(
          "appNamespace" => "lolote",
          "username" => getenv("USERNAME1"),
          "accessToken" => getenv("TOKEN1"),
@@ -68,9 +68,9 @@ class izbergTest extends BaseTester
 
 	public function testSandboxParamIsWellUsedForUrlToRequest()
 	{
-		$a = new Izberg(array("sandbox" => true, "appNamespace" => "lolote"));
+		$a = new Izberg\Izberg(array("sandbox" => true, "appNamespace" => "lolote"));
 		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.sandbox.iceberg.technology/v1/");
-		$a = new Izberg(array("appNamespace" => "lolote"));
+		$a = new Izberg\Izberg(array("appNamespace" => "lolote"));
 		$this->assertEquals(PHPUnit_Framework_Assert::readAttribute($a, '_api_url'), "https://api.iceberg.technology/v1/");
 	}
 
@@ -79,7 +79,7 @@ class izbergTest extends BaseTester
 	{
 		\VCR\VCR::insertCassette('testShouldThrowErrorIfNotGoodResponseCode');
 
-		$this->setExpectedException('BadRequestException');
+		$this->setExpectedException('Izberg\BadRequestException');
 		$a = $this->getIzberg();
 		$a->sso(array(
       "email"     => "myemail@yahoo.fr",
@@ -97,7 +97,15 @@ class izbergTest extends BaseTester
 		$a = $this->getIzberg();
 		$this->sso($a);
 
-		$this->assertEquals($a, Izberg::getInstance());
+		$this->assertEquals($a, Izberg\Izberg::getInstance());
+	}
+
+	public function testconvertHtmlShouldReturnTextWithoutHtml()
+	{
+    $text = "<p>My test</p>";
+		$result = Izberg\Izberg::convertHtml($text);
+
+		$this->assertEquals($result, "My test");
 	}
 
 }

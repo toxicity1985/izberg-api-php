@@ -16,13 +16,13 @@ PHP Wrapper around the Izberg API
 
 You can use your access token or our Single Sign On system to identify:
 
+*Izberg use [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
+
 #### With Access token :
 
 ```php
 <?php
-    require_once 'izberg.php';
-
-    $izberg = new Izberg(array(
+    $izberg = new Izberg\Izberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
       'accessToken'  => 'YOUR_ACCESSTOKEN',
       'username'   	 => 'YOUR_USERNAME',
@@ -37,9 +37,7 @@ You can use your access token or our Single Sign On system to identify:
 
 ```php
 <?php
-    require_once 'izberg.php';
-
-    $izberg = new Izberg(array(
+    $izberg = new Izberg\Izberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
       'apiKey'       => 'YOUR_APP_KEY',
       'apiSecret'    => 'YOUR_APP_SECRET'
@@ -60,9 +58,7 @@ To use our sandbox environment, just pass the param `sandbox` in options when yo
 
 ```php
 <?php
-    require_once 'izberg.php';
-
-    $izberg = new Izberg(array(
+    $izberg = new Izberg\Izberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
       'sandbox'      => true,
     ));
@@ -244,9 +240,6 @@ Creating an order on Izberg is really easy, the only thing you need is the Item 
 ```php
 
 <?php
-
-	require_once "izberg.php";
-
 	$valid_array = array(
 			'appNamespace' => 'YOUR_APP_NAMESPACE',
 			'accessToken'  => 'YOUR_ACCESSTOKEN',
@@ -255,7 +248,7 @@ Creating an order on Izberg is really easy, the only thing you need is the Item 
 			'apiSecret'    => 'YOUR_APP_SECRET'
 			)
 
-	$IzbergInstance = new Izberg($valid_array);
+	$IzbergInstance = new Izberg\Izberg($valid_array);
 
 	$IzbergInstance->setUser(array(
 				"email" => "EMAIL_ADDRESS",

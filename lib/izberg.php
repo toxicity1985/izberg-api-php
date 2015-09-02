@@ -11,11 +11,9 @@
  * @version 2.0
  * @license BSD http://www.opensource.org/licenses/bsd-license.php
  */
+namespace Izberg;
 
 require_once __DIR__."/../HtmlToText/HtmlToText.php";
-require_once __DIR__."/resources/loader.php";
-require_once __DIR__."/exceptions.php";
-require_once __DIR__."/helper.php";
 
 class Izberg
 {
@@ -61,9 +59,9 @@ class Izberg
 	protected static $_singleton;
 
 	/**
-	* The singleton of Ice\Helper instance
+	* The singleton of Izberg\Helper instance
 	*
-	* @var Ice\Helper
+	* @var Izberg\Helper
 	*/
 	protected static $_helper;
 
@@ -512,7 +510,7 @@ class Izberg
 	{
 		$this->_debug = false;
 		if (true === is_array($config)) {
-			$this->helper = new Ice\Helper();
+			$this->helper = new Helper();
 
 			self::$_api_url = (isset($config['sandbox']) && $config['sandbox'] === true) ? self::SANDBOX_API_URL : self::PRODUCTION_API_URL;
 			self::$_api_url = (isset($config['apiUrl']))? $config['apiUrl']: self::$_api_url;
@@ -537,7 +535,7 @@ class Izberg
 
 			// We save this instance as singleton
 			self::setInstance($this);
-			Ice\Resource::setIzberg($this);
+			Resource::setIzberg($this);
 
 		} else {
 			throw new GenericException("Error: __construct() - Configuration data is missing.");
@@ -593,7 +591,7 @@ class Izberg
 
 	/**
 	* Get helper instance
-	* @return Ice\Helper
+	* @return Izberg\Helper
 	*/
 	public function getHelper()
 	{
@@ -856,8 +854,9 @@ class Izberg
 			$id = "me";
 		if (strtolower($resource) == "country" && !$params)
 			$params = array("code" => "FR");
-		if (strncmp("Ice\\", $resource, 4) != 0)
-			$resource = "Ice\\".$resource;
+
+		$resource = "Izberg\Resource\\".ucfirst($resource);
+
 		$object = new $resource();
 		if (!$endpoint)
 			$endpoint =  $object->getName();
@@ -878,8 +877,7 @@ class Izberg
 	**/
 	public function get_list_response($resource, $params = null, $accept_type = "Accept: application/json", $url = null)
 	{
-		if (strncmp("Ice\\", $resource, 4) != 0)
-			$resource = "Ice\\".ucfirst($resource);
+		$resource = "Izberg\Resource\\" . ucfirst($resource);
 		$object = new $resource();
 		// If we override the get_list method
 		if (method_exists($resource, "get_list")) {
@@ -901,11 +899,9 @@ class Izberg
 	**/
 	public function get_list($resource, $params = null, $accept_type = "Accept: application/json", $url = null)
 	{
-		if (strncmp("Ice\\", $resource, 4) != 0)
-			$resource = "Ice\\".ucfirst($resource);
-
 		$list = $this->get_list_response($resource, $params, $accept_type, $url);
 		$object_list = array();
+		$resource = "Izberg\Resource\\".ucfirst($resource);
 		foreach ($list->objects as $object)
 		{
 			$obj = new $resource();
@@ -935,8 +931,7 @@ class Izberg
 	**/
 	public function create($resource, $params = null, $accept_type = "Content-Type: application/json")
 	{
-		if (strncmp("Ice\\", $resource, 4) != 0)
-			$resource = "Ice\\".$resource;
+		$resource = "Izberg\Resource\\".ucfirst($resource);
 		if ($this->getDebug())
 			$params['debug'] = 'true';
 		$object = new $resource();
@@ -955,8 +950,7 @@ class Izberg
 	{
 		if (!$id || !$resource)
 			throw new Exception(__METHOD__." needs a valid ID and a valid Resource Name");
-		if (strncmp("Ice\\", $resource, 4) != 0)
-			$resource = "Ice\\".$resource;
+		$resource = "Izberg\Resource\\".$resource;
 		$object = new $resource();
 		$name = $object->getName();
 		$response = $this->Call($object->getPrefix() . $name . "/" . $id . "/", 'PUT', $params, $accept_type);
@@ -973,8 +967,7 @@ class Izberg
 	**/
 	public function get_schema($resource, $params = null, $accept_type = 'Accept: application/json')
 	{
-		if (strncmp("Ice\\", $resource, 4) != 0)
-			$resource = "Ice\\".$resource;
+		$resource = "Izberg\Resource\\".$resource;
 		$object = new $resource();
 		return $this->Call($object->getPrefix() . $object->getName() ."/schema/", 'GET', $params, $accept_type);
 	}

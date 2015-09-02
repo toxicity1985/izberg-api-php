@@ -1,6 +1,6 @@
-<?php namespace Ice;
-
-require_once "resource.class.php";
+<?php
+namespace Izberg\Resource;
+use Izberg\Resource;
 
 class Product extends Resource
 {

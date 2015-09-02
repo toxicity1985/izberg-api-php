@@ -1,4 +1,8 @@
 <?php
+namespace Izberg;
+use Exception;
+use RuntimeException;
+
 /**
  * GenericException Representation of generic exception
  */

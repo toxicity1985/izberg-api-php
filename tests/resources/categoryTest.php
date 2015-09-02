@@ -8,8 +8,8 @@ class categoryTest extends BaseTester
   {
     \VCR\VCR::turnOn();
     \VCR\VCR::configure()->setStorage('json');
-    Ice\Category::tearDown();
-    Ice\ApplicationCategory::tearDown();
+    Izberg\Resource\Category::tearDown();
+    Izberg\Resource\ApplicationCategory::tearDown();
   }
 
   /**
@@ -49,7 +49,7 @@ class categoryTest extends BaseTester
     \VCR\VCR::insertCassette('testGetSubcategories');
 
     $a = $this->getIzberg();
-    $category = new Ice\Category();
+    $category = new Izberg\Resource\Category();
     $category->id = 1021;
     $subCategories = $category->get_childs();
     $this->assertTrue(count($subCategories) > 0);
@@ -61,7 +61,7 @@ class categoryTest extends BaseTester
 
     $a = $this->getIzberg();
     $categories = $a->get_list("category");
-    $this->assertInstanceOf('Ice\Category', $categories[0]);
+    $this->assertInstanceOf('Izberg\Resource\Category', $categories[0]);
   }
 
   public function testGetRootApplicationCategories()
@@ -70,7 +70,7 @@ class categoryTest extends BaseTester
 
     $a = $this->getIzberg();
     $categories = $a->get_list("applicationCategory");
-    $this->assertInstanceOf('Ice\ApplicationCategory', $categories[0]);
+    $this->assertInstanceOf('Izberg\Resource\ApplicationCategory', $categories[0]);
   }
 
   public function testGetApplicationCategoryChild()
@@ -80,17 +80,17 @@ class categoryTest extends BaseTester
     $a = $this->getIzberg();
     $categories = $a->get_list("applicationCategory");
     $subcats = $categories[0]->get_childs();
-    $this->assertInstanceOf('Ice\ApplicationCategory', $subcats[0]);
+    $this->assertInstanceOf('Izberg\Resource\ApplicationCategory', $subcats[0]);
   }
 
   public function testGetApplicationCategoryWithoutCallingRoot()
   {
     \VCR\VCR::insertCassette('testGetApplicationCategoryWithoutCallingRoot');
     $a = $this->getIzberg();
-    $fakeCat = new Ice\ApplicationCategory();
+    $fakeCat = new Izberg\Resource\ApplicationCategory();
     $fakeCat->id = 5836;
 
     $subcats = $fakeCat->get_childs();
-    $this->assertInstanceOf('Ice\ApplicationCategory', $subcats[0]);
+    $this->assertInstanceOf('Izberg\Resource\ApplicationCategory', $subcats[0]);
   }
 }

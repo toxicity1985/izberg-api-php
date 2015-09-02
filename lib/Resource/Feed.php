@@ -1,7 +1,6 @@
-<?php namespace Ice;
-
-require_once("resource.class.php");
-require_once("merchant.class.php");
+<?php
+namespace Izberg\Resource;
+use Izberg\Resource;
 
 class Feed extends Resource
 {

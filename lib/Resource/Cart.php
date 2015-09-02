@@ -1,7 +1,6 @@
-<?php namespace Ice;
-
-require_once("resource.class.php");
-require_once("order.class.php");
+<?php
+namespace Izberg\Resource;
+use Izberg\Resource;
 
 class Cart extends Resource
 {

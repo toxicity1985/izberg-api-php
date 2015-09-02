@@ -1,4 +1,4 @@
-<?php namespace Ice;
+<?php namespace Izberg;
 
 abstract class Resource
 {
@@ -17,15 +17,8 @@ abstract class Resource
         */
         if ($name === null)
         {
-            $name = substr(str_replace("\\", "", get_class($this)), 3);
-            $pieces = preg_split('/(?=[A-Z])/',$name);
-            $final_str = "";
-            foreach ($pieces as $piece)
-            {
-                if (strlen($final_str) > 0)
-                    $final_str .= "_";
-                $final_str .= strtolower($piece);
-            }
+            $name = str_replace("Izberg\Resource\\", "", get_class($this));
+            $final_str = self::$Izberg->getHelper()->uncamelize($name);
         }
         else
             $final_str = $name;
@@ -42,7 +35,7 @@ abstract class Resource
         foreach ($tabname as &$value)
             $value = ucfirst($value);
         $uri = implode('', $tabname);
-        return "Ice\\".$uri;
+        return "Izberg\\".$uri;
     }
 
     public function getName()

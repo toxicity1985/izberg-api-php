@@ -1,7 +1,6 @@
 <?php
-namespace Ice;
-use Exception;
-require_once("resource.class.php");
+namespace Izberg\Resource;
+use Izberg\Resource;
 
 class Order extends Resource
 {
