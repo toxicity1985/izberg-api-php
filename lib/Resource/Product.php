@@ -1,6 +1,6 @@
-<?php namespace Ice;
-
-require_once "resource.class.php";
+<?php
+namespace Izberg\Resource;
+use Izberg\Resource;
 
 class Product extends Resource
 {
@@ -16,11 +16,14 @@ class ProductOffer extends Resource
 {
 }
 
+class ProductOfferVariation extends Resource
+{
+}
+
 
 class ProductVariation extends Resource
 {
 }
-
 
 class OfferImage extends Resource
 {

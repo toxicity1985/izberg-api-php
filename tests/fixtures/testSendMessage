@@ -1,0 +1,64 @@
+[{
+    "request": {
+        "method": "GET",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/user\/me\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json; charset=UTF-8",
+            "Accept": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-cache",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Thu, 27 Aug 2015 14:06:19 GMT",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20150826T145558",
+            "Content-Length": "1353",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"age\": null, \"birth_date\": null, \"display_name\": \"sebfie\", \"email\": \"sebfie@yahoo.fr\", \"first_name\": \"\", \"from_list\": false, \"gender\": \"F\", \"gid\": \"u:14\", \"groups\": [\"Developers\"], \"id\": 14, \"is_active\": true, \"is_application_staff\": true, \"is_public\": true, \"is_staff\": true, \"is_superuser\": true, \"language\": \"fr\", \"last_name\": \"\", \"last_updated\": \"2014-06-23T10:43:15+02:00\", \"location_latitude\": null, \"location_longitude\": null, \"profile_image\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user\/14\/\", \"shoes_size\": \"rns\", \"shopping_preference\": {\"application\": {\"id\": 9, \"pk\": 9, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application\/9\/\"}, \"country\": null, \"currency\": \"EUR\", \"feed_content\": \"{}\", \"from_list\": false, \"id\": 58, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user_shopping_prefs\/58\/\", \"user\": {\"id\": 14, \"pk\": 14, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user\/14\/\"}}, \"size\": \"rns\", \"timestamp\": \"2014-06-23T10:43:15+02:00\", \"timezone\": \"Europe\/Paris\", \"total_spent\": \"0.00\", \"type\": \"user\", \"user\": {\"display_name\": \"sebfie\", \"first_name\": \"\", \"from_list\": false, \"gid\": \"u:14\", \"groups\": [\"Developers\"], \"id\": 14, \"last_name\": \"\", \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user\/14\/\", \"type\": \"user\", \"username\": \"sebfie\"}, \"username\": \"sebfie\"}"
+    }
+},{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/message\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        },
+        "body": "{\"receiver\":{\"id\":14,\"resource_uri\":\"\\\/v1\\\/merchant\\\/14\\\/\"},\"sender\":{\"id\":14,\"resource_uri\":\"\\\/v1\\\/user\\\/14\\\/\"},\"subject\":\"Hello\",\"body\":\"Votre commande est pr\\u00eate.\"}"
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "401",
+            "message": "UNAUTHORIZED"
+        },
+        "headers": {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Language": "fr",
+            "Content-Type": "text\/html; charset=utf-8",
+            "Date": "Thu, 27 Aug 2015 14:06:20 GMT",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept-Language, Cookie, Host",
+            "X-Release-Version": "20150826T145558",
+            "Content-Length": "0",
+            "Connection": "keep-alive"
+        }
+    }
+}]

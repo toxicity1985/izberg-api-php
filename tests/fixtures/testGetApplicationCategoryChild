@@ -22,7 +22,7 @@
             "Cache-Control": "no-cache",
             "Content-Language": "fr",
             "Content-Type": "application\/json",
-            "Date": "Fri, 28 Aug 2015 09:13:26 GMT",
+            "Date": "Fri, 28 Aug 2015 09:13:33 GMT",
             "Server": "nginx\/1.6.2",
             "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
             "X-Release-Version": "20150826T145558",
@@ -30,5 +30,38 @@
             "Connection": "keep-alive"
         },
         "body": "{\"meta\": {\"total_count\": 3, \"next\": null, \"limit\": 50, \"offset\": 0, \"resource_endpoint\": \"application_category\", \"previous\": null}, \"objects\": [{\"weight\": 0, \"from_list\": true, \"children_count\": 1, \"localization_id\": 5254, \"sort_order\": 10, \"breadcrumb_name\": \"\", \"keywords\": \"\", \"id\": 5836, \"available_product_data\": [], \"image\": null, \"children\": [{\"id\": 5837, \"name\": \"Famille, Sant\\u00e9 et Bien-\\u00eatre\"}], \"status_localized\": \"actif\", \"parents\": [], \"localized_available_product_data\": [], \"google_taxonomy\": null, \"status\": 1, \"description\": \"\", \"shown_in_languages\": [\"bg\", \"fr\"], \"slug\": \"books\", \"name\": \"Books\", \"language\": \"fr\", \"parent_ids_tree\": [5836], \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application_category\/5836\/\"}, {\"weight\": 1, \"from_list\": true, \"children_count\": 11, \"localization_id\": 5513, \"sort_order\": 10, \"breadcrumb_name\": \"\", \"keywords\": \"\", \"id\": 4357, \"available_product_data\": [], \"image\": null, \"children\": [{\"id\": 4358, \"name\": \"Cheval\"}, {\"id\": 4669, \"name\": \"Cavalier\"}, {\"id\": 4815, \"name\": \"Ecuries\"}, {\"id\": 5254, \"name\": \"Sant\\u00e9\"}, {\"id\": 5514, \"name\": \"Alimentation\"}, {\"id\": 5549, \"name\": \"Animalerie\"}, {\"id\": 5582, \"name\": \"Art et Loisirs\"}, {\"id\": 5665, \"name\": \"M\\u00e9dia\"}, {\"id\": 5719, \"name\": \"S\\u00e9jours\"}, {\"id\": 5739, \"name\": \"Services\"}, {\"id\": 5818, \"name\": \"Ev\\u00e9nements\"}], \"status_localized\": \"actif\", \"parents\": [], \"localized_available_product_data\": [], \"google_taxonomy\": null, \"status\": 1, \"description\": \"\", \"shown_in_languages\": [\"bg\", \"fr\"], \"slug\": \"cheval\", \"name\": \"Cheval\", \"language\": \"fr\", \"parent_ids_tree\": [4357], \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application_category\/4357\/\"}, {\"weight\": 2, \"from_list\": true, \"children_count\": 3, \"localization_id\": 5876, \"sort_order\": 10, \"breadcrumb_name\": null, \"keywords\": null, \"id\": 5853, \"available_product_data\": [], \"image\": null, \"children\": [{\"id\": 5854, \"name\": \"Photo et Cam\\u00e9scopes\"}, {\"id\": 5857, \"name\": \"Objet connect\\u00e9\"}, {\"id\": 5858, \"name\": \"Mobile Phone\"}], \"status_localized\": \"actif\", \"parents\": [], \"localized_available_product_data\": [], \"google_taxonomy\": null, \"status\": 1, \"description\": null, \"shown_in_languages\": [\"bg\", \"fr\"], \"slug\": \"electronics\", \"name\": \"Electronics\", \"language\": \"fr\", \"parent_ids_tree\": [5853], \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application_category\/5853\/\"}]}"
+    }
+},{
+    "request": {
+        "method": "GET",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/application_category\/?parents=5836",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json; charset=UTF-8",
+            "Accept": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-cache",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Fri, 28 Aug 2015 09:13:33 GMT",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20150826T145558",
+            "Content-Length": "1166",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"meta\": {\"limit\": 50, \"next\": null, \"offset\": 0, \"previous\": null, \"total_count\": 1}, \"objects\": [{\"available_product_data\": [], \"breadcrumb_name\": \"\", \"children\": [{\"id\": 5838, \"name\": \"B\u00e9b\u00e9s\"}, {\"id\": 5839, \"name\": \"Couples\"}, {\"id\": 5840, \"name\": \"Enfants\"}, {\"id\": 5860, \"name\": \"Ma cat\u00e9gorie de test\"}, {\"id\": 5841, \"name\": \"Femmes\"}, {\"id\": 5844, \"name\": \"Hommes\"}, {\"id\": 5847, \"name\": \"Famille - Parents\"}, {\"id\": 5848, \"name\": \"Alimentation, r\u00e9gimes et di\u00e9t\u00e9tique\"}, {\"id\": 5850, \"name\": \"Se d\u00e9placer\"}], \"children_count\": 8, \"description\": \"\", \"from_list\": true, \"google_taxonomy\": null, \"id\": 5837, \"image\": null, \"keywords\": \"\", \"language\": \"fr\", \"localization_id\": 5983, \"localized_available_product_data\": [], \"name\": \"Famille, Sant\u00e9 et Bien-\u00eatre\", \"parent_ids_tree\": [5836, 5837], \"parents\": [{\"id\": 5836, \"pk\": 5836, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application_category\/5836\/\"}], \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application_category\/5837\/\", \"shown_in_languages\": [\"bg\", \"fr\"], \"slug\": \"famille-sante-bien-etre\", \"sort_order\": 10, \"status\": 1, \"status_localized\": \"actif\", \"weight\": 0}]}"
     }
 }]

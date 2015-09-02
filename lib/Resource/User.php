@@ -1,6 +1,6 @@
-<?php namespace Ice;
-
-require_once("resource.class.php");
+<?php
+namespace Izberg\Resource;
+use Izberg\Resource;
 
 class User extends Resource
 {
@@ -26,7 +26,12 @@ class User extends Resource
 
 	public function getInbox()
 	{
-		return parent::$Izberg->get_list("inbox", $this->id."/inbox/", null, null, $this->getName());
+		return parent::$Izberg->get_list("message", array(), "Accept: application/json", "user/" . $this->id . "/inbox/");
+	}
+
+	public function getOutbox()
+	{
+		return parent::$Izberg->get_list("message", array(), "Accept: application/json", "user/" . $this->id . "/outbox/");
 	}
 }
 

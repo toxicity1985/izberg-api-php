@@ -11,18 +11,21 @@ PHP Wrapper around the Izberg API
 [Create an account](http://account.izberg-marketplace.com) on Izberg-Marketplace.
 [Create an application](http://dashboard.izberg-marketplace.com) to be able to use this api.
 
+## API DOCUMENTATION
+
+You can found our [API documentation](http://iceberg-marketplace.github.io/iceberg-api-php-doc/) to help you
 
 ### Initialize the class
 
 You can use your access token or our Single Sign On system to identify:
 
+*Izberg use [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
+
 #### With Access token :
 
 ```php
 <?php
-    require_once 'izberg.php';
-
-    $izberg = new Izberg(array(
+    $izberg = new Izberg\Izberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
       'accessToken'  => 'YOUR_ACCESSTOKEN',
       'username'   	 => 'YOUR_USERNAME',
@@ -37,9 +40,7 @@ You can use your access token or our Single Sign On system to identify:
 
 ```php
 <?php
-    require_once 'izberg.php';
-
-    $izberg = new Izberg(array(
+    $izberg = new Izberg\Izberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
       'apiKey'       => 'YOUR_APP_KEY',
       'apiSecret'    => 'YOUR_APP_SECRET'
@@ -60,9 +61,7 @@ To use our sandbox environment, just pass the param `sandbox` in options when yo
 
 ```php
 <?php
-    require_once 'izberg.php';
-
-    $izberg = new Izberg(array(
+    $izberg = new Izberg\Izberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
       'sandbox'      => true,
     ));
@@ -98,7 +97,8 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Address
      * Brand
      * Cart
-     * Category
+     * ApplicationCategory (Categories of your application)
+     * Category (Categories created by izberg)
      * Country
      * Feed
      * Webhook
@@ -243,9 +243,6 @@ Creating an order on Izberg is really easy, the only thing you need is the Item 
 ```php
 
 <?php
-
-	require_once "izberg.php";
-
 	$valid_array = array(
 			'appNamespace' => 'YOUR_APP_NAMESPACE',
 			'accessToken'  => 'YOUR_ACCESSTOKEN',
@@ -254,7 +251,7 @@ Creating an order on Izberg is really easy, the only thing you need is the Item 
 			'apiSecret'    => 'YOUR_APP_SECRET'
 			)
 
-	$IzbergInstance = new Izberg($valid_array);
+	$IzbergInstance = new Izberg\Izberg($valid_array);
 
 	$IzbergInstance->setUser(array(
 				"email" => "EMAIL_ADDRESS",
@@ -371,8 +368,14 @@ Now that both addresses are set, we can place the order.
     $locale->delete();
 ```
 
+### Documentation
+
+To generate doc, we use [apigen](http://www.apigen.org/) , with this command :
+
+`apigen generate --source lib --destination doc`
+
 ### Run tests
 
 - Install php unit : http://phpunit.de/getting-started.html
 - cd /to/the/izberg/php/library/folder
-- run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests/IzbergTest.php'
+- run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests'

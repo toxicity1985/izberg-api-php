@@ -1,7 +1,21 @@
 {
+    "name": "izberg/izberg",
+    "description": "Php library to use Izberg marketplace API",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sébastien Fieloux",
+            "email": "sebastien.fieloux@gmail.com"
+        }
+    ],
+    "require": {},
     "require-dev": {
-        "raveren/kint": "1.0.x-dev",
-        "php-vcr/php-vcr": "dev-master",
-        "php-vcr/phpunit-testlistener-vcr": "*"
+      "raveren/kint": "1.0.x-dev",
+      "php-vcr/php-vcr": "dev-master",
+      "php-vcr/phpunit-testlistener-vcr": "*",
+      "phpunit/phpunit": "4.1.2"
+    },
+    "autoload": {
+      "classmap": ["lib/"]
     }
 }

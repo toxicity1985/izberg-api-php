@@ -1,15 +1,23 @@
-<?php namespace Ice;
+<?php namespace Izberg;
 
 abstract class Resource
 {
     protected static    $Izberg = null;
     protected           $_name;
 
+    /**
+  	* Return object as a json
+  	*/
     public function __toString()
     {
         return json_encode($this);
     }
 
+    /**
+    * Set resource name computed from className
+    * ApplicationCategory => application_category
+    * @param string $name Resource name
+    */
     private function setName($name = null)
     {
         /*
@@ -17,21 +25,18 @@ abstract class Resource
         */
         if ($name === null)
         {
-            $name = substr(str_replace("\\", "", get_class($this)), 3);
-            $pieces = preg_split('/(?=[A-Z])/',$name);
-            $final_str = "";
-            foreach ($pieces as $piece)
-            {
-                if (strlen($final_str) > 0)
-                    $final_str .= "_";
-                $final_str .= strtolower($piece);
-            }
+            $name = str_replace("Izberg\Resource\\", "", get_class($this));
+            $final_str = self::$Izberg->getHelper()->uncamelize($name);
         }
         else
             $final_str = $name;
         $this->_name = $final_str;
     }
 
+    /**
+    * Return class name from a resource uri
+    * @param string $uri Resource url
+    */
     public function parseUri($uri)
     {
         if (strncmp("http", $uri, 4) == 0)
@@ -42,14 +47,23 @@ abstract class Resource
         foreach ($tabname as &$value)
             $value = ucfirst($value);
         $uri = implode('', $tabname);
-        return "Ice\\".$uri;
+        return "Izberg\Resource\\".$uri;
     }
 
+    /**
+    * Return resource name
+    * @param string $uri Resource url
+    * @return string Returns resource name
+    */
     public function getName()
     {
         return ($this->_name);
     }
 
+    /**
+    * Return resource prefix
+    * @return string Returns resource prefix
+    */
     public function getPrefix()
     {
       return "";
@@ -84,7 +98,7 @@ abstract class Resource
     **/
     public function log($message, $level="error", $path = null)
     {
-        date_default_timezone_set("Europe/berlin");
+        // date_default_timezone_set("Europe/Paris");
         if (false === Izberg::LOGS)
             return ;
         if (false === is_dir($path))
@@ -96,7 +110,7 @@ abstract class Resource
 
     /**
     * Hydrate function
-    *
+    * From json returned by our api, we create classes from name using our naming convention
     * @return void
     *
     **/
