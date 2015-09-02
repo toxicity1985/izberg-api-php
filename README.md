@@ -11,6 +11,9 @@ PHP Wrapper around the Izberg API
 [Create an account](http://account.izberg-marketplace.com) on Izberg-Marketplace.
 [Create an application](http://dashboard.izberg-marketplace.com) to be able to use this api.
 
+## API DOCUMENTATION
+
+You can found our [API documentation](http://iceberg-marketplace.github.io/iceberg-api-php-doc/) to help you
 
 ### Initialize the class
 
