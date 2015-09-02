@@ -5,11 +5,19 @@ abstract class Resource
     protected static    $Izberg = null;
     protected           $_name;
 
+    /**
+  	* Return object as a json
+  	*/
     public function __toString()
     {
         return json_encode($this);
     }
 
+    /**
+    * Set resource name computed from className
+    * ApplicationCategory => application_category
+    * @param string $name Resource name
+    */
     private function setName($name = null)
     {
         /*
@@ -25,6 +33,10 @@ abstract class Resource
         $this->_name = $final_str;
     }
 
+    /**
+    * Return class name from a resource uri
+    * @param string $uri Resource url
+    */
     public function parseUri($uri)
     {
         if (strncmp("http", $uri, 4) == 0)
@@ -35,14 +47,23 @@ abstract class Resource
         foreach ($tabname as &$value)
             $value = ucfirst($value);
         $uri = implode('', $tabname);
-        return "Izberg\\".$uri;
+        return "Izberg\Resource\\".$uri;
     }
 
+    /**
+    * Return resource name
+    * @param string $uri Resource url
+    * @return string Returns resource name
+    */
     public function getName()
     {
         return ($this->_name);
     }
 
+    /**
+    * Return resource prefix
+    * @return string Returns resource prefix
+    */
     public function getPrefix()
     {
       return "";
@@ -89,7 +110,7 @@ abstract class Resource
 
     /**
     * Hydrate function
-    *
+    * From json returned by our api, we create classes from name using our naming convention
     * @return void
     *
     **/

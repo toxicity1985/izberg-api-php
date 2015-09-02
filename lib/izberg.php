@@ -18,6 +18,9 @@ require_once __DIR__."/../HtmlToText/HtmlToText.php";
 class Izberg
 {
 
+	/**
+	* Use logger
+	*/
 	const LOGS = true;
 
 	/**
@@ -67,6 +70,7 @@ class Izberg
 
 	/**
 	* The API base URL
+	* @var String
 	*/
 	protected static $_api_url;
 

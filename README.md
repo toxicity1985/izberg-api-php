@@ -365,6 +365,12 @@ Now that both addresses are set, we can place the order.
     $locale->delete();
 ```
 
+### Documentation
+
+To generate doc, we use [apigen](http://www.apigen.org/) , with this command :
+
+`apigen generate --source lib --destination doc`
+
 ### Run tests
 
 - Install php unit : http://phpunit.de/getting-started.html
