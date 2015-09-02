@@ -34,11 +34,3 @@ class User extends Resource
 		return parent::$Izberg->get_list("message", array(), "Accept: application/json", "user/" . $this->id . "/outbox/");
 	}
 }
-
-class Inbox extends Resource
-{
-}
-
-class profile extends Resource
-{
-}

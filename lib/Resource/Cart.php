@@ -4,7 +4,6 @@ use Izberg\Resource;
 
 class Cart extends Resource
 {
-
     /**
     * get current cart items
     *
@@ -15,15 +14,16 @@ class Cart extends Resource
         $list = self::$Izberg->Call("cart/".$this->id."/items/", 'GET', $params, $accept_type);
         $object_list = array();
         if (!isset($list->objects))
-            return null;
+          return null;
         foreach ($list->objects as $object)
         {
-            $obj = new CartItem();
-            $obj->hydrate($object);
-            $object_list[] = $obj;
+          $obj = new CartItem();
+          $obj->hydrate($object);
+          $object_list[] = $obj;
         }
-        if (!isset($this->items))
-            $this->items = array();
+        if (!isset($this->items)) {
+          $this->items = array();
+        }
         $this->items = array_merge($this->items, $object_list);
         return $object_list;
     }
@@ -102,18 +102,10 @@ class Cart extends Resource
 
     public function addOffer($product_offer_id,$quantity = 1)
     {
-        /*
-        **  Add an offer to the Cart
-        */
         $params = array(
             'offer_id'=> $product_offer_id,
             'quantity'=> $quantity
         );
         return parent::$Izberg->Call($this->getName()."/items/", "POST", $params);
     }
-
-}
-
-class CartItem extends Resource
-{
 }

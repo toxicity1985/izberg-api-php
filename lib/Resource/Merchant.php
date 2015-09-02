@@ -49,7 +49,3 @@ class Merchant extends Resource
 		return $this->get_catalog($this->id, $params , $accept_type);
 	}
 }
-
-class MerchantImage extends Resource
-{
-}

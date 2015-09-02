@@ -11,20 +11,3 @@ class Product extends Resource
 		return parent::$Izberg->get("review", $params = array("product"=>$id));
 	}
 }
-
-class ProductOffer extends Resource
-{
-}
-
-class ProductOfferVariation extends Resource
-{
-}
-
-
-class ProductVariation extends Resource
-{
-}
-
-class OfferImage extends Resource
-{
-}
