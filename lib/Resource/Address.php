@@ -26,7 +26,3 @@ class Address extends Resource
         zipcode: integer
      */
 }
-
-class MerchantAddress extends Resource
-{
-}
