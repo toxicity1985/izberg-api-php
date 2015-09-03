@@ -31,7 +31,7 @@ class Merchant extends Resource
 		{
 			$seller = parent::$Izberg->Call('merchant/?api_key='.parent::$Izberg->getApiKey());
 		}
-		catch (Exception $e)
+		catch (Exception\GenericException $e)
 		{
 			$seller = false;
 		}

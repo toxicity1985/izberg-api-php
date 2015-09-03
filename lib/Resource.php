@@ -72,7 +72,7 @@ abstract class Resource
     public function __construct()
     {
         if (self::$Izberg === null)
-            throw new Exception("Can't create instance of ".get_class().", no valid Izberg singleton");
+            throw new Exception\GenericException("Can't create instance of ".get_class().", no valid Izberg singleton");
         if (!$this->getName())
             $this->setName();
     }
@@ -163,7 +163,7 @@ abstract class Resource
     **/
     public function delete($params = null)
     { if (!$this->id)
-            throw new Exception(__METHOD__." needs a valid ID");
+            throw new Exception\GenericException(__METHOD__." needs a valid ID");
         $name = $this->getName();
         return self::$Izberg->Call( $name . "/" . $this->id . "/", 'DELETE', $params, 'Content-Type: application/json');
     }
