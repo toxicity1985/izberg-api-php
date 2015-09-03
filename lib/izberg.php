@@ -13,7 +13,7 @@
  */
 namespace Izberg;
 
-require_once __DIR__."/../HtmlToText/HtmlToText.php";
+require_once __DIR__."/HtmlToText/HtmlToText.php";
 
 class Izberg
 {
