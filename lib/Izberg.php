@@ -630,10 +630,10 @@ class Izberg
 	 */
 	public function getInlineUserToken()
 	{
-		if (!$this->_anonymous) {
-			 $h = 'IcebergAccessToken '. $this->getUsername() . ":" . $this->getAccessToken();
-		} else {
+		if ($this->_anonymous) {
 			$h = 'IcebergAccessToken anonymous:'. $this->getAppNamespace() . ":" . $this->getAccessToken();
+		} else {
+			$h = 'IcebergAccessToken '. $this->getUsername() . ":" . $this->getAccessToken();
 		}
 		return "Authorization: " . $h;
 	}
