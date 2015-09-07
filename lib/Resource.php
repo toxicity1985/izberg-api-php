@@ -126,10 +126,10 @@ abstract class Resource
                 if (is_object($value))
                 {
                     $classname = $this->parseUri($key);
-                    if (!class_exists($classname, false) && isset($value->resource_uri))
+                    if (!class_exists($classname) && isset($value->resource_uri))
                         $classname = $this->parseUri($value->resource_uri);
-                    if (!class_exists($classname, false))
-                        continue ;
+                    if (!class_exists($classname))
+                        continue;
                     else
                     {
                         $new_obj = new $classname();
