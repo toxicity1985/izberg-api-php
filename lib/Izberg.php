@@ -713,7 +713,7 @@ class Izberg
 		$http_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
     if ($http_code >= 400) {
       // We raise only on http code > 400
-      throw new Exception\GenericException ("We got an response with code " . $http_code . " and response " . $data . " from url: " .$apiCall );
+      throw new Exception\GenericException ("We got an response with code " . $http_code . " and response " . $data . " from url: " .$apiCall . " and headers : " . json_encode($headers) . " and params: " . $paramString );
     }
 		curl_close($ch);
 		return ($accept_type == 'Accept: application/json' || $accept_type == 'Content-Type: application/json') ? json_decode($data) : (($accept_type == 'Accept: application/xml') ?  simplexml_load_string($data) : $data);
@@ -771,7 +771,7 @@ class Izberg
 		$jsonResponse = json_decode($jsonData);
 		// We display the error only if the HTTP code is different of 200..300
 		if (preg_match("/2\d{2}/", $httpcode)  == 0) {
-			$message = "Error: from Iceberg API - error: " . print_r($jsonResponse,true);
+			$message = "Error: from Iceberg API - error: " . print_r($jsonResponse,true) . " with params: " . json_encode($params);
 			switch ($httpcode){
 				case '400':
 					throw new Exception\BadRequestException($message);
