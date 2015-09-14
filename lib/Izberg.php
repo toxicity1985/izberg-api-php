@@ -868,6 +868,7 @@ class Izberg
 			$response = $this->Call($object->getPrefix() . $endpoint."/".$id."/", 'GET', $params, $accept_type);
 		else
 			$response = $this->Call($object->getPrefix() . $endpoint."/", 'GET', $params, $accept_type);
+		if ($accept_type != "Accept: application/json") return $response;
 		$object->hydrate($response);
 		return $object;
 	}
