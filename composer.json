@@ -6,6 +6,10 @@
         {
             "name": "Sébastien Fieloux",
             "email": "sebastien.fieloux@gmail.com"
+        },
+        {
+          "name": "Marin Ravenel",
+          "email": "marin.ravenel@gmail.com"
         }
     ],
     "require": {},
