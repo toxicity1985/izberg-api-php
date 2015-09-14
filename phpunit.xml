@@ -4,5 +4,4 @@
         convertNoticesToExceptions="true"
         convertWarningsToExceptions="true"
 >
-
 </phpunit>

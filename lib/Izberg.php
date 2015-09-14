@@ -13,7 +13,7 @@
  */
 namespace Izberg;
 
-require_once __DIR__."/HtmlToText/HtmlToText.php";
+require_once __DIR__."/Html2Text/Html2Text.php";
 
 class Izberg
 {
@@ -840,8 +840,8 @@ class Izberg
 	**/
 	public static function convertHtml($html)
 	{
-		$converter = new \HtmlToText\HtmlToText($html);
-		return $converter->convert();
+		$converter = new \Html2Text\Html2Text($html);
+		return $converter->getText();
 	}
 
 	/**
