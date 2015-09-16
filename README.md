@@ -1,6 +1,6 @@
 #Izberg-API-PHP
 
-[![Build Status](https://travis-ci.org/Iceberg-Marketplace/iceberg-api-php.svg?branch=master)](https://travis-ci.org/Izberg-Marketplace/izberg-api-php)
+[![Build Status](https://travis-ci.org/izberg-marketplace/iceberg-api-php.svg?branch=master)](https://travis-ci.org/izberg-marketplace/izberg-api-php)
 ## About
 
 PHP Wrapper around the Izberg API
@@ -8,12 +8,12 @@ PHP Wrapper around the Izberg API
 ## Get started
 
 
-[Create an account](http://account.izberg-marketplace.com) on Izberg-Marketplace.
-[Create an application](http://dashboard.izberg-marketplace.com) to be able to use this api.
+[Create an account](http://account.iceberg-marketplace.com) on Izberg-Marketplace.
+[Create an application](http://dashboard.iceberg-marketplace.com) to be able to use this api.
 
 ## API DOCUMENTATION
 
-You can found our [API documentation](http://iceberg-marketplace.github.io/iceberg-api-php-doc/) to help you
+You can found our [API documentation](http://izberg-marketplace.github.io/iceberg-api-php-doc/) to help you
 
 ### Initialize the class
 
