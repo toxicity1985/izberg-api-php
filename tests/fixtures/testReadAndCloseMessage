@@ -1,0 +1,131 @@
+[{
+    "request": {
+        "method": "GET",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/user\/me\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json; charset=UTF-8",
+            "Accept": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-cache",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Wed, 14 Oct 2015 09:42:47 GMT",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20151014T002410",
+            "Content-Length": "1481",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"age\": null, \"birth_date\": null, \"date_joined\": \"2014-06-23T10:42:57+02:00\", \"display_name\": \"sebfie\", \"email\": \"sebfie@yahoo.fr\", \"first_name\": \"\", \"from_list\": false, \"gender\": \"F\", \"gid\": \"u:14\", \"groups\": [\"Developers\"], \"id\": 14, \"is_active\": true, \"is_application_staff\": true, \"is_public\": true, \"is_staff\": true, \"is_superuser\": true, \"language\": \"fr\", \"last_name\": \"\", \"last_updated\": \"2014-06-23T10:43:15+02:00\", \"location_latitude\": null, \"location_longitude\": null, \"mail_proxy\": null, \"profile_image\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user\/14\/\", \"shoes_size\": \"rns\", \"shopping_preference\": {\"application\": {\"id\": 9, \"pk\": 9, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application\/9\/\"}, \"country\": null, \"currency\": \"EUR\", \"feed_content\": \"{}\", \"from_list\": false, \"id\": 58, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user_shopping_prefs\/58\/\", \"user\": {\"id\": 14, \"pk\": 14, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user\/14\/\"}}, \"size\": \"rns\", \"timestamp\": \"2014-06-23T10:43:15+02:00\", \"timezone\": \"Europe\/Paris\", \"total_spent\": \"0.00\", \"type\": \"user\", \"user\": {\"date_joined\": \"2014-06-23T10:42:57+02:00\", \"display_name\": \"sebfie\", \"first_name\": \"\", \"from_list\": false, \"gid\": \"u:14\", \"groups\": [\"Developers\"], \"id\": 14, \"last_name\": \"\", \"mail_proxy\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user\/14\/\", \"type\": \"user\", \"username\": \"sebfie\"}, \"username\": \"sebfie\"}"
+    }
+},{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/message\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        },
+        "body": "{\"receiver\":{\"id\":77,\"resource_uri\":\"\\\/v1\\\/merchant\\\/77\\\/\"},\"sender\":{\"id\":14,\"resource_uri\":\"\\\/v1\\\/user\\\/14\\\/\"},\"subject\":\"Hello\",\"body\":\"Votre commande est pr\\u00eate.\"}"
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "201",
+            "message": "CREATED"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Wed, 14 Oct 2015 09:42:48 GMT",
+            "Location": "https:\/\/api.sandbox.iceberg.technology\/v1\/message\/344\/",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20151014T002410",
+            "Content-Length": "915",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"application\": {\"id\": 9, \"pk\": 9, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application\/9\/\"}, \"body\": \"Votre commande est pr\u00eate.\", \"body_raw\": \"Votre commande est pr\u00eate.\", \"from_display_name\": \"sebfie\", \"from_email\": null, \"from_list\": false, \"from_location\": null, \"from_phone_number\": null, \"from_resource_uri\": \"\/v1\/user\/14\/\", \"id\": 344, \"merchant_order\": null, \"parent_msg\": null, \"priority\": 3, \"receiver\": {\"id\": 77, \"resource_uri\": \"\/v1\/merchant\/77\/\", \"to_display_name\": \"Raf merchant 01\"}, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/message\/344\/\", \"response_mail_proxy\": \"\", \"sender\": {\"from_display_name\": \"sebfie\", \"id\": 14, \"resource_uri\": \"\/v1\/user\/14\/\"}, \"sent_at\": \"2015-10-14T11:42:48.135697+02:00\", \"starred\": false, \"status\": \"unread\", \"status_localized\": \"Unread\", \"subject\": \"Hello\", \"to_display_name\": \"Raf merchant 01\", \"to_resource_uri\": \"\/v1\/merchant\/77\/\"}"
+    }
+},{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/message\/344\/read\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json; charset=UTF-8",
+            "Accept": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Wed, 14 Oct 2015 09:42:48 GMT",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20151014T002410",
+            "Content-Length": "908",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"application\": {\"id\": 9, \"pk\": 9, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application\/9\/\"}, \"body\": \"Votre commande est pr\u00eate.\", \"body_raw\": \"Votre commande est pr\u00eate.\", \"from_display_name\": \"sebfie\", \"from_email\": null, \"from_list\": false, \"from_location\": null, \"from_phone_number\": null, \"from_resource_uri\": \"\/v1\/user\/14\/\", \"id\": 344, \"merchant_order\": null, \"parent_msg\": null, \"priority\": 3, \"receiver\": {\"id\": \"77\", \"resource_uri\": \"\/v1\/merchant\/77\/\", \"to_display_name\": \"Raf merchant 01\"}, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/message\/344\/\", \"response_mail_proxy\": \"\", \"sender\": {\"from_display_name\": \"sebfie\", \"id\": \"14\", \"resource_uri\": \"\/v1\/user\/14\/\"}, \"sent_at\": \"2015-10-14T11:42:48+02:00\", \"starred\": false, \"status\": \"read\", \"status_localized\": \"Read\", \"subject\": \"Hello\", \"to_display_name\": \"Raf merchant 01\", \"to_resource_uri\": \"\/v1\/merchant\/77\/\"}"
+    }
+},{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/message\/344\/close\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json; charset=UTF-8",
+            "Accept": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Wed, 14 Oct 2015 09:42:49 GMT",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20151014T002410",
+            "Content-Length": "912",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"application\": {\"id\": 9, \"pk\": 9, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application\/9\/\"}, \"body\": \"Votre commande est pr\u00eate.\", \"body_raw\": \"Votre commande est pr\u00eate.\", \"from_display_name\": \"sebfie\", \"from_email\": null, \"from_list\": false, \"from_location\": null, \"from_phone_number\": null, \"from_resource_uri\": \"\/v1\/user\/14\/\", \"id\": 344, \"merchant_order\": null, \"parent_msg\": null, \"priority\": 3, \"receiver\": {\"id\": \"77\", \"resource_uri\": \"\/v1\/merchant\/77\/\", \"to_display_name\": \"Raf merchant 01\"}, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/message\/344\/\", \"response_mail_proxy\": \"\", \"sender\": {\"from_display_name\": \"sebfie\", \"id\": \"14\", \"resource_uri\": \"\/v1\/user\/14\/\"}, \"sent_at\": \"2015-10-14T11:42:48+02:00\", \"starred\": false, \"status\": \"closed\", \"status_localized\": \"Ferm\u00e9\", \"subject\": \"Hello\", \"to_display_name\": \"Raf merchant 01\", \"to_resource_uri\": \"\/v1\/merchant\/77\/\"}"
+    }
+}]

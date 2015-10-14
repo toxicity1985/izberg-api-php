@@ -885,7 +885,7 @@ class Izberg
 		$resource = "Izberg\Resource\\" . ucfirst($resource);
 		$object = new $resource();
 		// If we override the get_list method
-		if (method_exists($resource, "get_list")) {
+		if (method_exists($resource, "get_list") && !$url) {
 			return $object->get_list($params, $accept_type);
 		} else {
 			// If we specified url
