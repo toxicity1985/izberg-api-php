@@ -19,4 +19,17 @@ class MerchantOrder extends Resource
 		$id_order = $id_order ? $id_order : $this->id;
 		return	(parent::$Izberg->Call($this->getName().'/'.$id_order.'/'.$status.'/', 'POST'));
 	}
+
+	/**
+	* Create a return for this order
+	*
+	* Status : confirm | send | cancel
+	*
+	* @returns object
+	*
+	**/
+	public function createReturn($params)
+	{
+		return self::$Izberg->Call($this->getName()."/". $this->id ."/return/", "POST", $params, "Content-Type: application/json");
+	}
 }

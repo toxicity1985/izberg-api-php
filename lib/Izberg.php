@@ -649,11 +649,11 @@ class Izberg
 	*/
 	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json', $content_type = 'Content-Type: application/json; charset=UTF-8')
 	{
-		if (isset($params) && is_array($params) && $accept_type == "Content-Type: application/json")
+		if (!is_null($params) && is_array($params) && $accept_type == "Content-Type: application/json")
 		{
 			$paramString = json_encode($params);
 		}
-		else if (isset($params) && is_array($params) && !empty($params)) {
+		else if (!is_null($params) && is_array($params) && !empty($params)) {
 			$paramString = '?' . http_build_query($params);
 		} else {
 			$paramString = null;
@@ -858,6 +858,8 @@ class Izberg
 			$id = "me";
 		if (strtolower($resource) == "country" && !$params)
 			$params = array("code" => "FR");
+		if (strtolower($resource) == "return" && !$params)
+			$resource = "ReturnRequest";
 
 		$resource = "Izberg\Resource\\".ucfirst($resource);
 
