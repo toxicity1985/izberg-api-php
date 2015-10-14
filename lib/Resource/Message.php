@@ -9,7 +9,7 @@ class Message extends Resource
 	*/
 	public function read()
 	{
-		return self::$Izberg->Call($this->getName()."/read/", "POST");
+		return self::$Izberg->Call($this->getName()."/". $this->id ."/read/", "POST");
 	}
 
 	/*
@@ -17,14 +17,14 @@ class Message extends Resource
 	*/
 	public function close()
 	{
-		return self::$Izberg->Call($this->getName()."/close/", "POST");
+		return self::$Izberg->Call($this->getName()."/". $this->id ."/close/", "POST");
 	}
 
 	/*
-	**	Mark message as read
+	**	Get all messages
 	*/
-	public function all()
+	public static function get_list()
 	{
-		return self::$Izberg->Call($this->getName()."/current_app/all_messages/", "GET");
+		return self::$Izberg->Call("message/current_app/all_messages/", "GET");
 	}
 }

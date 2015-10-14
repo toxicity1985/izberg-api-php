@@ -79,7 +79,7 @@ class izbergTest extends BaseTester
 	{
 		\VCR\VCR::insertCassette('testShouldThrowErrorIfNotGoodResponseCode');
 
-		$this->setExpectedException('Izberg\BadRequestException');
+		$this->setExpectedException('Izberg\Exception\BadRequestException');
 		$a = $this->getIzberg();
 		$a->sso(array(
       "email"     => "myemail@yahoo.fr",
