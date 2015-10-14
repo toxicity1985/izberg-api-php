@@ -1,6 +1,6 @@
 #Izberg-API-PHP
 
-[![Build Status](https://travis-ci.org/Iceberg-Marketplace/iceberg-api-php.svg?branch=master)](https://travis-ci.org/Izberg-Marketplace/izberg-api-php)
+[![Build Status](https://travis-ci.org/izberg-marketplace/izberg-api-php.svg?branch=master)](https://travis-ci.org/izberg-marketplace/izberg-api-php)
 ## About
 
 PHP Wrapper around the Izberg API
