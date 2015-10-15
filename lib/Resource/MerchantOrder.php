@@ -30,6 +30,21 @@ class MerchantOrder extends Resource
 	**/
 	public function createReturn($params)
 	{
+		$params["return_type"] = 1;
+		return self::$Izberg->Call($this->getName()."/". $this->id ."/return/", "POST", $params, "Content-Type: application/json");
+	}
+
+	/**
+	* Create a refund for this order
+	*
+	* Status : confirm | send | cancel
+	*
+	* @returns object
+	*
+	**/
+	public function createRefund($params)
+	{
+		$params["return_type"] = 2;
 		return self::$Izberg->Call($this->getName()."/". $this->id ."/return/", "POST", $params, "Content-Type: application/json");
 	}
 }
