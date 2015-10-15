@@ -22,9 +22,6 @@ class MerchantOrder extends Resource
 
 	/**
 	* Create a return for this order
-	*
-	* Status : confirm | send | cancel
-	*
 	* @returns object
 	*
 	**/
@@ -36,11 +33,7 @@ class MerchantOrder extends Resource
 
 	/**
 	* Create a refund for this order
-	*
-	* Status : confirm | send | cancel
-	*
 	* @returns object
-	*
 	**/
 	public function createRefund($params)
 	{

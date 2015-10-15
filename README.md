@@ -13,7 +13,7 @@ PHP Wrapper around the Izberg API
 
 ## API DOCUMENTATION
 
-You can found our [API documentation](http://izberg-marketplace.github.io/iceberg-api-php-doc/) to help you
+You can found our [API documentation](http://izberg-marketplace.github.io/izberg-api-php-doc/) to help you.
 
 ### Initialize the class
 

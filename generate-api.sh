@@ -11,7 +11,7 @@ git config --global user.name "Travis"
 
 # Add branch
 git init
-git remote add origin https://${GH_TOKEN}@github.com/Iceberg-Marketplace/iceberg-api-php-doc.git > /dev/null
+git remote add origin https://${GH_TOKEN}@github.com/izberg-marketplace.github.io/izberg-api-php-doc > /dev/null
 git checkout -B gh-pages
 
 # Push generated files
