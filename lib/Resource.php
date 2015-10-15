@@ -47,6 +47,7 @@ abstract class Resource
         foreach ($tabname as &$value)
             $value = ucfirst($value);
         $uri = implode('', $tabname);
+        if ($uri == "Return") $uri = "ReturnRequest";
         return "Izberg\Resource\\".$uri;
     }
 
@@ -140,7 +141,7 @@ abstract class Resource
                 else if (is_array($value) && isset($value[0]->resource_uri))
                 {
                     $classname = $this->parseUri($value[0]->resource_uri);
-                    if (!class_exists($classname, false))
+                    if (!class_exists($classname))
                         continue ;
                     $list = array();
                     foreach ($value as $val) {
