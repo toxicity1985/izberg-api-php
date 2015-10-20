@@ -1,0 +1,67 @@
+[{
+    "request": {
+        "method": "GET",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/application\/mine\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json; charset=UTF-8",
+            "Accept": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-cache",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Mon, 19 Oct 2015 12:34:50 GMT",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20151016T134912",
+            "Content-Length": "1050",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"api_key\": \"d43fce48-836c-43d3-9ddb-7da2e70af9f1\", \"app_type\": 1, \"app_type_localized\": \"Op\u00e9rateur de Marketplace\", \"category\": 1, \"company_id\": null, \"contact_user\": {\"date_joined\": \"2014-06-23T10:42:57+02:00\", \"display_name\": \"sebfie\", \"first_name\": \"\", \"from_list\": false, \"gid\": \"u:14\", \"groups\": [\"Developers\"], \"id\": 14, \"last_name\": \"\", \"mail_proxy\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user\/14\/\", \"type\": \"user\", \"username\": \"sebfie\"}, \"created_on\": \"2014-06-23T10:43:15+02:00\", \"description\": \"\", \"environment\": \"sandbox\", \"environment_localized\": \"Sandbox\", \"from_list\": false, \"icon\": null, \"id\": 9, \"integration\": 1, \"integration_localized\": \"Ouvert\", \"is_master\": false, \"logo\": null, \"long_description\": \"\", \"meta\": {}, \"mobile_website\": null, \"name\": \"DemoMarketplace\", \"namespace\": \"lolote\", \"personal_shopper\": false, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application\/9\/\", \"sample\": false, \"status\": \"active\", \"status_localized\": \"Actif\", \"switchboard_number\": null, \"website\": \"\"}"
+    }
+},{
+    "request": {
+        "method": "GET",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/application\/9\/active_products_channel\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json; charset=UTF-8",
+            "Accept": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-cache",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Mon, 19 Oct 2015 12:34:51 GMT",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20151016T134912",
+            "transfer-encoding": "chunked",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"algolia_api_key\": \"420232e0a3a57c12e470f6dcd01828b6\", \"algolia_api_key_expiration_date\": \"2015-10-20T14:34:50.766038+02:00\", \"algolia_application_id\": \"XLQ48VVTWV\", \"algolia_available_slaves\": [{\"attribute\": \"best_offer.price_with_vat\", \"index_name\": \"SAND:pc:active:389:388:lolote:price_with_vat\", \"sort\": \"asc\"}, {\"attribute\": \"best_offer.price_with_vat\", \"index_name\": \"SAND:pc:active:389:388:lolote:-price_with_vat\", \"sort\": \"desc\"}], \"algolia_index_name\": \"SAND:pc:active:389:388:lolote:\", \"application\": {\"id\": 9, \"pk\": 9, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application\/9\/\"}, \"channel_type\": \"active\", \"created_on\": \"2015-01-19T10:54:45+01:00\", \"currency\": null, \"current_jobs_count\": 0, \"description\": \"Active products channel of application lolote\", \"devices\": \"[]\", \"from_list\": false, \"id\": 389, \"ignore_product_id_check\": false, \"inbound_policy\": {\"id\": 1, \"pk\": 1, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel_propagation_policy\/1\/\"}, \"is_main\": true, \"label\": \"active_products\", \"language\": \"fr\", \"last_full_sync_end\": null, \"last_full_sync_start\": null, \"last_logs\": [{\"action\": null, \"channel\": {\"id\": 389, \"pk\": 389, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel\/389\/\"}, \"event\": \"product_offer_updated\", \"event_data\": null, \"from_list\": true, \"generic_msg\": \"product_updated\", \"id\": 1825571, \"log_level\": 20, \"log_level_localized\": \"Info\", \"log_type\": 20, \"log_type_localized\": \"Log about event generation\", \"message\": \"Product updated\", \"msg\": \"\", \"outgoing\": false, \"output_backend_id\": null, \"output_backend_name\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel_log_event\/1825571\/\", \"storage_backend_id\": 388, \"storage_backend_name\": \"cache\", \"timestamp\": \"2015-08-25T16:53:24+02:00\", \"traceback\": \"\"}, {\"action\": null, \"channel\": {\"id\": 389, \"pk\": 389, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel\/389\/\"}, \"event\": \"product_offer_updated\", \"event_data\": null, \"from_list\": true, \"generic_msg\": \"product_updated\", \"id\": 1825552, \"log_level\": 20, \"log_level_localized\": \"Info\", \"log_type\": 20, \"log_type_localized\": \"Log about event generation\", \"message\": \"Product updated\", \"msg\": \"\", \"outgoing\": false, \"output_backend_id\": null, \"output_backend_name\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel_log_event\/1825552\/\", \"storage_backend_id\": 388, \"storage_backend_name\": \"cache\", \"timestamp\": \"2015-08-25T14:53:19+02:00\", \"traceback\": \"\"}, {\"action\": null, \"channel\": {\"id\": 389, \"pk\": 389, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel\/389\/\"}, \"event\": \"partial_sync\", \"event_data\": {\"accepted_product_ids\": [176, 177, 172, 173, 186, 187, 188, 189]}, \"from_list\": true, \"generic_msg\": \"channel_synced\", \"id\": 1816686, \"log_level\": 20, \"log_level_localized\": \"Info\", \"log_type\": 20, \"log_type_localized\": \"Log about event generation\", \"message\": \"Channel synced\", \"msg\": \"\", \"outgoing\": false, \"output_backend_id\": null, \"output_backend_name\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel_log_event\/1816686\/\", \"storage_backend_id\": 388, \"storage_backend_name\": \"cache\", \"timestamp\": \"2015-08-21T14:52:34+02:00\", \"traceback\": \"\"}, {\"action\": null, \"channel\": {\"id\": 389, \"pk\": 389, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel\/389\/\"}, \"event\": \"partial_sync\", \"event_data\": {\"event\": \"partial_sync\", \"merchant_id\": 14, \"product_ids\": [176, 177, 172, 173, 186, 187, 188, 189], \"timestamp\": \"2015-08-21T12:52:05.442456+02:00\"}, \"from_list\": true, \"generic_msg\": \"channel_syncing\", \"id\": 1816685, \"log_level\": 20, \"log_level_localized\": \"Info\", \"log_type\": 20, \"log_type_localized\": \"Log about event generation\", \"message\": \"Channel syncing\", \"msg\": \"\", \"outgoing\": false, \"output_backend_id\": null, \"output_backend_name\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel_log_event\/1816685\/\", \"storage_backend_id\": 388, \"storage_backend_name\": \"cache\", \"timestamp\": \"2015-08-21T14:52:31+02:00\", \"traceback\": \"\"}, {\"action\": null, \"channel\": {\"id\": 389, \"pk\": 389, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel\/389\/\"}, \"event\": \"partial_sync\", \"event_data\": {\"accepted_product_ids\": [162, 163, 180, 181, 160, 161, 152, 153, 174, 175, 182, 183, 168, 169, 184, 178, 179, 164, 165, 166, 170, 150, 154, 155, 156, 159]}, \"from_list\": true, \"generic_msg\": \"channel_synced\", \"id\": 1816674, \"log_level\": 20, \"log_level_localized\": \"Info\", \"log_type\": 20, \"log_type_localized\": \"Log about event generation\", \"message\": \"Channel synced\", \"msg\": \"\", \"outgoing\": false, \"output_backend_id\": null, \"output_backend_name\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel_log_event\/1816674\/\", \"storage_backend_id\": 388, \"storage_backend_name\": \"cache\", \"timestamp\": \"2015-08-21T14:52:18+02:00\", \"traceback\": \"\"}], \"last_modified\": \"2015-08-21T14:52:34+02:00\", \"logging_backend_name\": \"db\", \"merchant\": null, \"meta\": {}, \"name\": \"Active products channel of lolote\", \"offer_type\": \"product_offers\", \"options\": \"{}\", \"outbound_policy\": {\"id\": 1, \"pk\": 1, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel_propagation_policy\/1\/\"}, \"product_families\": [], \"propagate_dropped_events\": true, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_channel\/389\/\", \"status\": \"synced\", \"storage_backend_name\": \"cache\", \"try_to_delete_on_drop\": true}"
+    }
+}]

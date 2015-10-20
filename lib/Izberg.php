@@ -639,6 +639,15 @@ class Izberg
 	}
 
 	/**
+	 * Get the current application
+	 * @return Resource/Application
+	 */
+	public function getCurrentApplication()
+	{
+		return $this->get("application", null, null, "Accept: application/json", "application/mine");
+	}
+
+	/**
 	* The call operator
 	*
 	* @param string $function              API resource path
@@ -647,7 +656,7 @@ class Izberg
 	* @param string [optional] $method     Request type GET|POST
 	* @return mixed
 	*/
-	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json', $content_type = 'Content-Type: application/json; charset=UTF-8')
+	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json', $content_type = 'Content-Type: application/json; charset=UTF-8', $output_file = null)
 	{
 		if (!is_null($params) && is_array($params) && $accept_type == "Content-Type: application/json")
 		{
@@ -677,7 +686,6 @@ class Izberg
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -697,6 +705,13 @@ class Izberg
 			curl_setopt($ch, CURLOPT_POST, count($params));
 			curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+		}
+
+		if ($output_file) {
+			$fp = fopen ($output_file, 'w+');
+			curl_setopt($ch, CURLOPT_FILE, $fp);
+		} else {
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		}
 
 		$data = $this->curlExec($ch);

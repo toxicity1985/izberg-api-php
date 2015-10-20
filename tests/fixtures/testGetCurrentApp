@@ -1,0 +1,34 @@
+[{
+    "request": {
+        "method": "GET",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/application\/mine\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json; charset=UTF-8",
+            "Accept": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96"
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-cache",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Mon, 19 Oct 2015 12:28:32 GMT",
+            "Server": "nginx\/1.6.2",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20151016T134912",
+            "Content-Length": "1050",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"api_key\": \"d43fce48-836c-43d3-9ddb-7da2e70af9f1\", \"app_type\": 1, \"app_type_localized\": \"Op\u00e9rateur de Marketplace\", \"category\": 1, \"company_id\": null, \"contact_user\": {\"date_joined\": \"2014-06-23T10:42:57+02:00\", \"display_name\": \"sebfie\", \"first_name\": \"\", \"from_list\": false, \"gid\": \"u:14\", \"groups\": [\"Developers\"], \"id\": 14, \"last_name\": \"\", \"mail_proxy\": null, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/user\/14\/\", \"type\": \"user\", \"username\": \"sebfie\"}, \"created_on\": \"2014-06-23T10:43:15+02:00\", \"description\": \"\", \"environment\": \"sandbox\", \"environment_localized\": \"Sandbox\", \"from_list\": false, \"icon\": null, \"id\": 9, \"integration\": 1, \"integration_localized\": \"Ouvert\", \"is_master\": false, \"logo\": null, \"long_description\": \"\", \"meta\": {}, \"mobile_website\": null, \"name\": \"DemoMarketplace\", \"namespace\": \"lolote\", \"personal_shopper\": false, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/application\/9\/\", \"sample\": false, \"status\": \"active\", \"status_localized\": \"Actif\", \"switchboard_number\": null, \"website\": \"\"}"
+    }
+}]

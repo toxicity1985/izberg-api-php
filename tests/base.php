@@ -5,7 +5,7 @@ ini_set("display_errors", 1);
 abstract class BaseTester extends PHPUnit_Framework_TestCase
 {
 
-  public function getIzberg($options = array())
+  public function getIzberg($options = array(), $extra_mocks_methods = array())
 	{
 		if (empty($options)) {
 			$options = array(
@@ -15,7 +15,7 @@ abstract class BaseTester extends PHPUnit_Framework_TestCase
 					"sandbox" => true
 			);
 		}
-		$mock = $this->getMock('Izberg\Izberg', array('setTimestamp', 'getTimestamp', 'log'), array($options));
+		$mock = $this->getMock('Izberg\Izberg', array_merge(array('setTimestamp', 'getTimestamp', 'log'),$extra_mocks_methods), array($options));
 
 		$mock->expects($this->any())
 	    ->method('setTimestamp')
