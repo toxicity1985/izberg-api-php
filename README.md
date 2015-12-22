@@ -8,8 +8,8 @@ PHP Wrapper around the Izberg API
 ## Get started
 
 
-[Create an account](http://account.iceberg-marketplace.com) on Izberg-Marketplace.
-[Create an application](http://dashboard.iceberg-marketplace.com) to be able to use this api.
+[Create an account](https://account.izberg-marketplace.com) on Izberg-Marketplace.
+[Create an application](https://operator.izberg-marketplace.com) to be able to use this api.
 
 ## API DOCUMENTATION
 
