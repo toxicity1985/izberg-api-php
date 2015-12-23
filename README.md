@@ -8,7 +8,6 @@ PHP Wrapper around the IZBERG API
 
 ## Get started
 
-
 [Create an account](https://account.izberg-marketplace.com) on IZBERG-Marketplace.
 [Create an application](https://operator.izberg-marketplace.com) to be able to use this api.
 
@@ -22,7 +21,7 @@ You can use your access token or our Single Sign On system to identify:
 
 *IZBERG use [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
 
-#### With Access token :
+#### With Access token
 
 ```php
 <?php
@@ -37,7 +36,7 @@ You can use your access token or our Single Sign On system to identify:
 ?>
 ```
 
-#### With SSO :
+#### With SSO
 
 ```php
 <?php
@@ -58,7 +57,7 @@ You can use your access token or our Single Sign On system to identify:
 
 #### Sandbox
 
-To use our sandbox environment, just pass the param `sandbox` in options when you create your izberg object :
+To use our sandbox environment, just pass the param `sandbox` in options when you create your izberg object:
 
 ```php
 <?php
@@ -70,11 +69,11 @@ To use our sandbox environment, just pass the param `sandbox` in options when yo
 ?>
 ```
 
-**Note** : It will request a none https url.
+**Note**: It will request a none https url.
 
 #### Authentification
 
-By default we authenticate the admin user with informations specified on initialization (email, firstname, lastname). If you want to authenticate a new user, you can do it using the setUser function :
+By default we authenticate the admin user with informations specified on initialization (email, firstname, lastname). If you want to authenticate a new user, you can do it using the setUser function:
 
 ```php
 <?php
@@ -371,12 +370,12 @@ Now that both addresses are set, we can place the order.
 
 ### Documentation
 
-To generate doc, we use [apigen](http://www.apigen.org/) , with this command :
+To generate doc, we use [apigen](http://www.apigen.org/) , with this command:
 
 `apigen generate --source lib --destination doc`
 
 ### Run tests
 
-- Install php unit : http://phpunit.de/getting-started.html
+- Install php unit: http://phpunit.de/getting-started.html
 - cd /to/the/izberg/php/library/folder
 - run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests'
