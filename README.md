@@ -333,6 +333,6 @@ To generate doc, we use [apigen](http://www.apigen.org/) , with this command:
 
 ## Run tests
 
-- Install php unit: http://phpunit.de/getting-started.html
+- Install [PHPUnit – The PHP Testing Framework](http://phpunit.de/getting-started.html)
 - cd /to/the/izberg/php/library/folder
 - run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests'
