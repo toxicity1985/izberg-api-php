@@ -9,7 +9,7 @@ PHP Wrapper around the IZBERG API
 ## Get started
 
 [Create an account](https://account.izberg-marketplace.com) on IZBERG-Marketplace.
-[Create an application](https://operator.izberg-marketplace.com) to be able to use this api.
+[Create an application](https://operator.izberg-marketplace.com) to be able to use this API.
 
 ## API DOCUMENTATION
 
@@ -19,7 +19,7 @@ You can found our [API documentation](http://izberg-marketplace.github.io/izberg
 
 You can use your access token or our Single Sign On (SSO) system to identify:
 
-*IZBERG use [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
+*IZBERG uses [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
 
 #### With Access token
 
@@ -60,11 +60,11 @@ $izberg = new Izberg\Izberg(array(
 ));
 ```
 
-**Note**: It will request a none https url.
+**Note**: It will request a none https URL.
 
-#### Authentification
+#### Authentication
 
-By default we authenticate the admin user with informations specified on initialization (email, firstname, lastname). If you want to authenticate a new user, you can do it using the setUser function:
+By default, we authenticate the admin user with informations specified on initialization (email, firstname, lastname). If you want to authenticate a new user, you can do it using the setUser function:
 
 ```php
 $izberg->setUser(array(
@@ -74,12 +74,12 @@ $izberg->setUser(array(
 ));
 ```
 
-This is useful when you want to link your api calls to a user, you will need it during an order process.
+This is useful when you want to link your API calls to a user, you will need it during an order process.
 
 
-##Ressources
+## Resources
 
-Basically, all ressources are handled the same way, using the 5 same generic methods
+Basically, all resources are handled the same way, using the 5 same generic methods
 
  * You have access to the following resources directly through the main **Izberg** object:
      * Address
@@ -112,9 +112,9 @@ The get_list() method will return an array containing all the instanciated objec
 public function get_list($resource, $params = null, $accept_type = "Accept: application/json")
 ```
 
-The first parameter is the ressource's name, the second one are the eventual parameters, the last one is the accept type, for most of the action, you will only need the $resource parameter
+The first parameter is the resource's name, the second one are optional parameters, the last one is the accept type, for most of the action, you will only need the `$resource` parameter.
 
-For exemple, the following will return the list of all the merchants on your marketplace.
+For example, the following will return the list of all the merchants on your marketplace.
 
 ```php
 $merchant_list = $Izberg->get_list("merchant");
@@ -128,7 +128,7 @@ The get() method works like get_list(), but it returns only one object, you have
 public function get($resource, $id, $params = null, $accept_type = "Accept: application/json")
 ```
 
-For exemple, the following will return the cart object of id '963'
+For example, the following will return the cart object with ID '963':
 
 ```php
 $my_cart = $Izberg->get("cart", 963);
@@ -136,15 +136,15 @@ $my_cart = $Izberg->get("cart", 963);
 
 ####Create
 
-The create() method will create a new element of the specified ressource
+The create() method will create a new element of the specified resource
 
 ```php
 public function create($resource, $params = null, $accept_type = "Accept: application/json")
 ```
 
-$name is the ressource's name and $params are the object you want to create ($params can be either an object or an array)
+$name is the resource's name and $params are the object you want to create ($params can be either an object or an array)
 
-The following example will create a new address
+The following example will create a new address:
 
 ```php
 $my_adress = $Izberg->create(
@@ -152,7 +152,7 @@ $my_adress = $Izberg->create(
     "address" => "ADDRESS LINE 1",
     "address2" => "ADDRESS LINE 2",
     "city" => "CITY NAME",
-    "company" => "OPTIONNAL COMPANY",
+    "company" => "COMPANY", // Optional
     "country" => "COUNTRY_ID",
     "default_billing" => true,
     "default_shipping" => true,
@@ -162,7 +162,7 @@ $my_adress = $Izberg->create(
     "last_name" => "LAST NAME",
     "name" => "ADDRESS NAME",
     "phone" => "PHONE NUMBER",
-    "state" => "OPTIONNAL STATE NAME",
+    "state" => "STATE NAME", // Optional
     "status" => 10,
     "zipcode" => "ZIPCODE"
 	)
@@ -171,13 +171,13 @@ $my_adress = $Izberg->create(
 
 ####Update
 
-The update() method will update one element from a specified ressource
+The update() method will update one element from a specified resource
 
 ```php
 public function update($resource, $id, $params = null, $accept_type = "Accept: application/json")
 ```
 
-$name is the ressource's name, $id is the object's id and $params are the fields you want to update.
+$name is the resource's name, $id is the object's id and $params are the fields you want to update.
 
 The following example will update an existing merchant
 
@@ -201,7 +201,7 @@ $merchant->save();
 
 ####Delete
 
-Deletes an element from a specific ressource
+Deletes an element from a specific resource
 
 ```php
 $address = $izberg->get("address", 963)
@@ -253,6 +253,7 @@ We need the country_id in in order to set the customer's address (Default value 
 ```php
 $country = $IzbergInstance->get('country');
 ```
+
 Now we can set the Shipping and Billing addresses.
 
 ```php
@@ -279,6 +280,7 @@ $address = $IzbergInstance->create('address', array(
 $my_cart->setBillingAddress($address->id);
 $my_cart->setShippingAddress($address->id);
 ```
+
 Now that both addresses are set, we can place the order.
 
 ```php
