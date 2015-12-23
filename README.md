@@ -1,14 +1,15 @@
-#Izberg-API-PHP
+# IZBERG-API-PHP
+
 [![Build Status](https://travis-ci.org/izberg-marketplace/izberg-api-php.svg?branch=master)](https://travis-ci.org/izberg-marketplace/izberg-api-php)
 
 ## About
 
-PHP Wrapper around the Izberg API
+PHP Wrapper around the IZBERG API
 
 ## Get started
 
 
-[Create an account](https://account.izberg-marketplace.com) on Izberg-Marketplace.
+[Create an account](https://account.izberg-marketplace.com) on IZBERG-Marketplace.
 [Create an application](https://operator.izberg-marketplace.com) to be able to use this api.
 
 ## API DOCUMENTATION
@@ -19,7 +20,7 @@ You can found our [API documentation](http://izberg-marketplace.github.io/izberg
 
 You can use your access token or our Single Sign On system to identify:
 
-*Izberg use [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
+*IZBERG use [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
 
 #### With Access token :
 
@@ -98,7 +99,7 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Brand
      * Cart
      * ApplicationCategory (Categories of your application)
-     * Category (Categories created by izberg)
+     * Category (Categories created by IZBERG)
      * Country
      * Feed
      * Webhook
@@ -238,7 +239,7 @@ Deletes an element from a specific ressource
 
 ### Simple Order
 
-Creating an order on Izberg is really easy, the only thing you need is the Item ID, and your customer's informations.
+Creating an order on IZBERG is really easy, the only thing you need is the Item ID, and your customer's informations.
 
 ```php
 
