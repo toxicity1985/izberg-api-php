@@ -17,7 +17,7 @@ You can found our [API documentation](http://izberg-marketplace.github.io/izberg
 
 ### Initialize the class
 
-You can use your access token or our Single Sign On system to identify:
+You can use your access token or our Single Sign On (SSO) system to identify:
 
 *IZBERG use [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
 
