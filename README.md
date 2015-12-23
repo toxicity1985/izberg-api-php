@@ -51,7 +51,7 @@ $izberg->sso(array(
 
 #### Sandbox
 
-To use our sandbox environment, just pass the param `sandbox` in options when you create your izberg object:
+To use our sandbox environment, just pass the param `sandbox` in options when you create your Izberg object:
 
 ```php
 $izberg = new Izberg\Izberg(array(
@@ -64,7 +64,7 @@ $izberg = new Izberg\Izberg(array(
 
 #### Authentication
 
-By default, we authenticate the admin user with informations specified on initialization (email, firstname, lastname). If you want to authenticate a new user, you can do it using the setUser function:
+By default, we authenticate the admin user with informations specified on initialization (`email`, `firstname`, `lastname`). If you want to authenticate a new user, you can do it using the `setUser()` function:
 
 ```php
 $izberg->setUser(array(
@@ -75,7 +75,6 @@ $izberg->setUser(array(
 ```
 
 This is useful when you want to link your API calls to a user, you will need it during an order process.
-
 
 ## Resources
 
@@ -101,12 +100,12 @@ Basically, all resources are handled the same way, using the 5 same generic meth
      * Review
      * Message
 
-###Instanciating resources
+### Instanciating resources
 
 
-####Get List
+#### Get List
 
-The get_list() method will return an array containing all the instanciated objects from the called resource.
+The `get_list()` method will return an array containing all the instanciated objects from the called resource.
 
 ```php
 public function get_list($resource, $params = null, $accept_type = "Accept: application/json")
@@ -122,7 +121,7 @@ $merchant_list = $Izberg->get_list("merchant");
 
 ####Get
 
-The get() method works like get_list(), but it returns only one object, you have to specify the object's id
+The `get()` method works like `get_list()`, but it returns only one object, you have to specify the object's id
 
 ```php
 public function get($resource, $id, $params = null, $accept_type = "Accept: application/json")
@@ -136,13 +135,13 @@ $my_cart = $Izberg->get("cart", 963);
 
 ####Create
 
-The create() method will create a new element of the specified resource
+The `create()` method will create a new element of the specified resource
 
 ```php
 public function create($resource, $params = null, $accept_type = "Accept: application/json")
 ```
 
-$name is the resource's name and $params are the object you want to create ($params can be either an object or an array)
+`$name` is the resource's name and `$params` are the object you want to create (`$params` can be either an object or an array)
 
 The following example will create a new address:
 
@@ -171,13 +170,13 @@ $my_adress = $Izberg->create(
 
 ####Update
 
-The update() method will update one element from a specified resource
+The `update()` method will update one element from a specified resource
 
 ```php
 public function update($resource, $id, $params = null, $accept_type = "Accept: application/json")
 ```
 
-$name is the resource's name, $id is the object's id and $params are the fields you want to update.
+`$name` is the resource's name, `$id` is the object's id and `$params` are the fields you want to update.
 
 The following example will update an existing merchant
 
@@ -246,9 +245,9 @@ $my_cart->addItem(array(
 ));
 ```
 
-You have to use Cart::addItem() for each different offer you want to add to your cart.
+You have to use `Cart::addItem()` for each different offer you want to add to your cart.
 
-We need the country_id in in order to set the customer's address (Default value is "FR").
+We need the `country_id` in in order to set the customer's address (Default value is "FR").
 
 ```php
 $country = $IzbergInstance->get('country');
@@ -290,7 +289,7 @@ $order->updateStatus('authorizeOrder');
 
 ## Webhook
 
-####Create
+### Create
 
 ```php
 $params = array(
@@ -300,7 +299,7 @@ $params = array(
 $hook = $izberg->create("webhook", $params);
 ```
 
-####Get and Update
+### Get and Update
 
 ```php
 $webhook_id = 1046;
@@ -311,14 +310,14 @@ $hook = $hook->save();
 
 ## Locale
 
-####GET
+### GET
 
 ```php
 $a = $this->getIzberg();
 $locale = $a->get("localeConfig");
 ```
 
-####Update and reset using delete
+### Update and reset using delete
 
 ```php
 $locale->update(array("languages" => ["fr","it"]));
@@ -326,13 +325,13 @@ $this->assertEquals($locale->languages, ["fr","it"]);
 $locale->delete();
 ```
 
-### Documentation
+## Documentation
 
 To generate doc, we use [apigen](http://www.apigen.org/) , with this command:
 
 `apigen generate --source lib --destination doc`
 
-### Run tests
+## Run tests
 
 - Install php unit: http://phpunit.de/getting-started.html
 - cd /to/the/izberg/php/library/folder
