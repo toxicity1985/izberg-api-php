@@ -1,15 +1,15 @@
-#Izberg-API-PHP
+# IZBERG-API-PHP
+
 [![Build Status](https://travis-ci.org/izberg-marketplace/izberg-api-php.svg?branch=master)](https://travis-ci.org/izberg-marketplace/izberg-api-php)
 
 ## About
 
-PHP Wrapper around the Izberg API
+PHP Wrapper around the IZBERG API
 
 ## Get started
 
-
-[Create an account](https://account.izberg-marketplace.com) on Izberg-Marketplace.
-[Create an application](https://operator.izberg-marketplace.com) to be able to use this api.
+[Create an account](https://account.izberg-marketplace.com) on IZBERG-Marketplace.
+[Create an application](https://operator.izberg-marketplace.com) to be able to use this API.
 
 ## API DOCUMENTATION
 
@@ -17,88 +17,75 @@ You can found our [API documentation](http://izberg-marketplace.github.io/izberg
 
 ### Initialize the class
 
-You can use your access token or our Single Sign On system to identify:
+You can use your access token or our Single Sign On (SSO) system to identify:
 
-*Izberg use [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
+*IZBERG uses [psr-0](http://www.php-fig.org/psr/psr-0/) convention for autoload*
 
-#### With Access token :
+#### With Access token
 
 ```php
-<?php
-    $izberg = new Izberg\Izberg(array(
-      'appNamespace' => 'YOUR_APP_NAMESPACE',
-      'accessToken'  => 'YOUR_ACCESSTOKEN',
-      'username'   	 => 'YOUR_USERNAME',
-      'apiKey'       => 'YOUR_APP_KEY',
-      'apiSecret'    => 'YOUR_APP_SECRET'
-    ));
-
-?>
+$izberg = new Izberg\Izberg(array(
+  'appNamespace' => 'YOUR_APP_NAMESPACE',
+  'accessToken'  => 'YOUR_ACCESSTOKEN',
+  'username'     => 'YOUR_USERNAME',
+  'apiKey'       => 'YOUR_APP_KEY',
+  'apiSecret'    => 'YOUR_APP_SECRET'
+));
 ```
 
-#### With SSO :
+#### With SSO
 
 ```php
-<?php
-    $izberg = new Izberg\Izberg(array(
-      'appNamespace' => 'YOUR_APP_NAMESPACE',
-      'apiKey'       => 'YOUR_APP_KEY',
-      'apiSecret'    => 'YOUR_APP_SECRET'
-    ));
+$izberg = new Izberg\Izberg(array(
+  'appNamespace' => 'YOUR_APP_NAMESPACE',
+  'apiKey'       => 'YOUR_APP_KEY',
+  'apiSecret'    => 'YOUR_APP_SECRET'
+));
 
-    $izberg->sso(array(
-      "email"     => "YOUR_EMAIL",
-      "firstName" => "YOUR_ACCOUNT_FIRST_NAME",
-      "lastName"  => "YOUR_ACCOUNT_LAST_NAME"
-    ));
-
-?>
+$izberg->sso(array(
+  "email"     => "YOUR_EMAIL",
+  "firstName" => "YOUR_ACCOUNT_FIRST_NAME",
+  "lastName"  => "YOUR_ACCOUNT_LAST_NAME"
+));
 ```
 
 #### Sandbox
 
-To use our sandbox environment, just pass the param `sandbox` in options when you create your izberg object :
+To use our sandbox environment, just pass the param `sandbox` in options when you create your Izberg object:
 
 ```php
-<?php
-    $izberg = new Izberg\Izberg(array(
-      'appNamespace' => 'YOUR_APP_NAMESPACE',
-      'sandbox'      => true,
-    ));
-
-?>
+$izberg = new Izberg\Izberg(array(
+  'appNamespace' => 'YOUR_APP_NAMESPACE',
+  'sandbox'      => true,
+));
 ```
 
-**Note** : It will request a none https url.
+**Note**: It will request a none https URL.
 
-#### Authentification
+#### Authentication
 
-By default we authenticate the admin user with informations specified on initialization (email, firstname, lastname). If you want to authenticate a new user, you can do it using the setUser function :
+By default, we authenticate the admin user with informations specified on initialization (`email`, `firstname`, `lastname`). If you want to authenticate a new user, you can do it using the `setUser()` function:
 
 ```php
-<?php
-
-  $izberg->setUser(array(
-    "email"      => "myemail@yahoo.fr",
-    "first_name" => "seb",
-    "last_name"  => "fie"
-  ));
-?>
+$izberg->setUser(array(
+  "email"      => "myemail@yahoo.fr",
+  "first_name" => "seb",
+  "last_name"  => "fie"
+));
 ```
 
-This is useful when you want to link your api calls to a user, you will need it during an order process.
+This is useful when you want to link your API calls to a user, you will need it during an order process.
 
+## Resources
 
-##Ressources
-
-Basically, all ressources are handled the same way, using the 5 same generic methods
+Basically, all resources are handled the same way, using the 5 same generic methods
 
  * You have access to the following resources directly through the main **Izberg** object:
      * Address
      * Brand
      * Cart
      * ApplicationCategory (Categories of your application)
-     * Category (Categories created by izberg)
+     * Category (Categories created by IZBERG)
      * Country
      * Feed
      * Webhook
@@ -113,95 +100,87 @@ Basically, all ressources are handled the same way, using the 5 same generic met
      * Review
      * Message
 
-###Instanciating resources
+### Instanciating resources
 
 
-####Get List
+#### Get List
 
-The get_list() method will return an array containing all the instanciated objects from the called resource.
+The `get_list()` method will return an array containing all the instanciated objects from the called resource.
 
 ```php
-
 public function get_list($resource, $params = null, $accept_type = "Accept: application/json")
 ```
 
-The first parameter is the ressource's name, the second one are the eventual parameters, the last one is the accept type, for most of the action, you will only need the $resource parameter
+The first parameter is the resource's name, the second one are optional parameters, the last one is the accept type, for most of the action, you will only need the `$resource` parameter.
 
-For exemple, the following will return the list of all the merchants on your marketplace.
+For example, the following will return the list of all the merchants on your marketplace.
 
 ```php
-
 $merchant_list = $Izberg->get_list("merchant");
-
 ```
 
 ####Get
 
-The get() method works like get_list(), but it returns only one object, you have to specify the object's id
+The `get()` method works like `get_list()`, but it returns only one object, you have to specify the object's id
 
 ```php
-
 public function get($resource, $id, $params = null, $accept_type = "Accept: application/json")
 ```
 
-For exemple, the following will return the cart object of id '963'
+For example, the following will return the cart object with ID '963':
 
 ```php
-
 $my_cart = $Izberg->get("cart", 963);
 ```
 
 ####Create
 
-The create() method will create a new element of the specified ressource
+The `create()` method will create a new element of the specified resource
 
 ```php
-
 public function create($resource, $params = null, $accept_type = "Accept: application/json")
 ```
 
-$name is the ressource's name and $params are the object you want to create ($params can be either an object or an array)
+`$name` is the resource's name and `$params` are the object you want to create (`$params` can be either an object or an array)
 
-The following example will create a new address
+The following example will create a new address:
 
 ```php
-
-$my_adress = $Izberg->create("address", array(
-						"address" => "ADDRESS LINE 1",
-						"address2" => "ADDRESS LINE 2",
-						"city" => "CITY NAME",
-						"company" => "OPTIONNAL COMPANY",
-						"country" => "COUNTRY_ID",
-						"default_billing" => true,
-						"default_shipping" => true,
-						"digicode" => null,
-						"first_name" => "FIRST NAME",
-						"floor" => null,
-						"last_name" => "LAST NAME",
-						"name" => "ADDRESS NAME",
-						"phone" => "PHONE NUMBER",
-						"state" => "OPTIONNAL STATE NAME",
-						"status" => 10,
-						"zipcode" => "ZIPCODE"
-			)
-		);
+$my_adress = $Izberg->create(
+  "address", array(
+    "address" => "ADDRESS LINE 1",
+    "address2" => "ADDRESS LINE 2",
+    "city" => "CITY NAME",
+    "company" => "COMPANY", // Optional
+    "country" => "COUNTRY_ID",
+    "default_billing" => true,
+    "default_shipping" => true,
+    "digicode" => null,
+    "first_name" => "FIRST NAME",
+    "floor" => null,
+    "last_name" => "LAST NAME",
+    "name" => "ADDRESS NAME",
+    "phone" => "PHONE NUMBER",
+    "state" => "STATE NAME", // Optional
+    "status" => 10,
+    "zipcode" => "ZIPCODE"
+	)
+);
 ```
 
 ####Update
 
-The update() method will update one element from a specified ressource
+The `update()` method will update one element from a specified resource
 
 ```php
-
 public function update($resource, $id, $params = null, $accept_type = "Accept: application/json")
 ```
 
-$name is the ressource's name, $id is the object's id and $params are the fields you want to update.
+`$name` is the resource's name, `$id` is the object's id and `$params` are the fields you want to update.
 
 The following example will update an existing merchant
 
 ```php
-
 $my_merchant = $Izberg->update("merchant", 15, array("description" => "An updated merchant"));
 ```
 
@@ -214,168 +193,146 @@ Each object returned by the handling methods can use both the save and delete fu
 Save the current object
 
 ```php
-
 $merchant = $Izberg->get("merchant", 15);
-
 $merchant->description = "An Updated Merchant";
-
 $merchant->save();
-
 ```
 
 ####Delete
 
-Deletes an element from a specific ressource
+Deletes an element from a specific resource
 
 ```php
-
-	$address = $izberg->get("address", 963)
-	$address->delete();
-
+$address = $izberg->get("address", 963)
+$address->delete();
 ```
 
 ## Order Process
 
 ### Simple Order
 
-Creating an order on Izberg is really easy, the only thing you need is the Item ID, and your customer's informations.
+Creating an order on IZBERG is really easy, the only thing you need is the Item ID, and your customer's informations.
 
 ```php
+$valid_array = array(
+  'appNamespace' => 'YOUR_APP_NAMESPACE',
+  'accessToken'=> 'YOUR_ACCESSTOKEN',
+  'username' => 'YOUR_USERNAME',
+  'apiKey' => 'YOUR_APP_KEY',
+  'apiSecret'=> 'YOUR_APP_SECRET'
+)
 
-<?php
-	$valid_array = array(
-			'appNamespace' => 'YOUR_APP_NAMESPACE',
-			'accessToken'  => 'YOUR_ACCESSTOKEN',
-			'username'     => 'YOUR_USERNAME',
-			'apiKey'       => 'YOUR_APP_KEY',
-			'apiSecret'    => 'YOUR_APP_SECRET'
-			)
+$IzbergInstance = new Izberg\Izberg($valid_array);
 
-	$IzbergInstance = new Izberg\Izberg($valid_array);
-
-	$IzbergInstance->setUser(array(
-				"email" => "EMAIL_ADDRESS",
-				"first_name" => "FIRST_NAME",
-				"last_name" => "LAST_NAME"
-				));
+$IzbergInstance->setUser(array(
+  "email" => "EMAIL_ADDRESS",
+  "first_name" => "FIRST_NAME",
+  "last_name" => "LAST_NAME"
+));
 
 ```
 
 Now that we have set the User informations, we can add the offer to the cart.
 
 ```php
+$id_offer = "MY OFFER ID";
+$quantity = "MY OFFER QUANTITY";
 
-	$id_offer = "MY OFFER ID";
-	$quantity = "MY OFFER QUANTITY";
-
-	$my_cart = IzbergInstance->get('cart');
-	$my_cart->addItem(array(
-		'offer_id' => $id_offer,
-		'quantity' => (int)$quantity,
-		));
-
+$my_cart = IzbergInstance->get('cart');
+$my_cart->addItem(array(
+  'offer_id' => $id_offer,
+  'quantity' => (int)$quantity,
+));
 ```
 
-You have to use Cart::addItem() for each different offer you want to add to your cart.
+You have to use `Cart::addItem()` for each different offer you want to add to your cart.
 
-We need the country_id in in order to set the customer's address (Default value is "FR").
+We need the `country_id` in in order to set the customer's address (Default value is "FR").
 
 ```php
-	$country = $IzbergInstance->get('country');
+$country = $IzbergInstance->get('country');
 ```
+
 Now we can set the Shipping and Billing addresses.
 
 ```php
+$address = $IzbergInstance->create('address', array(
+  "address" => "ADDRESS LINE 1",
+  "address2" => "ADDRESS LINE 2",
+  "city" => "CITY NAME"
+  "company" => "OPTIONNAL COMPANY NAME",
+  "country" => "/v1/country/" . $country->id . "/",
+  "default_billing" => true,
+  "default_shipping" => true,
+  "digicode" => null,
+  "first_name" => "FIRST NAME",
+  "floor" => null,
+  "last_name" => "LAST NAME",
+  "name" => "ADDRESS NAME",
+  "phone" => "PHONE NUMBER",
+  "state" => "OPTIONNAL STATE NAME",
+  //STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
+  "status" => 10,
+  "zipcode" => "ZIPCODE"
+));
 
-	$address = $IzbergInstance->create('address', array(
-        "address" => "ADDRESS LINE 1",
-        "address2" => "ADDRESS LINE 2",
-        "city" => "CITY NAME"
-        "company" => "OPTIONNAL COMPANY NAME",
-        "country" => "/v1/country/" . $country->id . "/",
-        "default_billing" => true,
-        "default_shipping" => true,
-        "digicode" => null,
-        "first_name" => "FIRST NAME",
-        "floor" => null,
-        "last_name" => "LAST NAME",
-        "name" => "ADDRESS NAME",
-        "phone" => "PHONE NUMBER",
-        "state" => "OPTIONNAL STATE NAME",
-		//STATUS | 0 : INACTIVE | 10 : ACTIVE | 90 : HIDDEN
-        "status" => 10,
-        "zipcode" => "ZIPCODE"
-        ));
-
-	$my_cart->setBillingAddress($address->id);
-    $my_cart->setShippingAddress($address->id);
-
-
+$my_cart->setBillingAddress($address->id);
+$my_cart->setShippingAddress($address->id);
 ```
+
 Now that both addresses are set, we can place the order.
 
 ```php
-
-        $order = $my_cart->createOrder();
-        $order->updateStatus('authorizeOrder');
-
-?>
-
+$order = $my_cart->createOrder();
+$order->updateStatus('authorizeOrder');
 ```
 
 ## Webhook
 
-####Create
+### Create
 
 ```php
-
-    $params = array(
-        'url' => "http://create.com",
-        'event' => 'merchant_order_confirmed',
-    );
-    $hook = $izberg->create("webhook", $params);
-
+$params = array(
+  'url' => "http://create.com",
+  'event' => 'merchant_order_confirmed',
+);
+$hook = $izberg->create("webhook", $params);
 ```
 
-####Get and Update
+### Get and Update
 
 ```php
-
-	$webhook_id = 1046;
-	$hook = $izberg->get("webhook", $webhook_id);
-
-    $hook->url = "http://update.com";
-    $hook = $hook->save();
-
+$webhook_id = 1046;
+$hook = $izberg->get("webhook", $webhook_id);
+$hook->url = "http://update.com";
+$hook = $hook->save();
 ```
 
 ## Locale
 
-####GET
+### GET
 
 ```php
-
-    $a = $this->getIzberg();
-	$locale = $a->get("localeConfig");
+$a = $this->getIzberg();
+$locale = $a->get("localeConfig");
 ```
 
-####Update and reset using delete
+### Update and reset using delete
 
 ```php
-
-	$locale->update(array("languages" => ["fr","it"]));
-    $this->assertEquals($locale->languages, ["fr","it"]);
-    $locale->delete();
+$locale->update(array("languages" => ["fr","it"]));
+$this->assertEquals($locale->languages, ["fr","it"]);
+$locale->delete();
 ```
 
-### Documentation
+## Documentation
 
-To generate doc, we use [apigen](http://www.apigen.org/) , with this command :
+To generate doc, we use [apigen](http://www.apigen.org/) , with this command:
 
 `apigen generate --source lib --destination doc`
 
-### Run tests
+## Run tests
 
-- Install php unit : http://phpunit.de/getting-started.html
-- cd /to/the/izberg/php/library/folder
-- run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests'
+- Install [PHPUnit – The PHP Testing Framework](http://phpunit.de/getting-started.html)
+- `cd /path/to/izberg-api-php`
+- run `USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests`
