@@ -127,8 +127,13 @@ abstract class Resource
                 if (is_object($value))
                 {
                     $classname = $this->parseUri($key);
-                    if (!class_exists($classname) && isset($value->resource_uri))
-                        $classname = $this->parseUri($value->resource_uri);
+                    try {
+                      if (!class_exists($classname) && isset($value->resource_uri))
+                          $classname = $this->parseUri($value->resource_uri);
+                    } catch (\LogicException $e) {
+                       continue;
+                    }
+
                     if (!class_exists($classname))
                         continue;
                     else

@@ -108,4 +108,13 @@ class izbergTest extends BaseTester
 		$this->assertEquals($result, "My test");
 	}
 
+  public function testGetCurrentApp()
+	{
+    \VCR\VCR::insertCassette('testGetCurrentApp');
+		$a = $this->getIzberg();
+    $application = $a->getCurrentApplication();
+    $this->assertInstanceOf("Izberg\Resource\Application", $application);
+    $this->assertEquals($application->namespace, "lolote");
+	}
+
 }

@@ -2,6 +2,6 @@
 namespace Izberg\Resource;
 use Izberg\Resource;
 
-class MerchantReview extends Resource
+class Meta extends Resource
 {
 }
