@@ -20,7 +20,7 @@ class cartTest extends BaseTester
     // Turn off VCR to stop intercepting requests
     \VCR\VCR::turnOff();
   }
-  
+
   /**
    * Tests
    */
@@ -63,8 +63,8 @@ class cartTest extends BaseTester
     $number_items = count($my_cart->getItems());
     $this->assertTrue($number_items==0);
     $my_cart->addItem(array(
-      "offer_id" => 27254,
-      "variation_id" => 60873,
+      "offer_id" => 38895,
+      "variation_id" => null,
       "quantity" => 1
     ));
     \VCR\VCR::eject();

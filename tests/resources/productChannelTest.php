@@ -32,7 +32,7 @@ class productChannelTest extends BaseTester
     $mock->expects($this->any())
 	    ->method('readFromUrl')
       ->with(
-         "https://d1uyhd0hkrx9pt.cloudfront.net/channels/2015/10/20151020002840_channel_389_4.xml"
+         "https://d1uyhd0hkrx9pt.cloudfront.net/channels/2016/04/20160413144852_channel_389_4.xml"
       )
 	    ->will($this->returnValue(true));
 
