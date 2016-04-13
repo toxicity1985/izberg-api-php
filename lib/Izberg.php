@@ -132,6 +132,14 @@ class Izberg
 
 
 	/**
+	* The request nonce
+	*
+	* @var string
+	*/
+	private $_nonce;
+
+
+	/**
    * Anonymous
    *
    * @var boolean
@@ -306,6 +314,15 @@ class Izberg
 	}
 
 	/**
+	* Nonce Getter
+	*
+	* @return String
+	*/
+	public function getNonce() {
+		return $this->_nonce;
+	}
+
+	/**
 	* Locale Getter
 	*
 	* @return String
@@ -328,6 +345,23 @@ class Izberg
 		}
 		$message_auth = hash_hmac('sha1', implode(";", $to_compose), $this->getApiSecret());
 		return $message_auth;
+	}
+
+
+	/**
+	* Request signature
+	*
+	* @return String
+	*/
+	public function getRequestSignature($body)
+	{
+		$this->setNonce(time());
+		$nonce = $this->getNonce();
+		$to_compose = array($body, $nonce);
+		if (is_null($this->getApiSecret())) {
+			throw new Exception\GenericException("To sign your requests, you need a api secret");
+		}
+		return hash_hmac('sha1', implode(":", $to_compose), $this->getApiSecret());
 	}
 
 
@@ -490,6 +524,17 @@ class Izberg
 	public function setTimestamp($timestamp)
 	{
 		$this->_timestamp = $timestamp;
+	}
+
+	/**
+	* Nonce Setter
+	*
+	* @param string $timestamp
+	* @return String
+	*/
+	public function setNonce($nonce)
+	{
+		$this->_nonce = $nonce;
 	}
 
 	/**
@@ -682,28 +727,20 @@ class Izberg
 		if ($this->getDebug()) {
 			curl_setopt($ch, CURLOPT_VERBOSE, true);
 		}
-		curl_setopt($ch, CURLOPT_URL, $apiCall);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
-
+		$body = ltrim(ltrim($paramString, '&'), '?');
 		if ('POST' === $method)
 		{
 			curl_setopt($ch, CURLOPT_POST, count($params));
 			if (ltrim(ltrim($paramString, '&'), '?') != "") {
-				curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 			}
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 		} else if ('DELETE' === $method) {
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		} else if ('PUT' === $method) {
 			curl_setopt($ch, CURLOPT_POST, count($params));
-			curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 		}
 
@@ -713,6 +750,22 @@ class Izberg
 		} else {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		}
+
+		// We sign the request
+		$signature = $this->getRequestSignature($body);
+		$nonce = $this->getNonce();
+		array_push($headers, "Application-Signature: $signature");
+		array_push($headers, "Application-Nonce: $nonce");
+
+		curl_setopt($ch, CURLOPT_URL, $apiCall);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
 		$data = $this->curlExec($ch);
 		// We log request
