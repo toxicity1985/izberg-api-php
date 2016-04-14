@@ -32,7 +32,7 @@ class returnTest extends BaseTester
     $user = $a->get("user");
 
     // We get an existing order
-    $merchant_order = $a->get("merchantOrder", 871);
+    $merchant_order = $a->get("merchantOrder", 26390);
     $item = $merchant_order->items[0];
 
     // We return this item
@@ -67,7 +67,7 @@ class returnTest extends BaseTester
     $user = $a->get("user");
 
     // We get an existing order
-    $merchant_order = $a->get("merchantOrder", 864);
+    $merchant_order = $a->get("merchantOrder", 26388);
     $item = $merchant_order->items[0];
 
     // We return this item

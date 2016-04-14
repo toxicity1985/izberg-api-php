@@ -77,7 +77,7 @@ class messageTest extends BaseTester
 
     $a = $this->getIzberg();
     $messages = $a->get_list("message");
-    $this->assertCount(6, $messages);
+    $this->assertCount(14, $messages);
   }
 
 }

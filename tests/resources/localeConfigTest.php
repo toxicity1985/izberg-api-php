@@ -30,7 +30,7 @@ class localeConfigTest extends BaseTester
 
     $a = $this->getIzberg();
     $locale = $a->get("localeConfig");
-    $this->assertEquals($locale->languages, array());
+    $this->assertEquals($locale->languages, array("fr"));
   }
 
   public function testAddALocale()

@@ -29,7 +29,7 @@ class OrderTest extends BaseTester
 		$a = $this->getIzberg();
 		// We get the first merchant
 		$merchants = $a->get_list('merchant');
-		$merchant = $merchants[0];
+		$merchant = $merchants[1];
 		$products = $merchant->getCatalog();
 		$product = $products->product;
 		$best_offer_id = (string) $product->best_offer->id;

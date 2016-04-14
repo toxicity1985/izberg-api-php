@@ -29,7 +29,6 @@ You can use your access token or our Single Sign On system to identify:
       'appNamespace' => 'YOUR_APP_NAMESPACE',
       'accessToken'  => 'YOUR_ACCESSTOKEN',
       'username'   	 => 'YOUR_USERNAME',
-      'apiKey'       => 'YOUR_APP_KEY',
       'apiSecret'    => 'YOUR_APP_SECRET'
     ));
 
@@ -42,7 +41,6 @@ You can use your access token or our Single Sign On system to identify:
 <?php
     $izberg = new Izberg\Izberg(array(
       'appNamespace' => 'YOUR_APP_NAMESPACE',
-      'apiKey'       => 'YOUR_APP_KEY',
       'apiSecret'    => 'YOUR_APP_SECRET'
     ));
 
@@ -247,7 +245,6 @@ Creating an order on Izberg is really easy, the only thing you need is the Item 
 			'appNamespace' => 'YOUR_APP_NAMESPACE',
 			'accessToken'  => 'YOUR_ACCESSTOKEN',
 			'username'     => 'YOUR_USERNAME',
-			'apiKey'       => 'YOUR_APP_KEY',
 			'apiSecret'    => 'YOUR_APP_SECRET'
 			)
 
@@ -378,4 +375,4 @@ To generate doc, we use [apigen](http://www.apigen.org/) , with this command :
 
 - Install php unit : http://phpunit.de/getting-started.html
 - cd /to/the/izberg/php/library/folder
-- run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests'
+- run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 API_SECRET_KEY=6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0 phpunit --debug tests'

@@ -88,12 +88,6 @@ class Izberg
 	*/
 	private $_apisecret;
 
-	/**
-	* The izberg application api key
-	*
-	* @var string
-	*/
-	private $_apikey;
 
 	/**
 	* The izberg application access_token
@@ -102,12 +96,6 @@ class Izberg
 	*/
 	private $_access_token;
 
-	/**
-	* The izberg api key
-	*
-	* @var string
-	*/
-	private $_izberg_apikey;
 
 	/**
 	* The user email
@@ -129,6 +117,14 @@ class Izberg
 	* @var string
 	*/
 	private $_timestamp;
+
+
+	/**
+	* The request nonce
+	*
+	* @var string
+	*/
+	private $_nonce;
 
 
 	/**
@@ -192,14 +188,6 @@ class Izberg
 		return $this->_debug;
 	}
 
-	/**
-	* API-key Getter
-	*
-	* @return String
-	*/
-	public function getApiKey() {
-		return $this->_apikey;
-	}
 
 	/**
 	* API-secret Getter
@@ -287,14 +275,6 @@ class Izberg
 		return self::$_api_url;
 	}
 
-	/**
-	* Izberg API key Getter
-	*
-	* @return String
-	*/
-	public function getIzbergApiKey() {
-		return $this->_izberg_apikey;
-	}
 
 	/**
 	* Timestamp Getter
@@ -303,6 +283,15 @@ class Izberg
 	*/
 	public function getTimestamp() {
 		return $this->_timestamp;
+	}
+
+	/**
+	* Nonce Getter
+	*
+	* @return String
+	*/
+	public function getNonce() {
+		return $this->_nonce;
 	}
 
 	/**
@@ -332,14 +321,19 @@ class Izberg
 
 
 	/**
-	* API-key Setter
+	* Request signature
 	*
-	* @param string $apiKey
-	* @return void
+	* @return String
 	*/
-	public function setApiKey($apiKey)
+	public function getRequestSignature($body)
 	{
-		$this->_apikey = $apiKey;
+		$this->setNonce(time());
+		$nonce = $this->getNonce();
+		$to_compose = array($body, $nonce);
+		if (is_null($this->getApiSecret())) {
+			throw new Exception\GenericException("To sign your requests, you need a api secret");
+		}
+		return hash_hmac('sha1', implode(":", $to_compose), $this->getApiSecret());
 	}
 
 	/**
@@ -414,7 +408,6 @@ class Izberg
 	{
 		$this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
 		$this->current_user = $this->getUser();
-		$this->setIzbergApiKey($this->_single_sign_on_response->api_key);
 		$this->setAccessToken($this->_single_sign_on_response->access_token);
 		$this->setUsername($this->_single_sign_on_response->username);
 		if ($this->_single_sign_on_response->username != "Anonymous") {
@@ -470,16 +463,6 @@ class Izberg
 		$this->_shipping_country = $shippingCountry;
 	}
 
-	/**
-	* Izberg API key Setter
-	*
-	* @param string $api_key
-	* @return String
-	*/
-	public function setIzbergApiKey($api_key)
-	{
-		$this->_izberg_apikey = $api_key;
-	}
 
 	/**
 	* Timestamp Setter
@@ -490,6 +473,17 @@ class Izberg
 	public function setTimestamp($timestamp)
 	{
 		$this->_timestamp = $timestamp;
+	}
+
+	/**
+	* Nonce Setter
+	*
+	* @param string $timestamp
+	* @return String
+	*/
+	public function setNonce($nonce)
+	{
+		$this->_nonce = $nonce;
 	}
 
 	/**
@@ -528,8 +522,6 @@ class Izberg
 
 			$this->_anonymous = (isset($config["anonymous"]) && $config["anonymous"] == true) ? true : false;
 
-			if (isset($config['apiKey']))
-				$this->setApiKey($config['apiKey']);
 			if (isset($config['apiSecret']))
 				$this->setApiSecret($config['apiSecret']);
 			if (isset($config['appNamespace']))
@@ -549,8 +541,6 @@ class Izberg
 	public function sso($config)
 	{
 		// if you want to access user data
-		if (isset($config['apiKey']))
-      $this->setApiKey($config['apiKey']);
     if (isset($config['apiSecret']))
       $this->setApiSecret($config['apiSecret']);
     if (isset($config['appNamespace'])) $this->setAppNamespace($config['appNamespace']);
@@ -682,28 +672,20 @@ class Izberg
 		if ($this->getDebug()) {
 			curl_setopt($ch, CURLOPT_VERBOSE, true);
 		}
-		curl_setopt($ch, CURLOPT_URL, $apiCall);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
-		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
-		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
-
+		$body = ltrim(ltrim($paramString, '&'), '?');
 		if ('POST' === $method)
 		{
 			curl_setopt($ch, CURLOPT_POST, count($params));
 			if (ltrim(ltrim($paramString, '&'), '?') != "") {
-				curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
+				curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 			}
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
 		} else if ('DELETE' === $method) {
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		} else if ('PUT' === $method) {
 			curl_setopt($ch, CURLOPT_POST, count($params));
-			curl_setopt($ch, CURLOPT_POSTFIELDS, ltrim(ltrim($paramString, '&'), '?'));
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
 		}
 
@@ -713,6 +695,22 @@ class Izberg
 		} else {
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		}
+
+		// We sign the request
+		$signature = $this->getRequestSignature($body);
+		$nonce = $this->getNonce();
+		array_push($headers, "Application-Signature: $signature");
+		array_push($headers, "Application-Nonce: $nonce");
+
+		curl_setopt($ch, CURLOPT_URL, $apiCall);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+		// curl_setopt($ch, CURLOPT_PROXY, "127.0.0.1");
+		// curl_setopt($ch, CURLOPT_PROXYPORT, 8888);
 
 		$data = $this->curlExec($ch);
 		// We log request

@@ -38,6 +38,6 @@ class UserTest extends BaseTester
 		$a = $this->getIzberg();
 		$user = $a->get("user");
     $messsages = $user->getOutbox();
-		$this->assertEmpty($messsages);
+		$this->assertCount(14,$messsages);
 	}
 }
