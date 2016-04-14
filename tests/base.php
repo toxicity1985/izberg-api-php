@@ -12,7 +12,7 @@ abstract class BaseTester extends PHPUnit_Framework_TestCase
 					"appNamespace" => "lolote",
 					"username" => getenv("USERNAME1"),
 					"accessToken" => getenv("TOKEN1"),
-          "apiSecret" => getenv("API_KEY"),
+          "apiSecret" => getenv("API_SECRET_KEY"),
 					"sandbox" => true
 			);
 		}

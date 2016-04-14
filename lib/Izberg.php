@@ -88,12 +88,6 @@ class Izberg
 	*/
 	private $_apisecret;
 
-	/**
-	* The izberg application api key
-	*
-	* @var string
-	*/
-	private $_apikey;
 
 	/**
 	* The izberg application access_token
@@ -102,12 +96,6 @@ class Izberg
 	*/
 	private $_access_token;
 
-	/**
-	* The izberg api key
-	*
-	* @var string
-	*/
-	private $_izberg_apikey;
 
 	/**
 	* The user email
@@ -200,14 +188,6 @@ class Izberg
 		return $this->_debug;
 	}
 
-	/**
-	* API-key Getter
-	*
-	* @return String
-	*/
-	public function getApiKey() {
-		return $this->_apikey;
-	}
 
 	/**
 	* API-secret Getter
@@ -295,14 +275,6 @@ class Izberg
 		return self::$_api_url;
 	}
 
-	/**
-	* Izberg API key Getter
-	*
-	* @return String
-	*/
-	public function getIzbergApiKey() {
-		return $this->_izberg_apikey;
-	}
 
 	/**
 	* Timestamp Getter
@@ -362,18 +334,6 @@ class Izberg
 			throw new Exception\GenericException("To sign your requests, you need a api secret");
 		}
 		return hash_hmac('sha1', implode(":", $to_compose), $this->getApiSecret());
-	}
-
-
-	/**
-	* API-key Setter
-	*
-	* @param string $apiKey
-	* @return void
-	*/
-	public function setApiKey($apiKey)
-	{
-		$this->_apikey = $apiKey;
 	}
 
 	/**
@@ -448,7 +408,6 @@ class Izberg
 	{
 		$this->_single_sign_on_response = $this->_getSingleSignOnResponse($params);
 		$this->current_user = $this->getUser();
-		$this->setIzbergApiKey($this->_single_sign_on_response->api_key);
 		$this->setAccessToken($this->_single_sign_on_response->access_token);
 		$this->setUsername($this->_single_sign_on_response->username);
 		if ($this->_single_sign_on_response->username != "Anonymous") {
@@ -504,16 +463,6 @@ class Izberg
 		$this->_shipping_country = $shippingCountry;
 	}
 
-	/**
-	* Izberg API key Setter
-	*
-	* @param string $api_key
-	* @return String
-	*/
-	public function setIzbergApiKey($api_key)
-	{
-		$this->_izberg_apikey = $api_key;
-	}
 
 	/**
 	* Timestamp Setter
@@ -573,8 +522,6 @@ class Izberg
 
 			$this->_anonymous = (isset($config["anonymous"]) && $config["anonymous"] == true) ? true : false;
 
-			if (isset($config['apiKey']))
-				$this->setApiKey($config['apiKey']);
 			if (isset($config['apiSecret']))
 				$this->setApiSecret($config['apiSecret']);
 			if (isset($config['appNamespace']))
@@ -594,8 +541,6 @@ class Izberg
 	public function sso($config)
 	{
 		// if you want to access user data
-		if (isset($config['apiKey']))
-      $this->setApiKey($config['apiKey']);
     if (isset($config['apiSecret']))
       $this->setApiSecret($config['apiSecret']);
     if (isset($config['appNamespace'])) $this->setAppNamespace($config['appNamespace']);
