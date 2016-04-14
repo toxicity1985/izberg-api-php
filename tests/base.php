@@ -12,10 +12,11 @@ abstract class BaseTester extends PHPUnit_Framework_TestCase
 					"appNamespace" => "lolote",
 					"username" => getenv("USERNAME1"),
 					"accessToken" => getenv("TOKEN1"),
+          "apiSecret" => getenv("API_SECRET_KEY"),
 					"sandbox" => true
 			);
 		}
-		$mock = $this->getMock('Izberg\Izberg', array_merge(array('setTimestamp', 'getTimestamp', 'log'),$extra_mocks_methods), array($options));
+		$mock = $this->getMock('Izberg\Izberg', array_merge(array('setTimestamp', 'getTimestamp', 'setNonce','getNonce','log'),$extra_mocks_methods), array($options));
 
 		$mock->expects($this->any())
 	    ->method('setTimestamp')
@@ -24,6 +25,15 @@ abstract class BaseTester extends PHPUnit_Framework_TestCase
 		$mock->expects($this->any())
 	    ->method('getTimestamp')
 	    ->will($this->returnValue(1439912480));
+
+		$mock->expects($this->any())
+	    ->method('setNonce')
+	    ->will($this->returnValue(true));
+
+		$mock->expects($this->any())
+	    ->method('getNonce')
+	    ->will($this->returnValue(1439912482));
+
 		return $mock;
 	}
 

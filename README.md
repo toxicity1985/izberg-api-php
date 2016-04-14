@@ -24,29 +24,33 @@ You can use your access token or our Single Sign On (SSO) system to identify:
 #### With Access token
 
 ```php
-$izberg = new Izberg\Izberg(array(
-  'appNamespace' => 'YOUR_APP_NAMESPACE',
-  'accessToken'  => 'YOUR_ACCESSTOKEN',
-  'username'     => 'YOUR_USERNAME',
-  'apiKey'       => 'YOUR_APP_KEY',
-  'apiSecret'    => 'YOUR_APP_SECRET'
-));
+<?php
+    $izberg = new Izberg\Izberg(array(
+      'appNamespace' => 'YOUR_APP_NAMESPACE',
+      'accessToken'  => 'YOUR_ACCESSTOKEN',
+      'username'   	 => 'YOUR_USERNAME',
+      'apiSecret'    => 'YOUR_APP_SECRET'
+    ));
+
+?>
 ```
 
 #### With SSO
 
 ```php
-$izberg = new Izberg\Izberg(array(
-  'appNamespace' => 'YOUR_APP_NAMESPACE',
-  'apiKey'       => 'YOUR_APP_KEY',
-  'apiSecret'    => 'YOUR_APP_SECRET'
-));
+<?php
+    $izberg = new Izberg\Izberg(array(
+      'appNamespace' => 'YOUR_APP_NAMESPACE',
+      'apiSecret'    => 'YOUR_APP_SECRET'
+    ));
 
-$izberg->sso(array(
-  "email"     => "YOUR_EMAIL",
-  "firstName" => "YOUR_ACCOUNT_FIRST_NAME",
-  "lastName"  => "YOUR_ACCOUNT_LAST_NAME"
-));
+    $izberg->sso(array(
+      "email"     => "YOUR_EMAIL",
+      "firstName" => "YOUR_ACCOUNT_FIRST_NAME",
+      "lastName"  => "YOUR_ACCOUNT_LAST_NAME"
+    ));
+
+?>
 ```
 
 #### Sandbox
@@ -214,22 +218,21 @@ $address->delete();
 Creating an order on IZBERG is really easy, the only thing you need is the Item ID, and your customer's informations.
 
 ```php
-$valid_array = array(
-  'appNamespace' => 'YOUR_APP_NAMESPACE',
-  'accessToken'=> 'YOUR_ACCESSTOKEN',
-  'username' => 'YOUR_USERNAME',
-  'apiKey' => 'YOUR_APP_KEY',
-  'apiSecret'=> 'YOUR_APP_SECRET'
-)
+<?php
+	$valid_array = array(
+			'appNamespace' => 'YOUR_APP_NAMESPACE',
+			'accessToken'  => 'YOUR_ACCESSTOKEN',
+			'username'     => 'YOUR_USERNAME',
+			'apiSecret'    => 'YOUR_APP_SECRET'
+			)
 
-$IzbergInstance = new Izberg\Izberg($valid_array);
+	$IzbergInstance = new Izberg\Izberg($valid_array);
 
-$IzbergInstance->setUser(array(
-  "email" => "EMAIL_ADDRESS",
-  "first_name" => "FIRST_NAME",
-  "last_name" => "LAST_NAME"
-));
-
+	$IzbergInstance->setUser(array(
+				"email" => "EMAIL_ADDRESS",
+				"first_name" => "FIRST_NAME",
+				"last_name" => "LAST_NAME"
+				));
 ```
 
 Now that we have set the User informations, we can add the offer to the cart.
@@ -332,7 +335,6 @@ To generate doc, we use [apigen](http://www.apigen.org/) , with this command:
 `apigen generate --source lib --destination doc`
 
 ## Run tests
-
-- Install [PHPUnit – The PHP Testing Framework](http://phpunit.de/getting-started.html)
-- `cd /path/to/izberg-api-php`
-- run `USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 phpunit --debug tests`
+- Install php unit : http://phpunit.de/getting-started.html
+- cd /to/the/izberg/php/library/folder
+- run 'USERNAME1=sebfie TOKEN1=156d219e38f84953c159a857738119bc0c35de96 API_SECRET_KEY=6cb0c550-9686-41af-9b5e-5cf2dc2aa3d0 phpunit --debug tests'

@@ -88,7 +88,7 @@ class categoryTest extends BaseTester
     \VCR\VCR::insertCassette('testGetApplicationCategoryWithoutCallingRoot');
     $a = $this->getIzberg();
     $fakeCat = new Izberg\Resource\ApplicationCategory();
-    $fakeCat->id = 5836;
+    $fakeCat->id = 21709;
 
     $subcats = $fakeCat->get_childs();
     $this->assertInstanceOf('Izberg\Resource\ApplicationCategory', $subcats[0]);
