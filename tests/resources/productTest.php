@@ -57,4 +57,13 @@ class productTest extends BaseTester
     $product = $a->get_schema("product");
     $this->assertNotNull($product->allowed_detail_http_methods);
   }
+
+  public function testGetProductOfferShouldReturnProductOffer()
+  {
+    \VCR\VCR::insertCassette('testGetProductOfferShouldReturnProductOffer');
+
+    $a = $this->getIzberg();
+    $product = $a->get("productoffer", 38895);
+    $this->assertNotNull($product->id);
+  }
 }
