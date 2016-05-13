@@ -1,0 +1,36 @@
+[{
+    "request": {
+        "method": "GET",
+        "url": "https:\/\/api.sandbox.iceberg.technology\/v1\/productoffer\/38895\/",
+        "headers": {
+            "Host": "api.sandbox.iceberg.technology",
+            "Content-Type": "application\/json; charset=UTF-8",
+            "Accept": "application\/json",
+            "Content-Language": "fr",
+            "Authorization": "IcebergAccessToken sebfie:156d219e38f84953c159a857738119bc0c35de96",
+            "Application-Signature": "1ee82c0e7b43503824fffb6c3be9d2262af62b70",
+            "Application-Nonce": "1439912482"
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "1.1",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-CSRFToken, X-Requested-With, Accept",
+            "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-cache",
+            "Content-Language": "fr",
+            "Content-Type": "application\/json",
+            "Date": "Fri, 13 May 2016 14:56:10 GMT",
+            "Server": "nginx\/1.8.1",
+            "Vary": "Accept, Accept-Language, Cookie, Accept-Encoding, Host",
+            "X-Release-Version": "20160512T105502",
+            "Content-Length": "3161",
+            "Connection": "keep-alive"
+        },
+        "body": "{\"application_id\": 9, \"attributes\": {}, \"availability\": \"in_stock\", \"availability_localized\": \"En stock\", \"available_customizations\": [], \"cancellation\": false, \"carrier\": {\"name\": \"laposte-courrier-suivi\", \"url\": \"http:\/\/www.csuivi.courrier.laposte.fr\/\", \"verbose_name\": \"La Poste (courrier suivi)\"}, \"condition\": 0, \"condition_display\": \"Neuf\", \"crawling_policy\": 1, \"crawling_policy_display\": \"Sync all the fields from the feed (except manually modified fields)\", \"created_on\": \"2015-04-16T16:12:51+02:00\", \"currency\": \"EUR\", \"default_image\": \"https:\/\/d1uyhd0hkrx9pt.cloudfront.net\/images\/2015\/04\/38895_54f70e6b4ec77faba91aef8cde7bc144.JPEG\", \"delay_before_shipping\": \"0.00\", \"delivery_time\": 72, \"description\": \"Boucles d'oreilles compos\u00e9es de 3 perles de verre et 2 perles de rocailles. Option possible : fermoir en argent\", \"discounted\": false, \"end_selling_date\": null, \"exclusive\": false, \"external_id\": \"133\", \"free_return\": false, \"free_shipping\": false, \"from_list\": false, \"id\": 38895, \"images\": [{\"display_mode\": 0, \"height\": 700, \"id\": 68539, \"order\": 0, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/offer_image\/68539\/\", \"url\": \"https:\/\/d1uyhd0hkrx9pt.cloudfront.net\/images\/2015\/04\/38895_54f70e6b4ec77faba91aef8cde7bc144.JPEG\", \"variation\": null, \"width\": 686}, {\"display_mode\": 0, \"height\": 900, \"id\": 68540, \"order\": 1, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/offer_image\/68540\/\", \"url\": \"https:\/\/d1uyhd0hkrx9pt.cloudfront.net\/images\/2015\/04\/38895_e1fb2d26c9366861461632c658f063a8.PNG\", \"variation\": null, \"width\": 900}], \"is_abstract\": false, \"isnew\": false, \"language\": \"fr\", \"last_modified\": \"2016-04-13T17:19:10+02:00\", \"manually_managed_fields\": [], \"max_order_quantity\": null, \"merchant\": {\"id\": 726, \"keywords\": [], \"name\": \"Lolote.fr\", \"pk\": 726, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/merchant\/726\/\", \"slug\": \"lolotefr\", \"status\": \"10\"}, \"merchant_url\": \"http:\/\/www.lolote.fr\/boucles-d-oreilles-troisieme-oeil\", \"meta\": {}, \"name\": \"Boucles d'oreilles - Troisieme oeil\", \"number_of_items\": null, \"number_of_units\": 1, \"offer_latitude\": null, \"offer_longitude\": null, \"previous_price\": \"6.000000\", \"previous_price_with_vat\": \"7.20\", \"previous_price_without_vat\": \"6.000000\", \"price\": \"6.000000\", \"price_with_vat\": \"7.20\", \"price_without_vat\": \"6.000000\", \"product\": {\"id\": 39277, \"pk\": 39277, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product\/39277\/\"}, \"product_tax_group\": {\"id\": 1, \"pk\": 1, \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/product_tax_group\/1\/\"}, \"product_tax_group_id\": 1, \"requested_language\": \"fr\", \"resource_uri\": \"https:\/\/api.sandbox.iceberg.technology\/v1\/productoffer\/38895\/\", \"restock_date\": null, \"shipping_cost_override_rule\": null, \"shipping_cost_override_value\": \"0.000000\", \"shipping_estimation\": \"6.00\", \"shipping_estimation_coutry\": \"France m\u00e9tropolitaine\", \"shipping_info\": null, \"sku\": \"CREA\/VERR\/TROI\", \"start_selling_date\": null, \"status\": \"active\", \"status_localized\": \"Offre Active\", \"stock\": 1, \"tax_code\": null, \"variations\": [], \"warranty\": null, \"weight_numeral\": null, \"wrappable\": true, \"wrapping\": \"0.000000\"}"
+    }
+}]
