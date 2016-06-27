@@ -108,4 +108,43 @@ class Cart extends Resource
         );
         return parent::$Izberg->Call($this->getName()."/items/", "POST", $params);
     }
+
+    /**
+ 	  * Remove an item from cart
+ 	  * @param $id
+ 	  * @param string $accept_type
+ 	  * @return CartItem
+ 	  */
+ 	  public function removeItem($id, $accept_type = 'Accept: application/json')
+ 	  {
+      $object = new CartItem();
+      $response = parent::$Izberg->Call($object->getName()."/".$id."/", "DELETE", array(), $accept_type);
+      $object->hydrate($response);
+      return $object;
+ 	  }
+
+    /**
+ 	  * Apply a coupon code
+ 	  * @param $code
+ 	  * @param string $action
+ 	  * @return DiscountCode
+ 	  */
+    public function discountCode($code, $action = "add")
+    {
+      $params = array('discount_code'=> $code);
+      $id = $this->id ? $this->id : 'mine';
+      return parent::$Iceberg->Call("cart/" . $id . "/" . $action . "_discount_code/", "POST", $params, 'Content-Type: application/json');
+    }
+
+    /**
+    * Remove all cart items
+    * @return Boolean
+    */
+    public function clean() {
+      $this->getItems();
+      foreach ($this->items as $item) {
+        $item->delete();
+      }
+      return true;
+    }
 }
