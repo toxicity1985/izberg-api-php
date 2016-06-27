@@ -84,6 +84,33 @@ class cartTest extends BaseTester
     $this->assertEquals(count($items), $number_items);
   }
 
+  public function testCleanCartShouldRemoveAllItems()
+  {
+    \VCR\VCR::insertCassette('testCleanCartShouldRemoveAllItems');
+
+    $a = $this->getIzberg();
+
+    $my_cart = $a->create('cart');
+    $number_items = count($my_cart->getItems());
+    $this->assertTrue($number_items==0);
+    $item = $my_cart->addItem(array(
+      "offer_id" => 38895,
+      "variation_id" => null,
+      "quantity" => 1
+    ));
+
+    \VCR\VCR::eject();
+    \VCR\VCR::insertCassette('testCleanCartShouldRemoveAllItems2');
+    $items = $my_cart->getItems();
+    $this->assertEquals(count($items), 1);
+    $my_cart->clean();
+    \VCR\VCR::eject();
+    \VCR\VCR::insertCassette('testCleanCartShouldRemoveAllItems3');
+    $items = $my_cart->getItems();
+    $this->assertEquals(count($items), 0);
+    \VCR\VCR::eject();
+  }
+
   public function testNewCartItemShouldCreateANewCart()
   {
     \VCR\VCR::insertCassette('testNewCartItemShouldCreateANewCart1');
