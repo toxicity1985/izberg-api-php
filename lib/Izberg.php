@@ -991,4 +991,8 @@ class Izberg
 		$object = new $resource();
 		return $this->Call($object->getPrefix() . $object->getName() ."/schema/", 'GET', $params, $accept_type);
 	}
+
+	public function isAnonymous() {
+ 		return $this->_anonymous;
+  }
 }
