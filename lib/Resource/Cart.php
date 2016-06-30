@@ -147,4 +147,42 @@ class Cart extends Resource
       }
       return true;
     }
+
+
+    /**
+    * Remove all shipping providers
+    * @return Array
+    */
+    public function shippingProviders() {
+      $id = $this->id ? $this->id : 'mine';
+      return parent::$Iceberg->Call("cart/" . $id . "/shipping_providers/" , "GET", array(), 'Content-Type: application/json');
+    }
+
+    /**
+    * Select a shipping provider
+    * @return ShippingProvider
+    */
+    public function selectShippingProvider($provider_id) {
+      $id = $this->id ? $this->id : 'mine';
+      return parent::$Iceberg->Call("cart/" . $id . "/shipping_providers/" . $provider_id . "/select/" , "POST", array(), 'Content-Type: application/json');
+    }
+
+    /**
+    * Select multiple shipping providers
+    * @param Array $ids
+    * @return Array
+    */
+    public function selectShippingProviders($ids) {
+      $id = $this->id ? $this->id : 'mine';
+      return parent::$Iceberg->Call("cart/" . $id . "/shipping_providers/" , "POST", array(), 'Content-Type: application/json');
+    }
+
+    /**
+    * Update all available shipping providers for cart
+    * @return Array
+    */
+    public function updateShippingProviders() {
+      $id = $this->id ? $this->id : 'mine';
+      return parent::$Iceberg->Call("cart/" . $id . "/shipping_providers/update/" , "GET", array(), 'Content-Type: application/json');
+    }
 }

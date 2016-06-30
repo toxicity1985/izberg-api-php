@@ -123,4 +123,30 @@ class cartTest extends BaseTester
     $this->assertNotSame($cart1->id, $cart->id);
     \VCR\VCR::eject();
   }
+
+  // TODO When sandbox will be updated
+  public function testShippingWorkflow()
+  {
+
+    // \VCR\VCR::insertCassette('testShippingWorkflow1');
+    // $a = $this->getShippingIzberg();
+    // $cart = $a->create('cart');
+    // \VCR\VCR::eject();
+    //
+    // // We add a product
+    // $item = $cart->addItem(array(
+    //   "offer_id" => 38895,
+    //   "variation_id" => null,
+    //   "quantity" => 1
+    // ));
+    //
+    // // We get list of shipping_providers
+    // $shipping_providers = $cart->shippingProviders();
+    // // We recompute total
+    // $cart->updateShippingProviders();
+    //
+    // // We select first shipping provider
+    // $cart->selectShippingProvider($shipping_providers[0]->id);
+
+  }
 }
