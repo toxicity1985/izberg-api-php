@@ -133,7 +133,7 @@ class Cart extends Resource
     {
       $params = array('discount_code'=> $code);
       $id = $this->id ? $this->id : 'mine';
-      return parent::$Iceberg->Call("cart/" . $id . "/" . $action . "_discount_code/", "POST", $params, 'Content-Type: application/json');
+      return parent::$Izberg->Call("cart/" . $id . "/" . $action . "_discount_code/", "POST", $params, 'Content-Type: application/json');
     }
 
     /**
@@ -146,5 +146,43 @@ class Cart extends Resource
         $item->delete();
       }
       return true;
+    }
+
+
+    /**
+    * Remove all shipping options
+    * @return Array
+    */
+    public function shippingOptions() {
+      $id = $this->id ? $this->id : 'mine';
+      return parent::$Izberg->Call("cart/" . $id . "/shipping_options/" , "GET", null, 'Content-Type: application/json');
+    }
+
+    /**
+    * Select a shipping option
+    * @return ShippingOption
+    */
+    public function selectShippingOption($option_id) {
+      $id = $this->id ? $this->id : 'mine';
+      return parent::$Izberg->Call("cart/" . $id . "/shipping_options/" . $option_id . "/select/" , "POST", array(), 'Content-Type: application/json');
+    }
+
+    /**
+    * Select multiple shipping options
+    * @param Array $ids
+    * @return Array
+    */
+    public function selectShippingOptions($params) {
+      $id = $this->id ? $this->id : 'mine';
+      return parent::$Izberg->Call("cart/" . $id . "/shipping_options/" , "POST", $params, 'Content-Type: application/json');
+    }
+
+    /**
+    * Update all available shipping options for cart
+    * @return Array
+    */
+    public function updateShippingOptions() {
+      $id = $this->id ? $this->id : 'mine';
+      return parent::$Izberg->Call("cart/" . $id . "/shipping_options/update/" , "POST", null, 'Content-Type: application/json');
     }
 }

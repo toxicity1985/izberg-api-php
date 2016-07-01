@@ -365,6 +365,27 @@ Now that both addresses are set, we can place the order.
     $locale->delete();
 ```
 
+## Coupons
+
+####APPLY
+
+```php
+
+  $a = $this->getIzberg();
+	$cart = $a->create("cart");
+  $cart->discountCode("code1234","add"); // "add" (default) or "remove" action
+
+```
+
+####Update and reset using delete
+
+```php
+
+	$locale->update(array("languages" => ["fr","it"]));
+    $this->assertEquals($locale->languages, ["fr","it"]);
+    $locale->delete();
+```
+
 ### Documentation
 
 To generate doc, we use [apigen](http://www.apigen.org/) , with this command :
