@@ -133,7 +133,7 @@ class Cart extends Resource
     {
       $params = array('discount_code'=> $code);
       $id = $this->id ? $this->id : 'mine';
-      return parent::$Iceberg->Call("cart/" . $id . "/" . $action . "_discount_code/", "POST", $params, 'Content-Type: application/json');
+      return parent::$Izberg->Call("cart/" . $id . "/" . $action . "_discount_code/", "POST", $params, 'Content-Type: application/json');
     }
 
     /**
@@ -150,39 +150,39 @@ class Cart extends Resource
 
 
     /**
-    * Remove all shipping providers
+    * Remove all shipping options
     * @return Array
     */
-    public function shippingProviders() {
+    public function shippingOptions() {
       $id = $this->id ? $this->id : 'mine';
-      return parent::$Iceberg->Call("cart/" . $id . "/shipping_providers/" , "GET", array(), 'Content-Type: application/json');
+      return parent::$Izberg->Call("cart/" . $id . "/shipping_options/" , "GET", null, 'Content-Type: application/json');
     }
 
     /**
-    * Select a shipping provider
-    * @return ShippingProvider
+    * Select a shipping option
+    * @return ShippingOption
     */
-    public function selectShippingProvider($provider_id) {
+    public function selectShippingOption($option_id) {
       $id = $this->id ? $this->id : 'mine';
-      return parent::$Iceberg->Call("cart/" . $id . "/shipping_providers/" . $provider_id . "/select/" , "POST", array(), 'Content-Type: application/json');
+      return parent::$Izberg->Call("cart/" . $id . "/shipping_options/" . $option_id . "/select/" , "POST", array(), 'Content-Type: application/json');
     }
 
     /**
-    * Select multiple shipping providers
+    * Select multiple shipping options
     * @param Array $ids
     * @return Array
     */
-    public function selectShippingProviders($ids) {
+    public function selectShippingOptions($params) {
       $id = $this->id ? $this->id : 'mine';
-      return parent::$Iceberg->Call("cart/" . $id . "/shipping_providers/" , "POST", array(), 'Content-Type: application/json');
+      return parent::$Izberg->Call("cart/" . $id . "/shipping_options/" , "POST", $params, 'Content-Type: application/json');
     }
 
     /**
-    * Update all available shipping providers for cart
+    * Update all available shipping options for cart
     * @return Array
     */
-    public function updateShippingProviders() {
+    public function updateShippingOptions() {
       $id = $this->id ? $this->id : 'mine';
-      return parent::$Iceberg->Call("cart/" . $id . "/shipping_providers/update/" , "GET", array(), 'Content-Type: application/json');
+      return parent::$Izberg->Call("cart/" . $id . "/shipping_options/update/" , "POST", null, 'Content-Type: application/json');
     }
 }
