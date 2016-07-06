@@ -2,6 +2,6 @@
 namespace Izberg\Resource;
 use Izberg\Resource;
 
-class Attribute extends Resource
+class ShoppingPreference extends Resource
 {
 }

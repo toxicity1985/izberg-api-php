@@ -1,6 +1,7 @@
 <?php
 namespace Izberg\Resource;
 use Izberg\Resource;
-class ShoppingPreference extends Resource
+
+class MerchantReview extends Resource
 {
 }
