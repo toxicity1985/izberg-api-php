@@ -17,12 +17,6 @@ require_once __DIR__."/Html2Text/Html2Text.php";
 
 class Izberg
 {
-
-	/**
-	* Use logger
-	*/
-	const LOGS = true;
-
 	/**
 	* The API production URL
 	*/
@@ -68,6 +62,7 @@ class Izberg
 	*/
 	protected static $_helper;
 
+
 	/**
 	* The API base URL
 	* @var String
@@ -82,6 +77,13 @@ class Izberg
 	private $_appnamespace;
 
 	/**
+	* Enable or not library logs
+	*
+	* @var Boolean
+	*/
+	private $_enable_log;
+	
+	/**
 	* The izberg api secret
 	*
 	* @var string
@@ -90,7 +92,7 @@ class Izberg
 
 
 	/**
-	* The access_token of a application staff user 
+	* The access_token of a application staff user
 	*
 	* @var string
 	*/
@@ -304,6 +306,16 @@ class Izberg
 	}
 
 	/**
+	* Enable logs
+	*
+	* @return Boolean
+	*/
+	public function enableLog() {
+		$this->_enable_log = true;
+		return $this->_enable_log;
+	}
+
+	/**
 	* Message Auth Getter
 	*
 	* @return String
@@ -507,6 +519,7 @@ class Izberg
 	public function __construct($config)
 	{
 		$this->_debug = false;
+		$this->_enable_log = false;
 		if (true === is_array($config)) {
 			$this->helper = new Helper();
 
@@ -602,7 +615,7 @@ class Izberg
 	public function log($message, $level="error", $path = null)
 	{
 		// date_default_timezone_set("Europe/Paris");
-		if (false === self::LOGS)
+		if (false === $this->_enable_log)
 			return ;
 
 		if (false === is_dir($path)) {

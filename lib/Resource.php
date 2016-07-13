@@ -1,5 +1,5 @@
-<?php namespace Izberg;
-
+<?php 
+namespace Izberg;
 abstract class Resource
 {
     protected static    $Izberg = null;
@@ -128,20 +128,27 @@ abstract class Resource
                 {
                     $classname = $this->parseUri($key);
                     try {
-                      if (!class_exists($classname) && isset($value->resource_uri))
-                          $classname = $this->parseUri($value->resource_uri);
+                      if (!class_exists($classname) && isset($value->resource_uri)) {
+                        $classname = $this->parseUri($value->resource_uri);
+                      }
                     } catch (\LogicException $e) {
                        $this->$key = $value;
                        continue;
                     }
 
-                    if (!class_exists($classname)) {
-                        $this->$key = $value;
-                        continue;
-                    } else {
+                    try {
+                      if (class_exists($classname)) {
                         $new_obj = new $classname();
                         $new_obj->hydrate($value);
                         $this->$key = $new_obj;
+                        continue;
+                      } else {
+                        $this->$key = $value;
+                        continue;
+                      }
+                    } catch (\LogicException $e) {
+                       $this->$key = $value;
+                       continue;
                     }
                 }
                 else if (is_array($value) && isset($value[0]->resource_uri))
