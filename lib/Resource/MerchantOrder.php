@@ -12,12 +12,12 @@ class MerchantOrder extends Resource
 	* @returns object
 	*
 	**/
-	public function updateStatus($status, $id_order = null)
+	public function updateStatus($status, $id_order = null, $params = array())
 	{
 		if (!$id_order && !$this->id)
 			throw new Exception("No order_id and no URI");
 		$id_order = $id_order ? $id_order : $this->id;
-		return	(parent::$Izberg->Call($this->getName().'/'.$id_order.'/'.$status.'/', 'POST'));
+		return	(parent::$Izberg->Call($this->getName().'/'.$id_order.'/'.$status.'/', 'POST', $params));
 	}
 
 	/**
