@@ -19,6 +19,6 @@ class OrderItem extends Resource
 		if ($status != "confirm" && $status != "send" && $status != "cancel")
 			throw new Exception\GenericException("Wrong Status : send | confirm | cancel");
 		$id = $id_order ? $id_order : $this->id;
-		return	(parent::$Izberg->Call($this->_name.'/'.$id.'/'.$status.'/', 'POST', $params));
+		return	(parent::$Izberg->Call($this->_name.'/'.$id.'/'.$status.'/', 'POST', $params, 'Content-Type: application/json'));
 	}
 }

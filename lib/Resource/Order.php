@@ -20,7 +20,7 @@ class Order extends Resource
 		if ($status != "updateOrderPayment" && $status != "authorizeOrder" && $status != "cancel")
 			throw new Exception\GenericException("Wrong Status : authorizeOrder | updateOrderPayment");
 		$id = $id_order ? $id_order : $this->id;
-		$response = parent::$Izberg->Call($this->getName().'/'.$id.'/'.$status.'/', 'POST', $params);
+		$response = parent::$Izberg->Call($this->getName().'/'.$id.'/'.$status.'/', 'POST', $params, 'Content-Type: application/json');
 		$this->hydrate($response);
 		return $this;
 	}
