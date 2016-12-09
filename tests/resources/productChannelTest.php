@@ -28,7 +28,10 @@ class productChannelTest extends BaseTester
   {
     \VCR\VCR::insertCassette('testGetOutputUsingOutputFile');
 
-    $mock = $this->getMock('Izberg\Helper', array('readFromUrl'), array());
+    $mock = $this->getMockBuilder('Izberg\Helper')
+                 ->setMethods(array('readFromUrl'))
+                 ->getMock();
+
     $mock->expects($this->any())
 	    ->method('readFromUrl')
       ->with(
@@ -49,7 +52,9 @@ class productChannelTest extends BaseTester
     \VCR\VCR::insertCassette('testGetOutputUsingViewer');
 
     $a = $this->getIzberg(array(), array("getCurrentApplication"));
-    $channel_mock = $this->getMock('Izberg\Resource\ProductChannel', array('getViewer', 'getName'), array());
+    $channel_mock = $this->getMockBuilder('Izberg\Resource\ProductChannel')
+                 ->setMethods(array('getViewer', 'getName'))
+                 ->getMock();
     $channel_mock->expects($this->once())
 	    ->method('getViewer')
       ->with(array(), "test.xml")
@@ -60,7 +65,9 @@ class productChannelTest extends BaseTester
 	    ->will($this->returnValue("product_channel"));
     $channel_mock->id = 389;
 
-    $app_mock = $this->getMock('Izberg\Resource\Application', array('get_channel'), array());
+    $app_mock = $this->getMockBuilder('Izberg\Resource\Application')
+                 ->setMethods(array('get_channel'))
+                 ->getMock();
     $app_mock->expects($this->any())
 	    ->method('get_channel')
 	    ->will($this->returnValue($channel_mock));

@@ -26,7 +26,10 @@ abstract class BaseTester extends PHPUnit_Framework_TestCase
 					"sandbox" => true
 			);
 		}
-		$mock = $this->getMock('Izberg\Izberg', array_merge(array('setTimestamp', 'getTimestamp', 'setNonce','getNonce','log'),$extra_mocks_methods), array($options));
+		$mock = $this->getMockBuilder('Izberg\Izberg')
+                 ->setMethods(array_merge(array('setTimestamp', 'getTimestamp', 'setNonce','getNonce','log'),$extra_mocks_methods))
+                 ->setConstructorArgs(array($options))
+                 ->getMock();
 
 		$mock->expects($this->any())
 	    ->method('setTimestamp')
