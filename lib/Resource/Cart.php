@@ -159,6 +159,14 @@ class Cart extends Resource
     }
 
     /**
+    * Get a shipping options
+    * @return Array
+    */
+    public function shippingOption($option_id) {
+      return parent::$Izberg->Call("cart_shipping_choice/" . $option_id . "/" , "GET", null, 'Content-Type: application/json');
+    }
+
+    /**
     * Select a shipping option
     * @return ShippingOption
     */
