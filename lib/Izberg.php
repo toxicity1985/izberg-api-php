@@ -661,7 +661,7 @@ class Izberg
 	*/
 	public function Call($path, $method = 'GET', $params = null, $accept_type = 'Accept: application/json', $content_type = 'Content-Type: application/json; charset=UTF-8', $output_file = null)
 	{
-		if (!is_null($params) && is_array($params) && $content_type == "Content-Type: application/json; charset=UTF-8")
+		if (!is_null($params) && is_array($params) && $content_type == "Content-Type: application/json; charset=UTF-8" && ('GET' !== $method))
 		{
 			$paramString = json_encode($params);
 		}
