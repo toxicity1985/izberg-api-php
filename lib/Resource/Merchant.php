@@ -23,13 +23,13 @@ class Merchant extends Resource
 		return self::$Izberg->Call("merchant/".$merchant_id."/active_products_channel/", 'GET', $params);
 	}
 
-	public function getCurrent()
+	public function getCurrent($api_key = null)
 	{
 		if ($this->id)
 			return $this;
 		try
 		{
-			$seller = parent::$Izberg->Call('merchant/?api_key='.parent::$Izberg->getApiKey());
+			$seller = parent::$Izberg->Call('merchant/?api_key='.$api_key);
 		}
 		catch (Exception\GenericException $e)
 		{
