@@ -89,7 +89,13 @@ class Izberg
 	* @var string
 	*/
 	private $_apisecret;
-
+	
+	/**
+        * The izberg signature mode
+        *
+        * @var bool
+        */
+        private $_enable_signed_request;
 
 	/**
 	* The access_token of a application staff user
@@ -199,7 +205,7 @@ class Izberg
 	public function getApiSecret() {
 		return $this->_apisecret;
 	}
-
+	
 	/**
 	* Access token Getter
 	*
@@ -316,6 +322,16 @@ class Izberg
 	}
 
 	/**
+        * Enable signed call api
+        *
+        * @return Boolean
+        */
+        public function enableSignature() {
+                $this->_enable_signed_request = true;
+                return $this->_enable_signed_request;
+        }
+
+	/**
 	* Message Auth Getter
 	*
 	* @return String
@@ -342,7 +358,7 @@ class Izberg
 		$this->setNonce(time());
 		$nonce = $this->getNonce();
 		$to_compose = array($body, $nonce);
-		if (is_null($this->getApiSecret())) {
+		if (is_null($this->getApiSecret()) && $_enable_signed_request) {
 			throw new Exception\GenericException("To sign your requests, you need a api secret");
 		}
 		return hash_hmac('sha1', implode(":", $to_compose), $this->getApiSecret());
@@ -520,6 +536,7 @@ class Izberg
 	{
 		$this->_debug = false;
 		$this->_enable_log = false;
+		$this->_enable_signed_request = false;
 		if (true === is_array($config)) {
 			$this->helper = new Helper();
 
