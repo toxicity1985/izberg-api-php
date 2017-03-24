@@ -20,10 +20,10 @@ class Feed extends Resource
 		parent::__construct();
 	}
 
-	public function post($feed_url, $every, $period, $name, $source_type = "prestashop")
+	public function post($feed_url, $every, $period, $name, $source_type = "prestashop", $merchantapikey = '')
 	{
 		$merchant = new Merchant();
-		$merchant->getCurrent();
+		$merchant->getCurrent($merchantapikey);
 		if (!$merchant->id)
 			return false;
 		$merchant_uri = "/v1/merchant/".$merchant->id."/";
