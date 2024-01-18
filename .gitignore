@@ -5,3 +5,12 @@ vendor
 composer
 *.txt
 doc
+/tests/fixtures/
+/.phpunit.result.cache
+/.idea/codeception.xml
+/.idea/izberg-api-php.iml
+/.idea/php.xml
+/.idea/phpspec.xml
+/.idea/phpunit.xml
+/.idea/vcs.xml
+/.idea/workspace.xml

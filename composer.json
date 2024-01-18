@@ -1,25 +1,39 @@
 {
-    "name": "izberg/izberg",
-    "description": "Php library to use Izberg marketplace API",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Sébastien Fieloux",
-            "email": "sebastien.fieloux@gmail.com"
-        },
-        {
-          "name": "Marin Ravenel",
-          "email": "marin.ravenel@gmail.com"
-        }
-    ],
-    "require": {},
-    "require-dev": {
-      "raveren/kint": "1.0.x-dev",
-      "php-vcr/php-vcr": "dev-master",
-      "php-vcr/phpunit-testlistener-vcr": "*",
-      "phpunit/phpunit": "4.1.2"
+  "name": "izberg/izberg",
+  "description": "Php library to use Izberg marketplace API",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sébastien Fieloux",
+      "email": "sebastien.fieloux@gmail.com"
     },
-    "autoload": {
-      "classmap": ["lib/"]
+    {
+      "name": "Marin Ravenel",
+      "email": "marin.ravenel@gmail.com"
     }
+  ],
+  "require": {
+    "ext-json": "*",
+    "ext-soap": "*",
+    "php": ">=7.4",
+    "html2text/html2text": "^4.3",
+    "ext-curl": "*",
+    "ext-simplexml": "*"
+  },
+  "require-dev": {
+    "php-sage/sage": "^1.5",
+    "php-vcr/php-vcr": "dev-master",
+    "php-vcr/phpunit-testlistener-vcr": "*",
+    "phpunit/phpunit": "^8"
+  },
+  "autoload": {
+    "psr-4": {
+      "Izberg\\": "lib/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  }
 }
